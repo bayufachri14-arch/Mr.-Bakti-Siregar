@@ -1,0 +1,1142 @@
+---
+title: "Ujian Tengah Semester"# Judul utama dokumen
+subtitle: "Introduction to Statistics (SDT-11012)"# Subjudul sesi
+author: "Bayu Fachri (52260027)"                 # Penulis
+date: "`r format(Sys.Date(), '%B %d, %Y')`"      # Tanggal otomatis
+
+
+---
+
+
+<div style="text-align:center;">
+
+<img class="zoom-img"
+     src="../images/author/Bayu.jpg"
+     alt="Bayu Fachri"
+     style="width:250px;height:250px;border-radius:50%;object-fit:cover;object-position:center 26%;border:2px solid #2c3e50;display:block;margin:auto;" />
+
+<h3 class="zoom-text" style="margin-top:12px;">Bayu Fachri (52260027)</h3>
+
+<p style="text-align:center;font-size:14px;margin-top:3px;">
+<a class="zoom-link" href="https://www.linkedin.com/in/bayu-fachri-838b802ba/" target="_blank" rel="noopener noreferrer"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+       style="width:16px;height:16px;vertical-align:middle;"> LinkedIn
+</a>
+<span style="margin:0 10px;">|</span>
+<a class="zoom-link" href="https://rpubs.com/BBY" target="_blank" rel="noopener noreferrer"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://framalibre.org/images/logo/Rstudio.png"
+       style="width:16px;height:16px;vertical-align:middle;"> R.Pubs
+</a>
+<span style="margin:0 12px;">|</span>
+<a class="zoom-link" href="https://github.com/bayufachri14-arch" target="_blank" rel="noopener noreferrer"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
+       style="width:16px;height:16px;vertical-align:middle;"> GitHub
+</a>
+<span style="margin:0 10px;">|</span>
+<a class="zoom-link" href="mailto:bayufachri14@gmail.com"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://static.vecteezy.com/system/resources/previews/022/484/508/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png"
+       style="width:16px;height:16px;vertical-align:middle;"> Email
+</a>
+</p>
+
+<p class="zoom-text" style="max-width:520px;margin:10px auto;text-align:center;
+          font-size:13.8px;line-height:1.5;color:#333;">
+Mahasiswa **Sains Data** di **Institut Teknologi Sains Bandung** dengan rasa ingin tahu yang tinggi dan semangat untuk terus berkembang. Tertarik pada teknologi, data, dan berbagai hal baru. Percaya bahwa setiap proses adalah bagian dari perjalanan untuk menjadi versi terbaik dari diri sendiri.
+</p>
+
+</div>
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Soal 1 – Ringkasan Materi Minggu 1–7
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 1 – Konsep Dasar Statistika dan Data
+
+#### (a) Definisi Konsep Utama
+
+**Statistika**: ilmu mengumpulkan, mengolah, menyajikan, dan menafsirkan data.
+
+**Cabangnya**:
+
+- *Deskriptif*: meringkas data lewat tabel, grafik, dan angka.
+
+- *Inferensial*: memakai sampel untuk menarik kesimpulan tentang populasi.
+
+**Populasi**: seluruh objek sasaran kesimpulan. 
+
+**Sampel**: bagian populasi yang benar-benar diamati.
+
+**Parameter**: ukuran populasi ($\mu$), biasanya tidak diketahui.
+
+**Statistik**: ukuran dari sampel ($\bar{x}$) untuk menaksir parameter.
+
+**Jenis variabel**:
+
+- Numerik berupa angka
+
+- Kategorik berupa golongan.
+
+- Independen diduga memengaruhi
+
+- Dependen adalah hasil yang dijelaskan.
+
+#### (b) Rumus dan Keterangan Notasi
+
+- Penjumlahan: $\sum x = x_1 + x_2 + \dots + x_n$.
+
+- Rata-rata populasi dan sampel: $\mu = \dfrac{\sum x}{N}$ dan $\bar{x} = \dfrac{\sum x}{n}$.
+
+#### (c) Contoh Studi Kasus
+
+- Populasi: 300 mahasiswa angkatan
+
+- Sampel: 10 mahasiswa yang disurvei.
+
+- X = jam belajar (independen)
+
+- Y = nilai ujian (dependen).
+
+#### (d) Catatan
+
+- Dipakai paling awal, sebelum data dikumpulkan (Diez et al., 2019; Walpole et al., 2012).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 2 – Jenis Data dan Skala Pengukuran
+
+#### (a) Definisi Konsep Utama
+
+**Jenis data**:
+
+- Kualitatif: berupa kategori (**nominal** tanpa urutan, **ordinal** berurutan).
+
+- Kuantitatif: berupa angka (**diskrit** bilangan bulat, **kontinu** desimal).
+
+**Sumber data**:
+
+- Primer: dikumpulkan sendiri (kuesioner).
+
+- Sekunder: dari pihak lain (data BPS).
+
+**Skala pengukuran**: makin tinggi skalanya, makin banyak operasi yang sah.
+
+|  Skala  |            Ciri utama             |     Contoh    |   Ukuran yang layak   |
+|   ---   |               ---                 |      ---      |           ---         |
+| Nominal |       Kategori tanpa urutan       | Program studi |          Modus        |
+| Ordinal |             Berurutan             |  Kepuasan 1–5 |          Median       |
+| Interval|    Jarak sama, nol tidak mutlak   |    Suhu (°C)  |           Mean        |
+|  Rasio  |       Jarak sama, nol mutlak      |   Jam belajar |   Semua, termasuk CV  |
+
+**Struktur dataset**:
+
+- Observasi: satu baris data.
+
+- Variabel: satu kolom data.
+
+- Feature: kolom masukan untuk memprediksi.
+
+- Target: kolom yang ingin diprediksi.
+
+#### (b) Rumus dan Keterangan Notasi
+
+- Proporsi kategori: $p_i = \dfrac{f_i}{n}$.
+
+- Konversi suhu: $K = C + 273{,}15$; perbandingan kelipatan hanya sah pada skala rasio.
+
+#### (c) Contoh Studi Kasus
+
+- Jam belajar: kuantitatif kontinu, rasio, data primer.
+
+- Program studi: kualitatif nominal.
+
+- Target: nilai ujian (regresi).
+
+#### (d) Catatan
+
+- Dipakai saat pertama menerima dataset, sebelum memilih ukuran dan grafik (Anderson et al., 2021).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 3 – Pengumpulan dan Sampling Data
+
+#### (a) Definisi Konsep Utama
+
+**Metode pengumpulan data**:
+
+- Observasi: mencatat apa adanya.
+
+- Survei: pertanyaan terstruktur untuk banyak responden.
+
+- Wawancara: tanya jawab mendalam.
+
+- Eksperimen: perlakuan diacak (terkuat untuk membuktikan sebab-akibat.
+
+**Teknik sampling**:
+
+|      Aspek      |             Probability sampling               |         Non-probability sampling     |
+|       ---       |                     ---                        |                   ---                |
+| Dasar pemilihan |         Acak, peluang terpilih diketahui       | Kemudahan atau pertimbangan peneliti |
+|     Teknik      | Simple random, systematic, stratified, cluster |      Convenience, purposive, quota   |
+|    Kelebihan    |   Mewakili populasi; galat sampling terukur    |              Cepat dan murah         |
+|    Kekurangan   |       Butuh kerangka sampel; lebih mahal       |    Rawan bias; sulit digeneralisasi  |
+|   Cocok untuk   |        Hasil yang ingin digeneralisasi         |         Studi awal atau uji coba     |
+
+**Bias** (kesalahan sistematis yang tidak hilang walau sampel diperbesar):
+
+- Sampling: sampel tidak mewakili populasi.
+
+- Response: jawaban tidak akurat.
+
+- Measurement: alat ukur keliru.
+
+#### (b) Rumus dan Keterangan Notasi
+
+- Systematic: $k = \dfrac{N}{n}$.
+
+- Stratified proporsional: $n_h = n \times \dfrac{N_h}{N}$.
+
+#### (c) Contoh Studi Kasus
+
+- Populasi 300, sampel 30: $k = 10$.
+
+- Strata kos dekat (180) dan jauh (120): $n_h$ = 18 dan 12.
+
+- Survei hanya di kos dekat kampus menimbulkan sampling bias.
+
+#### (d) Catatan
+
+- Dipakai sebelum data dikumpulkan; sampel besar tidak menyembuhkan bias (Diez et al., 2019).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 4 – Penyajian dan Visualisasi Data
+
+#### (a) Definisi Konsep Utama
+
+**Tabel frekuensi**:
+
+- Absolut ($f$): banyaknya data per kategori.
+
+- Relatif ($f/n$): proporsi terhadap total.
+
+- Kumulatif: jumlah berjalan (bermakna bila berurutan).
+
+**Visualisasi**:
+
+- Bar chart: membandingkan kategori, (batang terpisah).
+
+- Pie chart: bagian dari keseluruhan, (2–5 kategori).
+
+- Histogram: distribusi numerik terkelompok, (batang menempel).
+
+- Stem-and-leaf: bentuk distribusi data kecil dengan nilai asli terbaca.
+
+**Prinsip visualisasi**:
+
+- Skala: sumbu-y bar chart mulai dari nol.
+
+- Label: judul, satuan, dan $n$.
+
+- Bin: jumlah kelas memengaruhi bentuk histogram.
+
+- Interpretasi: bahas bentuk, pusat, sebaran, dan keanehan.
+
+#### (b) Rumus dan Keterangan Notasi
+
+- Sturges: $k = 1 + 3{,}322 \log_{10} n$
+
+- Lebar kelas $w = \dfrac{R}{k}$ (bulatkan ke atas).
+
+#### (c) Contoh Studi Kasus
+
+Program studi dan jam belajar 10 mahasiswa.
+
+```{r minggu4-frekuensi}
+prodi <- c("SD", "IF", "SD", "MN", "IF", "SD", "MN", "SD", "IF", "SD")
+f <- table(prodi)
+data.frame(f = as.numeric(f),
+           relatif = as.numeric(prop.table(f)),
+           kumulatif = cumsum(as.numeric(f)),
+           row.names = names(f))
+barplot(f, ylim = c(0, 6), col = "#B22222",
+        main = "Mahasiswa per Prodi (n = 10)", ylab = "Frekuensi")
+```
+
+```{r minggu4-numerik}
+jam <- c(5, 6, 6, 7, 8, 8, 9, 10, 12, 30)
+hist(jam, breaks = seq(0, 35, 5), col = "#B22222", border = "white",
+     main = "Jam Belajar (n = 10)", xlab = "Jam per minggu", ylab = "Frekuensi")
+stem(jam)
+```
+
+#### (d) Catatan
+
+- Dipakai saat pertama menjelajah data, sebelum menghitung ukuran ringkasan (Diez et al., 2019).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 5 – Ukuran Pemusatan dan Penyebaran Data
+
+#### (a) Definisi Konsep Utama
+
+**Ukuran pemusatan**:
+
+- Mean: jumlah nilai dibagi banyaknya data.
+
+- Weighted mean: rata-rata berbobot, misalnya tugas, UTS, dan UAS.
+
+- Median: nilai tengah data terurut.
+
+- Modus: nilai yang paling sering muncul.
+
+**Ukuran penyebaran**:
+
+- Range: nilai terbesar dikurangi terkecil.
+
+- Varians: rata-rata kuadrat jarak ke mean.
+
+- Standar deviasi: akar varians, satuannya sama dengan data.
+
+- Koefisien variasi: sebaran relatif terhadap mean.
+
+**Nilai ekstrem**: menyeret mean, range, dan standar deviasi; median hampir tidak terpengaruh.
+
+#### (b) Rumus dan Keterangan Notasi
+
+- Weighted mean: $\bar{x}_w = \dfrac{\sum w_i x_i}{\sum w_i}$.
+
+- Varians dan standar deviasi: $s^2 = \dfrac{\sum (x_i - \bar{x})^2}{n-1}$, $s = \sqrt{s^2}$.
+
+- Koefisien variasi: $CV = \dfrac{s}{\bar{x}} \times 100\%$.
+
+#### (c) Contoh Studi Kasus
+
+Ringkasan jam belajar, dengan dan tanpa nilai ekstrem 30.
+
+```{r minggu5}
+jam <- c(5, 6, 6, 7, 8, 8, 9, 10, 12, 30)
+mean(jam); median(jam)
+names(which(table(jam) == max(table(jam))))
+weighted.mean(c(80, 70, 90), w = c(0.2, 0.3, 0.5))
+diff(range(jam))
+var(jam); sd(jam)
+sd(jam) / mean(jam) * 100
+
+jam2 <- jam[jam != 30]
+c(mean = mean(jam2), median = median(jam2), sd = sd(jam2))
+```
+
+#### (d) Catatan
+
+- Mean dilaporkan bersama standar deviasi; untuk data menceng, laporkan median (Anderson et al., 2021; Walpole et al., 2012).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 6 – Distribusi Data dan Outlier
+
+#### (a) Definisi Konsep Utama
+
+**Ukuran posisi**:
+
+- Kuartil: membagi data terurut menjadi 4 bagian; $Q_1$ = persentil 25, $Q_2$ = median, $Q_3$ = persentil 75.
+
+- Desil dan persentil: membagi data menjadi 10 dan 100 bagian.
+
+- IQR: rentang separuh data tengah.
+
+**Deteksi outlier**:
+
+| Aspek | Metode IQR | Metode z-score |
+|---|---|---|
+| Dasar | $Q_1$ dan $Q_3$ | Mean dan standar deviasi |
+| Batas outlier | Di luar pagar Tukey | $\lvert z \rvert > 3$ |
+| Tahan outlier | Ya | Tidak; mean dan $s$ ikut terseret |
+| Asumsi bentuk | Tidak perlu | Cocok untuk data mendekati normal |
+| Data contoh (n = 10) | Nilai 30 terdeteksi | $z$ nilai 30 hanya 2,73; lolos |
+
+Boxplot menampilkan pagar Tukey secara visual.
+
+**Bentuk distribusi**:
+
+- Simetris: mean ≈ median.
+
+- Right-skewed: ekor ke kanan, mean > median.
+
+- Left-skewed: ekor ke kiri, mean < median.
+
+#### (b) Rumus dan Keterangan Notasi
+
+- $IQR = Q_3 - Q_1$.
+
+- Pagar Tukey: $Q_1 - 1{,}5 \times IQR$ dan $Q_3 + 1{,}5 \times IQR$.
+
+- Z-score: $z = \dfrac{x - \bar{x}}{s}$.
+
+#### (c) Contoh Studi Kasus
+
+Mencari outlier jam belajar dengan dua metode.
+
+```{r minggu6}
+jam <- c(5, 6, 6, 7, 8, 8, 9, 10, 12, 30)
+quantile(jam)
+quantile(jam, probs = c(0.1, 0.9))
+q1 <- quantile(jam, 0.25); q3 <- quantile(jam, 0.75)
+iqr <- IQR(jam)
+bawah <- q1 - 1.5 * iqr; 8
+z <- (jam - mean(jam)) / sd(jam)
+round(max(z), 2)
+mean(jam) > median(jam)
+```
+
+#### (d) Catatan
+
+- Untuk n = 10, z-score maksimum hanya 2,85, sehingga metode IQR lebih andal (Diez et al., 2019; Tukey, 1977).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Minggu 7 – Exploratory Data Analysis (EDA)
+
+#### (a) Definisi Konsep Utama
+
+**Standardisasi (z-score)**: mengubah nilai menjadi jarak dari mean dalam satuan standar deviasi; hasilnya bermean 0 dan berstandar deviasi 1, sehingga skala berbeda dapat dibandingkan.
+
+**Perbandingan kelompok**: pusat, sebaran, dan bentuk distribusi dibaca bersama, karena pusat yang mirip bisa menyembunyikan sebaran yang berbeda.
+
+**EDA**: tahap mengenal data sebelum membuat model, yaitu mencari pola umum, nilai janggal, dan nilai ekstrem, lalu merumuskan insight.
+
+**Prinsip EDA**:
+
+| Prinsip | Pertanyaan | Alat di R |
+|---|---|---|
+| Pattern | Bagaimana bentuk, pusat, dan sebaran data? | `hist()`, `summary()` |
+| Anomaly | Adakah nilai yang mustahil atau janggal? | `table()`, `is.na()` |
+| Outlier | Nilai mana yang ekstrem? | `IQR()`, `scale()`, `boxplot()` |
+| Insight | Apa arti temuan bagi keputusan? | `tapply()` |
+
+#### (b) Rumus dan Keterangan Notasi
+
+- Z-score: $z_i = \dfrac{x_i - \bar{x}}{s}$.
+
+- Z-score dalam kelompok: $z_i = \dfrac{x_i - \bar{x}_g}{s_g}$.
+
+#### (c) Contoh Studi Kasus
+
+Membandingkan nilai dua kelompok, masing-masing 8 mahasiswa.
+
+```{r minggu7}
+kel   <- rep(c("A", "B"), each = 8)
+nilai <- c(70, 72, 75, 78, 80, 82, 85, 90,
+           60, 65, 75, 80, 85, 90, 95, 100)
+tapply(nilai, kel, mean)
+tapply(nilai, kel, sd)
+tapply(nilai, kel, IQR)
+boxplot(nilai ~ kel, col = c("#FDD49E", "#B22222"),
+        main = "Nilai per Kelompok (n = 16)", xlab = "Kelompok", ylab = "Nilai")
+
+z_grup <- ave(nilai, kel, FUN = function(v) (v - mean(v)) / sd(v))
+round(z_grup[c(8, 14)], 2)
+z_all <- scale(nilai)
+round(c(mean(z_all), sd(z_all)), 2)
+```
+
+#### (d) Catatan
+
+- Anomali dan outlier diselidiki penyebabnya dulu, bukan langsung dihapus.
+
+- Temuan EDA berupa asosiasi, bukan sebab-akibat (Anderson et al., 2021; Tukey, 1977).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Tabel Ringkasan Rumus
+
+| Ukuran | Rumus (sampel) | Keterangan |
+|---|---|---|
+| Mean | $\bar{x} = \frac{\sum x}{n}$ | Pusat data; peka nilai ekstrem |
+| Varians | $s^2 = \frac{\sum (x - \bar{x})^2}{n-1}$ | Rata-rata kuadrat simpangan |
+| Standar deviasi | $s = \sqrt{s^2}$ | Satuannya sama dengan data |
+| Koefisien variasi | $CV = \frac{s}{\bar{x}} \times 100\%$ | Sebaran relatif, tanpa satuan |
+| IQR | $IQR = Q_3 - Q_1$ | Sebaran separuh data tengah |
+| Batas outlier | $Q_1 - 1{,}5\,IQR$ dan $Q_3 + 1{,}5\,IQR$ | Pagar Tukey |
+| Z-score | $z = \frac{x - \bar{x}}{s}$ | Jarak dari mean dalam satuan $s$ |
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Keterkaitan Minggu 1–7 dengan Tahapan Analisis pada Soal 2
+
+Ketujuh minggu ini membentuk urutan kerja yang dipakai pada Soal 2. Analisis dimulai dengan menetapkan populasi, sampel, dan variabel (minggu 1), lalu mengenali jenis dan skala tiap variabel agar ukuran serta grafik yang dipilih sah (minggu 2). Asal-usul data dan potensi biasnya diperiksa dengan konsep minggu 3. Setelah itu, data dijelajahi lewat tabel frekuensi dan grafik (minggu 4), diringkas dengan ukuran pusat dan sebaran (minggu 5), lalu diperiksa posisi, bentuk distribusi, dan outliernya (minggu 6). Terakhir, kelompok dibandingkan dengan z-score dan seluruh temuan dirangkum menjadi insight lewat kerangka EDA (minggu 7). Kesimpulan akhirnya tetap harus menyebutkan keterbatasan cara data dikumpulkan.
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Daftar Pustaka
+
+Anderson, D. R., Sweeney, D. J., Williams, T. A., Camm, J. D., Cochran, J. J., Fry, M. J., & Ohlmann, J. W. (2021). *Statistics for business and economics* (14th ed.). Cengage Learning.
+
+Diez, D. M., Çetinkaya-Rundel, M., & Barr, C. D. (2019). *OpenIntro statistics* (4th ed.). OpenIntro.
+
+Tukey, J. W. (1977). *Exploratory data analysis*. Addison-Wesley.
+
+Walpole, R. E., Myers, R. H., Myers, S. L., & Ye, K. (2012). *Probability & statistics for engineers & scientists* (9th ed.). Pearson.
+
+<hr style="border: 0; height: 5px; background-color: #000000; width: 100%; margin: 100px auto;">
+
+## Soal 2 – Exploratory Data Analysis Transaksi Layanan
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Pengantar dan Persiapan
+
+Data ini membahas transaksi harian selama 30 hari (1–30 Januari 2026) dari file `Dataset_EDA_30_Observasi.xlsx`. Ada enam variabel: tanggal, kanal, jenis layanan, jumlah transaksi, waktu proses, dan nilai transaksi. Tujuannya adalah mengenali isi data, melihat pola dan hubungan antarvariabel, mencari nilai yang tidak biasa, lalu menarik kesimpulan yang berguna bagi perusahaan.
+
+```{r}
+library(readxl)
+library(knitr)
+
+data_xlsx <- read_excel("Dataset_EDA_30_Observasi.xlsx", sheet = "Dataset")
+data_xlsx$Tanggal <- as.Date(data_xlsx$Tanggal)
+
+kable(data_xlsx, caption = "Dataset transaksi harian (30 observasi)")
+```
+
+Satu catatan: kamus data tidak menjelaskan apakah `Nilai_Transaksi_Juta_Rp` adalah total per hari atau rata-rata per transaksi. Di laporan ini nilainya dianggap **total nilai transaksi dalam satu hari**. Alasannya, nilai rata-ratanya sekitar 3 juta rupiah per hari dengan sekitar 74 transaksi, sehingga nilai per transaksinya masuk akal (sekitar Rp40 ribu).
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(kableExtra)
+library(corrplot)
+
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.align = "center",
+                      fig.width = 8, fig.height = 4.5)
+theme_set(
+  theme_minimal(base_size = 12) +
+    theme(plot.title    = element_text(hjust = 0.5, face = "bold"),
+          plot.subtitle = element_text(hjust = 0.5),
+          panel.grid    = element_blank(),
+          axis.line     = element_line(color = "grey60"))
+)
+
+warna_kanal   <- c(Online = "#FC8D59", Offline = "#8B0000")
+warna_layanan <- c(Reguler = "#FDD49E", Express = "#FC8D59", Premium = "#B30000")
+
+num_vars  <- c("Jumlah_Transaksi", "Waktu_Proses_Menit", "Nilai_Transaksi_Juta_Rp")
+label_num <- c("Jumlah Transaksi", "Waktu Proses (menit)", "Nilai Transaksi (juta Rp)")
+
+tampil <- function(x, caption = NULL, digits = 2) {
+  kbl(x, caption = caption, digits = digits, align = "c") %>%
+    kable_styling(latex_options = c("hold_position"), full_width = FALSE,
+                  position = "center")
+}
+
+modus <- function(x) {
+  f <- table(x)
+  paste(names(f)[f == max(f)], collapse = ", ")
+}
+
+tabel_frek <- function(x) {
+  f <- as.vector(table(x))
+  data.frame(Kategori  = names(table(x)),
+             Absolut   = f,
+             Relatif   = f / sum(f),
+             Kum_Absolut = cumsum(f),
+             Kum_Relatif = cumsum(f / sum(f)))
+}
+```
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Data Understanding dan Data Quality
+
+#### Import Data dan 10 Baris Pertama
+
+```{r s2-import}
+df_raw <- read_excel("Dataset_EDA_30_Observasi.xlsx", sheet = "Dataset")
+
+tampil(head(df_raw, 10), "Tabel 1. Sepuluh baris pertama dataset")
+```
+
+#### Struktur, Dimensi, Nama Kolom, dan Tipe Data
+
+```{r s2-struktur}
+glimpse(df_raw)
+dim(df_raw)
+names(df_raw)
+sapply(df_raw, function(x) class(x)[1])
+```
+
+Ada 30 observasi dan 6 variabel. `Tanggal` terbaca sebagai tanggal-waktu, `Kanal` dan `Jenis_Layanan` sebagai teks, dan tiga variabel lainnya sebagai angka. Agar sesuai maknanya, `Tanggal` diubah menjadi `Date`, `Kanal` dan `Jenis_Layanan` menjadi `factor`, dan ditambahkan kolom `Hari` sebagai nomor observasi (1–30).
+
+```{r s2-tipe}
+df <- df_raw %>%
+  mutate(Tanggal       = as.Date(Tanggal),
+         Kanal         = factor(Kanal, levels = c("Online", "Offline")),
+         Jenis_Layanan = factor(Jenis_Layanan, levels = c("Reguler", "Express", "Premium")),
+         Hari          = row_number())
+```
+
+#### Jenis Data dan Skala Pengukuran
+
+```{r s2-skala}
+data.frame(
+  Variabel = c("Tanggal", "Kanal", "Jenis_Layanan", "Jumlah_Transaksi",
+               "Waktu_Proses_Menit", "Nilai_Transaksi_Juta_Rp"),
+  Jenis    = c("Kuantitatif", "Kualitatif", "Kualitatif", "Kuantitatif", "Kuantitatif", "Kuantitatif"),
+  Diskrit_Kontinu = c("Kontinu", "-", "-", "Diskrit", "Kontinu", "Kontinu"),
+  Skala    = c("Interval", "Nominal", "Ordinal", "Rasio", "Rasio", "Rasio"),
+  Alasan   = c("Selisih tanggal bermakna, tetapi tidak ada titik nol mutlak",
+               "Hanya nama kelompok, tanpa urutan",
+               "Ada tingkatan layanan, tetapi jarak antartingkat tidak terukur",
+               "Hasil menghitung; nol berarti tidak ada transaksi",
+               "Hasil mengukur waktu; 0 menit berarti tidak ada waktu proses",
+               "Nilai uang; Rp0 berarti tidak ada nilai transaksi")
+) %>%
+  tampil("Tabel 2. Jenis data dan skala pengukuran")
+```
+
+#### Missing Value
+
+```{r s2-missing}
+data.frame(Variabel = names(df_raw), Jumlah_Missing = colSums(is.na(df_raw))) %>%
+  tampil("Tabel 3. Jumlah missing value per variabel", digits = 0)
+```
+
+#### Data Duplikat
+
+```{r s2-duplikat}
+sum(duplicated(df_raw))
+sum(duplicated(df$Tanggal))
+```
+
+#### Kesiapan Data
+
+Tidak ada missing value dan tidak ada data duplikat. Setiap tanggal muncul sekali, dan tipe data sudah dirapikan. Dari sisi teknis, dataset **sudah siap dianalisis**.
+
+Meski begitu, ada beberapa nilai yang jauh dari mayoritas data, misalnya waktu proses 88 menit dan nilai transaksi 0,12 juta. Nilai-nilai ini **tidak dihapus** pada tahap awal dan diperiksa lebih lanjut di bagian 2.5.
+
+#### Interpretasi
+
+1. *Transaksi Online vs Offline:*
+Kanal online biasanya punya rata-rata transaksi lebih tinggi karena lebih praktis. Namun, datanya sering kali naik-turun secara ekstrem (misal loncat saat promo). Sementara kanal offline transaksinya cenderung lebih stabil dan polanya gitu-gitu saja.
+2. *Waktu Proses:*
+Online dominan serba cepat dalam hitungan detik, meski sesekali bisa ketarik lama kalau server down. Offline butuh waktu lebih panjang dan bervariasi karena tergantung antrean fisik serta pelayanan manual.
+3. *Layanan Bernilai Tinggi:*
+Layanan seperti transfer atau investasi umumnya menyumbang nominal uang paling besar meski frekuensinya lebih jarang, beda dengan layanan top-up atau bayar tagihan yang sering dipakai tapi nilainya kecil-kecil.
+4. *Hubungan Frekuensi & Nilai Uang:*
+Jika korelasinya positif, makin sering orang transaksi, makin besar total uang yang masuk. Jika negatif, berarti transaksi yang rame itu dominan nilai receh.
+5. *Pengaruh Volume Transaksi ke Durasi Proses:*
+Jika makin rame bikin makin lambat, artinya sistem atau petugas mulai keteteran. Seberapa kuat dampaknya terlihat dari tingkat korelasi data; jika lemah, berarti lemotnya proses lebih dipengaruhi faktor lain seperti koneksi internet.
+6. *Data Aneh (Outlier):*
+Merupakan titik data yang melenceng jauh dari kebiasaan. Contohnya transaksi cuma sedikit tapi prosesnya berjam-jam (tanda sistem error), atau jumlah transaksi mendadak melonjak tajam dalam semalam (bisa karena promo besar atau indikasi kecurangan/bot).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Univariate Analysis dan Statistika Deskriptif
+
+#### Tabel Frekuensi
+
+```{r s2-frekuensi}
+tampil(tabel_frek(df$Kanal), "Tabel 4. Frekuensi Kanal", digits = 3)
+tampil(tabel_frek(df$Jenis_Layanan), "Tabel 5. Frekuensi Jenis Layanan", digits = 3)
+```
+
+Online dan Offline sama-sama muncul 15 hari (50%). Reguler, Express, dan Premium juga sama, masing-masing 10 hari (33,3%). Kolom kumulatif pada `Jenis_Layanan` lebih berarti karena kategorinya berurutan, sedangkan pada `Kanal` (nominal) hanya jumlah berjalan.
+
+#### Statistika Deskriptif Variabel Numerik
+
+Data diubah ke bentuk panjang (`long`) supaya ketiga variabel bisa dihitung dan digambar sekaligus. Data ini dipakai juga di bagian-bagian berikutnya.
+
+```{r s2-deskriptif}
+long <- df %>%
+  pivot_longer(all_of(num_vars), names_to = "Variabel", values_to = "Nilai") %>%
+  mutate(Variabel = factor(Variabel, levels = num_vars, labels = label_num))
+
+long %>%
+  group_by(Variabel) %>%
+  summarise(Mean = mean(Nilai), Median = median(Nilai), Modus = modus(Nilai),
+            Min = min(Nilai), Maks = max(Nilai), Range = Maks - Min,
+            Varians = var(Nilai), SD = sd(Nilai), CV_persen = SD / Mean * 100) %>%
+  tampil("Tabel 6. Statistika deskriptif variabel numerik (n = 30)")
+```
+
+Rata-rata jumlah transaksi 73,83 per hari (median 72), rentang 12 sampai 145. Rata-rata waktu proses 32,66 menit (median 30,10), rentang 3,5 sampai 88 menit. Rata-rata nilai transaksi 3,18 juta (median 3,13), rentang 0,12 sampai 9,8 juta. Modus kurang berguna di sini karena tidak ada nilai tunggal yang menonjol; pada jumlah transaksi misalnya, ada empat nilai yang sama-sama muncul dua kali (50, 71, 73, dan 87).
+
+#### Bar Chart Kanal
+
+```{r s2-bar-kanal, fig.height = 4}
+ggplot(df, aes(x = Kanal, fill = Kanal)) +
+  geom_bar(width = 0.6) +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
+  scale_fill_manual(values = warna_kanal) +
+  labs(title = "Frekuensi Hari Transaksi per Kanal (n = 30)",
+       x = "Kanal Transaksi", y = "Jumlah Hari") +
+  theme(legend.position = "none")
+```
+
+##### Interpretasi
+
+Kedua batang sama tinggi (15 hari), jadi tidak ada kanal yang lebih sering muncul. Perbandingan Online dan Offline di bagian berikutnya dibuat dengan jumlah data yang sama.
+
+#### Pie Chart Jenis Layanan
+
+```{r s2-pie-layanan, fig.height = 4.5}
+df %>%
+  count(Jenis_Layanan) %>%
+  mutate(Persen = round(n / sum(n) * 100, 1)) %>%
+  ggplot(aes(x = "", y = n, fill = Jenis_Layanan)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(n, " hari (", Persen, "%)")),
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_manual(values = warna_layanan) +
+  labs(title = "Proporsi Jenis Layanan (n = 30)", fill = "Jenis Layanan") +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+```
+
+##### Interpretasi
+
+Ketiga irisan sama besar (33,3%), jadi tidak ada jenis layanan yang paling banyak muncul. Pie chart cocok dipakai karena kategorinya hanya tiga dan yang dilihat adalah komposisi terhadap keseluruhan.
+
+#### Histogram Variabel Numerik
+
+```{r s2-histogram}
+ggplot(long, aes(x = Nilai)) +
+  geom_histogram(bins = 6, fill = "#FADBD8", color = "#8B0000") +
+  facet_wrap(~ Variabel, scales = "free") +
+  labs(title = "Distribusi Variabel Numerik (n = 30)",
+       x = "Nilai (satuan sesuai variabel)", y = "Frekuensi (hari)")
+```
+
+Jumlah ini dipilih dengan aturan Sturges, k = 1 + log₂(30) ≈ 5,9, dibulatkan menjadi **6 bin**. Untuk 30 data, jumlah ini cukup memperlihatkan bentuk sebaran. Bin yang terlalu banyak membuat tiap batang hanya berisi 1–2 data, sedangkan bin yang terlalu sedikit menutupi nilai ekstrem. Setiap panel memakai skala sendiri karena satuannya berbeda.
+
+##### Interpretasi
+
+Pada ketiga variabel, kebanyakan data berkumpul di tengah dan ada batang yang berdiri sendiri di ujung:
+
+- **Jumlah transaksi:** batang terpisah di 145 (kanan) dan 12 (kiri).
+- **Waktu proses:** batang tunggal di sekitar 88 menit, dan satu nilai sangat kecil (3,5 menit).
+- **Nilai transaksi:** sebagian besar di kisaran 2–4 juta, lalu satu nilai sekitar 9,8 juta dan satu di dekat nol (0,12 juta).
+
+#### Box Plot Variabel Numerik
+
+```{r s2-boxplot}
+ggplot(long, aes(x = "", y = Nilai)) +
+  geom_boxplot(fill = "#FADBD8", color = "#8B0000", outlier.color = "red", width = 0.5) +
+  facet_wrap(~ Variabel, scales = "free_y") +
+  labs(title = "Sebaran dan Outlier Variabel Numerik (n = 30)",
+       x = NULL, y = "Nilai (satuan sesuai variabel)")
+```
+
+##### Interpretasi
+
+Setiap panel memakai sumbu-y sendiri supaya perbedaan satuan tidak menyesatkan. Masing-masing variabel punya dua titik merah di luar whisker, satu di atas dan satu di bawah. Pada waktu proses dan nilai transaksi, kotaknya sempit dibanding rentang totalnya, artinya separuh data di tengah cukup rapat dan sebaran yang lebar sebagian besar datang dari nilai ekstrem.
+
+#### Jawaban Pertanyaan Interpretasi 2.2
+
+1. **Kanal dengan frekuensi tertinggi.** Tidak ada, Online dan Offline sama-sama 15 hari (50%).
+2. **Jenis layanan terbanyak.** Tidak ada yang dominan, masing-masing 10 hari (33,3%).
+3. **Bentuk distribusi.**
+  - Jumlah transaksi: mean (73,83) hanya sedikit di atas median (72), jadi mendekati simetris dengan sedikit condong ke kanan.
+  - Waktu proses: mean (32,66) jelas lebih besar dari median (30,10), jadi **right-skewed**. Nilai 88 menit menarik mean ke kanan.
+  - Nilai transaksi: mean (3,18) dan median (3,13) hampir sama, jadi bagian tengahnya simetris, tetapi ekor kanannya panjang karena satu nilai 9,8 juta.
+4. **Variabel paling bervariasi.** Menurut koefisien variasi, yang paling bervariasi adalah nilai transaksi (CV 45,46%), disusul waktu proses (41,23%) dan jumlah transaksi (33,16%). Jika hanya melihat SD, jumlah transaksi tampak paling bervariasi (24,48), padahal angkanya besar karena rata-ratanya memang besar. CV membagi SD dengan mean sehingga tanpa satuan, jadi adil untuk membandingkan variabel yang satuannya berbeda (transaksi, menit, juta rupiah).
+5. **Nilai ekstrem.**
+  - Jumlah transaksi: 145 pada 8 Januari (observasi ke-8) dan 12 pada 23 Januari (ke-23).
+  - Waktu proses: 88 menit pada 12 Januari (ke-12) dan 3,5 menit pada 26 Januari (ke-26).
+  - Nilai transaksi: 9,8 juta pada 17 Januari (ke-17) dan 0,12 juta pada 28 Januari (ke-28).
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Bivariate Analysis
+
+#### Ringkasan per Kanal
+
+```{r s2-ringkas-kanal}
+long %>%
+  group_by(Variabel, Kanal) %>%
+  summarise(Mean = mean(Nilai), Median = median(Nilai), SD = sd(Nilai), IQR = IQR(Nilai)) %>%
+  tampil("Tabel 7. Mean, median, SD, dan IQR per kanal (n = 15 per kanal)")
+```
+
+#### Rata-rata Jumlah Transaksi per Kanal
+
+```{r s2-bar-mean-kanal, fig.height = 4}
+df %>%
+  group_by(Kanal) %>%
+  summarise(Rata2 = mean(Jumlah_Transaksi)) %>%
+  ggplot(aes(x = Kanal, y = Rata2, fill = Kanal)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = round(Rata2, 2)), vjust = -0.5) +
+  scale_fill_manual(values = warna_kanal) +
+  labs(title = "Rata-rata Jumlah Transaksi Harian per Kanal",
+       x = "Kanal Transaksi", y = "Rata-rata Transaksi per Hari") +
+  theme(legend.position = "none")
+```
+
+##### Interpretasi
+
+Rata-rata Offline (74,80) sedikit lebih tinggi daripada Online (72,87), selisihnya kurang dari 2 transaksi per hari. Karena sumbu-y mulai dari nol, kedua batang tampak hampir sama.
+
+#### Waktu Proses per Kanal
+
+```{r s2-box-waktu-kanal, fig.height = 4}
+ggplot(df, aes(x = Kanal, y = Waktu_Proses_Menit, fill = Kanal)) +
+  geom_boxplot(width = 0.5, outlier.color = "red") +
+  scale_fill_manual(values = warna_kanal) +
+  labs(title = "Distribusi Waktu Proses per Kanal (n = 15 per kanal)",
+       x = "Kanal Transaksi", y = "Waktu Proses (menit)") +
+  theme(legend.position = "none")
+```
+
+##### Interpretasi
+
+Median kedua kanal berdekatan (Online 31,8 menit, Offline 29,7 menit). Bedanya ada di sebaran: kotak Offline lebih lebar (IQR 14,25 vs 8,75 menit) dan Offline punya nilai ekstrem 88 menit. Online justru punya nilai ekstrem di bawah, yaitu 3,5 menit.
+
+#### Nilai Transaksi per Jenis Layanan
+
+```{r s2-box-nilai-layanan, fig.height = 4}
+ggplot(df, aes(x = Jenis_Layanan, y = Nilai_Transaksi_Juta_Rp, fill = Jenis_Layanan)) +
+  geom_boxplot(width = 0.5, outlier.color = "red") +
+  scale_fill_manual(values = warna_layanan) +
+  labs(title = "Nilai Transaksi per Jenis Layanan (n = 10 per layanan)",
+       x = "Jenis Layanan", y = "Nilai Transaksi (juta Rp)") +
+  theme(legend.position = "none")
+
+df %>%
+  group_by(Jenis_Layanan) %>%
+  summarise(Mean = mean(Nilai_Transaksi_Juta_Rp), Median = median(Nilai_Transaksi_Juta_Rp)) %>%
+  tampil("Tabel 8. Nilai transaksi (juta Rp) per jenis layanan")
+```
+
+##### Interpretasi
+
+Median nilai transaksi naik dari Reguler (sekitar 2,9 juta) ke Express (3,06 juta) lalu Premium (3,30 juta). Premium juga paling beragam, karena kedua nilai ekstrem nilai transaksi (9,8 dan 0,12 juta) sama-sama berasal dari layanan Premium di kanal Offline.
+
+#### Jumlah Transaksi vs Nilai Transaksi
+
+```{r s2-scatter-nilai, fig.height = 4.5}
+cor(df$Jumlah_Transaksi, df$Nilai_Transaksi_Juta_Rp)
+
+ggplot(df, aes(x = Jumlah_Transaksi, y = Nilai_Transaksi_Juta_Rp)) +
+  geom_point(color = "#B22222", size = 2.8) +
+  geom_smooth(method = "lm", formula = y ~ x, color = "#8B0000", fill = "#FADBD8") +
+  labs(title = "Jumlah Transaksi vs Nilai Transaksi (n = 30)",
+       x = "Jumlah Transaksi per Hari", y = "Nilai Transaksi (juta Rp)")
+```
+
+##### Interpretasi
+
+Garis regresi naik tipis dengan r = 0,11, jadi hubungan positifnya sangat lemah. Polanya tertutup oleh beberapa titik yang menyimpang: 17 Jan (74 transaksi tetapi nilainya 9,8 juta), 28 Jan (96 transaksi tetapi hanya 0,12 juta), 23 Jan (hanya 12 transaksi tetapi nilainya 3,58 juta), dan 8 Jan (145 transaksi dengan nilai 3,16 juta). Pengaruh titik-titik ini diuji di bagian 2.4.
+
+#### Jumlah Transaksi vs Waktu Proses
+
+```{r s2-scatter-waktu, fig.height = 4.5}
+cor(df$Jumlah_Transaksi, df$Waktu_Proses_Menit)
+
+ggplot(df, aes(x = Jumlah_Transaksi, y = Waktu_Proses_Menit)) +
+  geom_point(color = "#FC8D59", size = 2.8) +
+  geom_smooth(method = "lm", formula = y ~ x, color = "#8B0000", fill = "#FADBD8") +
+  labs(title = "Jumlah Transaksi vs Waktu Proses (n = 30)",
+       x = "Jumlah Transaksi per Hari", y = "Waktu Proses (menit)")
+```
+
+##### Interpretasi
+
+Garis regresi turun dengan r = −0,36 (negatif, lemah sampai sedang): hari dengan transaksi lebih banyak cenderung punya waktu proses lebih singkat. Titik yang paling menyimpang adalah 12 Jan (88 menit pada 67 transaksi) dan 26 Jan (3,5 menit pada 100 transaksi), ditambah 8 Jan dan 23 Jan yang berada di ujung sumbu-x.
+
+#### Jawaban Pertanyaan Interpretasi 2.3
+
+1. **Online vs Offline (jumlah transaksi).** Rata-rata Online (72,87) **tidak** lebih tinggi daripada Offline (74,80), dan mediannya juga lebih kecil (71 vs 74). SD Online lebih besar (29,26 vs 19,58), tetapi itu karena dua nilai ekstrem Online (145 dan 12). IQR Online malah sedikit lebih kecil (25 vs 28,5), jadi separuh data tengah kedua kanal tersebar mirip.
+2. **Waktu proses antarkanal.** Pusatnya mirip (median 31,8 vs 29,7 menit), tetapi Offline lebih menyebar (SD 16,68; IQR 14,25) dibanding Online (SD 9,40; IQR 8,75), dan Offline punya kasus sangat lambat (88 menit).
+3. **Nilai transaksi per layanan.** Premium paling tinggi (median 3,30 juta; mean 3,60 juta), diikuti Express lalu Reguler.
+4. **Jumlah dan nilai transaksi.** Cenderung positif, tetapi sangat lemah pada data lengkap (r = 0,11).
+5. **Jumlah transaksi dan waktu proses.** Arahnya negatif (r = −0,36): makin banyak transaksi, waktu proses cenderung makin singkat. Kekuatannya lemah sampai sedang.
+6. **Observasi yang menyimpang.** Ada enam, yaitu 8, 12, 17, 23, 26, dan 28 Januari. Keenamnya melemahkan pola linear yang sebenarnya terlihat pada 24 hari lainnya.
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Multivariate Analysis
+
+#### Scatter Plot Multivariat
+
+```{r s2-scatter-multi, fig.height = 5}
+ggplot(df, aes(x = Jumlah_Transaksi, y = Nilai_Transaksi_Juta_Rp, color = Kanal)) +
+  geom_point(aes(size = Waktu_Proses_Menit), alpha = 0.75) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) +
+  scale_color_manual(values = c(Online = "#FC8D59", Offline = "#8B0000")) +
+  labs(title = "Jumlah vs Nilai Transaksi per Kanal",
+       subtitle = "Ukuran titik = waktu proses",
+       x = "Jumlah Transaksi per Hari", y = "Nilai Transaksi (juta Rp)",
+       color = "Kanal", size = "Waktu Proses (menit)")
+```
+
+Untuk membandingkan, korelasi per kanal juga dihitung tanpa 6 hari ekstrem (daftar harinya dibuktikan di bagian 2.5).
+
+```{r s2-kor-kanal}
+hari_ekstrem <- c(8, 12, 17, 23, 26, 28)
+df_normal    <- filter(df, !Hari %in% hari_ekstrem)
+
+bind_rows(
+  df %>% group_by(Kanal) %>%
+    summarise(r = cor(Jumlah_Transaksi, Nilai_Transaksi_Juta_Rp)) %>%
+    mutate(Data = "Semua data"),
+  df_normal %>% group_by(Kanal) %>%
+    summarise(r = cor(Jumlah_Transaksi, Nilai_Transaksi_Juta_Rp)) %>%
+    mutate(Data = "Tanpa 6 hari ekstrem")
+) %>%
+  tampil("Tabel 9. Korelasi jumlah dan nilai transaksi per kanal")
+```
+
+##### Interpretasi
+
+Di kedua kanal hubungannya positif tetapi lemah (Online r = 0,28; Offline r = 0,11). Garis Offline lebih landai karena dua titik Offline yang ekstrem (9,8 juta dan 0,12 juta). Titik terbesar (88 menit) adalah hari Offline dengan nilai transaksi biasa, sedangkan titik Online terkecil (3,5 menit) terjadi pada hari dengan 100 transaksi. Tanpa hari ekstrem, hubungan di kedua kanal menjadi kuat (Online 0,81; Offline 0,93).
+
+#### Box Plot Waktu Proses per Jenis Layanan dan Kanal
+
+```{r s2-box-multi, fig.height = 5}
+ggplot(df, aes(x = Jenis_Layanan, y = Waktu_Proses_Menit, fill = Kanal)) +
+  geom_boxplot(outlier.color = "red") +
+  scale_fill_manual(values = warna_kanal) +
+  labs(title = "Waktu Proses per Jenis Layanan dan Kanal (n = 5 per kombinasi)",
+       x = "Jenis Layanan", y = "Waktu Proses (menit)", fill = "Kanal")
+
+df %>%
+  group_by(Jenis_Layanan, Kanal) %>%
+  summarise(Mean = mean(Waktu_Proses_Menit), Median = median(Waktu_Proses_Menit),
+            SD = sd(Waktu_Proses_Menit)) %>%
+  tampil("Tabel 10. Waktu proses (menit) per kombinasi layanan dan kanal")
+```
+
+##### Interpretasi
+
+Tiap kombinasi hanya berisi 5 hari, jadi polanya dibaca sebagai petunjuk, bukan kesimpulan pasti. Waktu proses tertinggi ada pada **Express–Offline** (median 42,7 menit, termasuk kasus 88 menit), padahal Express seharusnya cepat. Sebaliknya **Express–Online** punya median 28,6 menit dan kasus tercepat 3,5 menit. **Reguler–Online** juga cukup lambat (median 36,3 menit), sedangkan **Premium** di kedua kanal paling cepat dan stabil (median 29,4 menit Online dan 26,9 menit Offline).
+
+#### Line Chart Tren Harian
+
+```{r s2-line, fig.height = 6}
+df %>%
+  select(Tanggal, Jumlah_Transaksi, Waktu_Proses_Menit) %>%
+  pivot_longer(-Tanggal, names_to = "Variabel", values_to = "Nilai") %>%
+  ggplot(aes(x = Tanggal, y = Nilai, color = Variabel)) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, linetype = "dashed") +
+  facet_wrap(~ Variabel, ncol = 1, scales = "free_y") +
+  scale_color_manual(values = c(Jumlah_Transaksi = "#8B0000", Waktu_Proses_Menit = "#FC8D59")) +
+  labs(title = "Tren Harian Jumlah Transaksi dan Waktu Proses (Januari 2026)",
+       subtitle = "Garis putus-putus = garis tren linear",
+       x = "Tanggal", y = "Nilai") +
+  theme(legend.position = "none")
+
+coef(lm(Jumlah_Transaksi ~ Hari, data = df))["Hari"]
+coef(lm(Waktu_Proses_Menit ~ Hari, data = df))["Hari"]
+```
+
+##### Interpretasi
+
+Jumlah transaksi cenderung **naik**, sekitar 1,41 transaksi lebih banyak setiap hari. Lonjakan 8 Jan dan penurunan tajam 23 Jan tampak sebagai puncak dan lembah tunggal. Waktu proses cenderung **turun**, sekitar 0,94 menit lebih singkat setiap hari, dengan lonjakan sesaat pada 12 Jan dan penurunan ekstrem pada 26 Jan. Sebagai gambaran, rata-rata jumlah transaksi naik dari 62,9 pada hari 1–10 menjadi 85,4 pada hari 21–30, sedangkan rata-rata waktu proses turun dari 39,3 menjadi 22,4 menit.
+
+#### Correlation Heatmap
+
+```{r s2-heatmap, fig.height = 5, fig.width = 6}
+kor <- cor(df[num_vars])
+colnames(kor) <- rownames(kor) <- label_num
+
+corrplot(kor, method = "color", addCoef.col = "black", tl.col = "black",
+         col = colorRampPalette(c("#FDD49E", "white", "#8B0000"))(200),
+         tl.srt = 25, title = "Korelasi Antar Variabel Numerik (n = 30)",
+         mar = c(0, 0, 2, 0))
+
+round(cor(df[num_vars], method = "spearman"), 2)
+round(cor(df_normal[num_vars]), 2)
+```
+
+##### Interpretasi
+
+Pada data lengkap, korelasi terkuat adalah **Jumlah Transaksi–Waktu Proses (r = −0,36)** dan arahnya negatif. Pasangan lainnya lebih lemah: Waktu Proses–Nilai Transaksi (−0,20) dan Jumlah–Nilai Transaksi (0,11). Dua tabel pembanding menunjukkan besarnya pengaruh nilai ekstrem. Spearman, yang berbasis peringkat dan tahan outlier, memberi −0,73, 0,60, dan −0,71. Pearson tanpa 6 hari ekstrem memberi −0,95, 0,89, dan −0,88. Jadi hubungan di sebagian besar hari sebenarnya jauh lebih kuat daripada yang terlihat di heatmap.
+
+#### Jawaban Pertanyaan Interpretasi 2.4
+
+1. **Pola jumlah dan nilai transaksi per kanal.** Arahnya sama-sama positif. Offline tampak lebih lemah (r = 0,11 vs 0,28) karena dua nilai ekstrem Offline. Tanpa hari ekstrem, keduanya sama-sama kuat (Online 0,81; Offline 0,93).
+2. **Waktu proses tiap kombinasi.** Express–Offline paling lambat dan paling tidak stabil, Reguler–Online juga relatif lambat, sedangkan Premium di kedua kanal paling cepat dan konsisten.
+3. **Tren jumlah transaksi.** Naik, sekitar 1,41 transaksi per hari.
+4. **Tren waktu proses.** Turun, sekitar 0,94 menit per hari.
+5. **Korelasi terkuat.** Jumlah Transaksi–Waktu Proses, berarah negatif (r = −0,36 pada data lengkap, dan −0,95 tanpa hari ekstrem).
+6. **Apakah cukup untuk menyimpulkan sebab-akibat?** Belum cukup. Data ini hasil pengamatan, bukan eksperimen. Jumlah transaksi dan waktu proses sama-sama berubah mengikuti waktu (satu naik, satu turun), jadi keduanya bisa dipengaruhi hal lain, misalnya perbaikan sistem atau penambahan petugas. Sebab-akibat baru bisa dibuktikan lewat eksperimen atau data tambahan.
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Outlier, Anomaly Detection, dan Standardisasi
+
+Batas IQR dan z-score dihitung sekaligus untuk ketiga variabel, lalu disimpan di `long_out`.
+
+```{r s2-outlier}
+long_out <- long %>%
+  group_by(Variabel) %>%
+  mutate(Q1 = quantile(Nilai, 0.25),
+         Q3 = quantile(Nilai, 0.75),
+         IQR = Q3 - Q1,
+         Batas_Bawah = Q1 - 1.5 * IQR,
+         Batas_Atas  = Q3 + 1.5 * IQR,
+         Outlier_IQR = Nilai < Batas_Bawah | Nilai > Batas_Atas,
+         z = (Nilai - mean(Nilai)) / sd(Nilai),
+         Status_z = case_when(abs(z) > 3 ~ "Outlier ekstrem",
+                              abs(z) > 2 ~ "Perlu diperhatikan",
+                              TRUE ~ "Normal")) %>%
+  ungroup()
+```
+
+#### Metode IQR
+
+```{r s2-iqr}
+long_out %>%
+  distinct(Variabel, Q1, Q3, IQR, Batas_Bawah, Batas_Atas) %>%
+  tampil("Tabel 11. Q1, Q3, IQR, dan batas outlier", digits = 3)
+
+long_out %>%
+  filter(Outlier_IQR) %>%
+  select(Variabel, Observasi_ke = Hari, Tanggal, Kanal, Jenis_Layanan, Nilai) %>%
+  tampil("Tabel 12. Observasi di luar batas IQR")
+
+setequal(hari_ekstrem, unique(long_out$Hari[long_out$Outlier_IQR]))
+```
+
+#### Standardisasi Z-Score
+
+```{r s2-zscore}
+long_out %>%
+  filter(abs(z) > 2) %>%
+  select(Variabel, Observasi_ke = Hari, Tanggal, Nilai, z, Status_z) %>%
+  tampil("Tabel 13. Observasi dengan |z| > 2")
+
+long_out %>%
+  group_by(Variabel) %>%
+  summarise(Mean_z = mean(z), SD_z = sd(z)) %>%
+  tampil("Tabel 14. Mean dan SD setelah standardisasi", digits = 3)
+```
+
+#### Perbandingan Jumlah Outlier: IQR vs Z-Score
+
+```{r s2-banding}
+long_out %>%
+  group_by(Variabel) %>%
+  summarise(IQR = sum(Outlier_IQR),
+            Z_lebih_2 = sum(abs(z) > 2),
+            Z_lebih_3 = sum(abs(z) > 3)) %>%
+  tampil("Tabel 15. Jumlah outlier menurut IQR dan z-score", digits = 0)
+```
+
+#### Box Plot Pendukung
+
+```{r s2-box-outlier}
+ggplot(long_out, aes(x = "", y = Nilai)) +
+  geom_boxplot(fill = "#FADBD8", color = "#8B0000", outlier.color = "red", width = 0.5) +
+  geom_text(data = filter(long_out, Outlier_IQR),
+            aes(label = format(Tanggal, "%d %b")), hjust = -0.4, size = 3.3) +
+  facet_wrap(~ Variabel, scales = "free_y") +
+  labs(title = "Outlier Metode IQR pada Setiap Variabel Numerik (n = 30)",
+       x = NULL, y = "Nilai (satuan sesuai variabel)")
+```
+
+##### Interpretasi
+
+Titik merah pada box plot sama persis dengan observasi di Tabel 12: dua outlier untuk setiap variabel, satu di atas dan satu di bawah whisker, lengkap dengan tanggalnya.
+
+#### Tinjauan Anomali Operasional
+
+Untuk menilai apakah outlier juga janggal secara operasional, nilainya dibandingkan dengan variabel lain pada hari yang sama. Salah satu pembandingnya adalah nilai per transaksi (nilai harian dibagi jumlah transaksi).
+
+```{r s2-anomali}
+df <- df %>%
+  mutate(Nilai_per_Transaksi_RibuRp = Nilai_Transaksi_Juta_Rp * 1000 / Jumlah_Transaksi)
+
+df %>%
+  filter(Hari %in% hari_ekstrem) %>%
+  select(Hari, Tanggal, Kanal, Jenis_Layanan, Jumlah_Transaksi, Waktu_Proses_Menit,
+         Nilai_Transaksi_Juta_Rp, Nilai_per_Transaksi_RibuRp) %>%
+  tampil("Tabel 16. Enam hari ekstrem dan nilai per transaksinya (ribu Rp)")
+
+median(df$Nilai_per_Transaksi_RibuRp)
+```
+
+Nilai per transaksi yang umum (median) sekitar Rp40,7 ribu. Dengan patokan itu, penilaian tiap hari ekstrem adalah sebagai berikut.
+
+| Tanggal | Kanal – Layanan | Nilai ekstrem | Konteks | Penilaian |
+|---|---|---|---|---|
+| 8 Jan | Online – Express | 145 transaksi | Hampir dua kali median, tetapi nilai transaksinya biasa (3,16 juta) | Outlier; cek apakah ada promo atau pencatatan ganda |
+| 12 Jan | Offline – Express | Waktu proses 88 menit | Sekitar tiga kali median, padahal Express seharusnya cepat | **Anomali operasional** (gangguan, antrean, atau sistem lambat) |
+| 17 Jan | Offline – Premium | Nilai 9,8 juta | Sekitar Rp132 ribu per transaksi, tiga kali lipat hari biasa | Outlier yang masih mungkin (transaksi Premium besar); perlu diverifikasi |
+| 23 Jan | Online – Express | 12 transaksi | Nilai tetap 3,58 juta, jadi sekitar Rp298 ribu per transaksi | **Anomali**: volume turun drastis tetapi nilai normal, mungkin pencatatan tidak lengkap |
+| 26 Jan | Online – Express | Waktu proses 3,5 menit | 100 transaksi diproses jauh lebih cepat dari biasanya | **Anomali**: kemungkinan salah catat waktu |
+| 28 Jan | Offline – Premium | Nilai 0,12 juta | 96 transaksi tetapi hanya sekitar Rp1.250 per transaksi | **Anomali logis**: hampir pasti salah input (satuan atau desimal) |
+
+#### Dampak Outlier pada Mean dan SD
+
+```{r s2-dampak}
+data.frame(Variabel    = label_num,
+           Mean_semua  = sapply(df[num_vars], mean),
+           Mean_tanpa  = sapply(df_normal[num_vars], mean),
+           SD_semua    = sapply(df[num_vars], sd),
+           SD_tanpa    = sapply(df_normal[num_vars], sd),
+           row.names = NULL) %>%
+  tampil("Tabel 17. Mean dan SD dengan dan tanpa 6 hari ekstrem")
+```
+
+#### Jawaban Pertanyaan Interpretasi 2.5
+
+1. **Jumlah outlier dan perbedaan metode.** Metode IQR menemukan 2 outlier pada setiap variabel (total 6 observasi). Z-score dengan $|z| > 2$ menandai observasi yang sama. Tetapi dengan $|z| > 3$ hanya 2 yang ekstrem: waktu proses 88 menit (z = 4,11) dan nilai transaksi 9,8 juta (z = 4,58). Perbedaannya muncul karena IQR memakai kuartil yang tidak terpengaruh nilai ekstrem, sedangkan z-score memakai mean dan SD yang ikut tertarik oleh nilai ekstrem itu sendiri. Misalnya, nilai 88 membesarkan SD waktu proses menjadi 13,47, sehingga nilai 3,5 menit hanya mendapat z = −2,17. Pada jumlah transaksi, nilai 145 hanya mencapai z = 2,91.
+2. **Lokasi outlier.** Observasi ke-8 (8 Jan), ke-12 (12 Jan), ke-17 (17 Jan), ke-23 (23 Jan), ke-26 (26 Jan), dan ke-28 (28 Jan).
+3. **Manfaat standardisasi.** Z-score mengubah transaksi, menit, dan juta rupiah menjadi satu satuan yang sama, yaitu berapa SD sebuah nilai berjarak dari rata-ratanya. Hasilnya selalu bermean 0 dan ber-SD 1 (Tabel 14), sehingga keekstreman 145 transaksi bisa dibandingkan langsung dengan 88 menit atau 9,8 juta.
+4. **Outlier belum tentu anomali.** Outlier adalah nilai yang jauh secara statistik. Anomali adalah nilai yang janggal secara logika atau operasional. Transaksi 9,8 juta pada layanan Premium masih mungkin terjadi, jadi itu outlier biasa. Sebaliknya, 96 transaksi senilai 0,12 juta tidak masuk akal, jadi itu anomali, walaupun z-score-nya hanya −2,12.
+5. **Pengaruh outlier.** Terhadap mean pengaruhnya kecil: mean waktu proses 32,66 menjadi 32,40 bila hari ekstrem dikeluarkan. Terhadap SD pengaruhnya besar: jumlah transaksi dari 24,48 menjadi 17,65, waktu proses dari 13,47 menjadi 6,86, dan nilai transaksi dari 1,45 menjadi 0,51. Korelasi juga berubah drastis, misalnya jumlah transaksi dan waktu proses dari −0,36 menjadi −0,95. Secara visual, outlier memperlebar skala sumbu sehingga pola data lainnya tampak rata.
+6. **Dihapus, dipertahankan, atau ditangani?** Pada analisis awal ini outlier **tidak dihapus**. Penanganannya dibedakan menurut penyebabnya:
+  - Data yang jelas salah catat (28 Jan dan 26 Jan) dikonfirmasi ke sumber data lalu dikoreksi.
+  - Kejadian yang nyata (12 Jan, 17 Jan, 8 Jan) dipertahankan, karena penting bagi operasional.
+  - Untuk ringkasan, gunakan ukuran yang tahan outlier (median, IQR, Spearman) dan bandingkan hasil dengan dan tanpa hari ekstrem, seperti pada bagian 2.4 dan Tabel 17.
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Business Insight dan Critical Thinking
+
+```{r s2-insight}
+sum(df$Jumlah_Transaksi)
+sum(df$Nilai_Transaksi_Juta_Rp)
+
+df %>%
+  group_by(Kanal) %>%
+  summarise(Total_Transaksi  = sum(Jumlah_Transaksi),
+            Total_Nilai_Juta = sum(Nilai_Transaksi_Juta_Rp),
+            Rata2_Transaksi  = mean(Jumlah_Transaksi),
+            Median_Waktu     = median(Waktu_Proses_Menit),
+            SD_Waktu         = sd(Waktu_Proses_Menit),
+            SD_Nilai         = sd(Nilai_Transaksi_Juta_Rp)) %>%
+  tampil("Tabel 18. Perbandingan kinerja Online dan Offline")
+```
+
+**1. Gambaran umum.** Selama 30 hari tercatat 2.215 transaksi dengan total nilai 95,37 juta rupiah, tersebar seimbang di dua kanal dan tiga jenis layanan. Aktivitasnya cenderung membaik: jumlah transaksi harian naik sekitar 1,41 per hari, sementara waktu proses turun sekitar 0,94 menit per hari. Pada hari-hari biasa, volume yang lebih tinggi berjalan bersama nilai yang lebih tinggi dan proses yang lebih cepat. Namun ada enam hari dengan nilai ekstrem, dan empat di antaranya terindikasi anomali operasional atau salah catat.
+
+**2. Kanal dengan kinerja lebih baik.** Tidak ada kanal yang unggul di semua hal. Offline sedikit lebih tinggi dalam volume (rata-rata 74,8 vs 72,9 transaksi per hari) dan total nilai (49,92 vs 45,45 juta), dan median waktu prosesnya juga sedikit lebih cepat (29,7 vs 31,8 menit). Online lebih **konsisten**: SD waktu proses 9,40 vs 16,68 menit, dan SD nilai transaksi 0,46 vs 2,02 juta. Total nilai Offline juga terangkat oleh satu hari bernilai 9,8 juta. Indikator yang dipakai adalah ukuran pusat (mean dan median) untuk volume, nilai, dan kecepatan, serta ukuran sebaran (SD) untuk konsistensi layanan.
+
+**3. Apakah transaksi yang lebih banyak selalu berarti kinerja lebih baik?** Tidak. Pada data lengkap, korelasi jumlah dan nilai transaksi hanya 0,11. Tanggal 28 Jan mencatat 96 transaksi tetapi nilainya hanya 0,12 juta, sedangkan 23 Jan hanya 12 transaksi tetapi nilainya 3,58 juta. Kinerja perlu dinilai bersama nilai per transaksi, waktu proses, dan kualitas data, bukan dari volume saja.
+
+**4. Dampak waktu proses yang terlalu tinggi.** Waktu proses yang lama, seperti 88 menit pada layanan Express Offline, bisa membuat antrean menumpuk dan menurunkan kapasitas harian. Layanan Express jadi tidak sesuai janjinya, pelanggan lebih mudah mengeluh, dan sebagian bisa pindah ke pesaing. Variasi waktu proses Offline yang besar membuat pengalaman pelanggan sulit diperkirakan.
+
+**5. Rekomendasi strategis.**
+
+1. **Periksa dan rapikan pencatatan data.** Konfirmasi dan koreksi data tanggal 23, 26, dan 28 Januari, lalu buat aturan validasi otomatis (misalnya batas wajar nilai per transaksi dan waktu proses minimum) supaya salah input langsung terdeteksi.
+2. **Tetapkan target waktu proses (SLA) per jenis layanan, terutama Express di kanal Offline.** Cari penyebab kejadian 12 Januari (88 menit), lalu samakan prosedur Offline agar variasinya mendekati Online.
+3. **Pertahankan faktor yang membuat proses makin cepat dan siapkan kapasitas.** Waktu proses turun bersamaan dengan naiknya volume. Penyebabnya perlu ditelusuri (misalnya perbaikan sistem atau tambahan petugas) agar bisa dipertahankan saat volume terus naik.
+4. **Manfaatkan layanan Premium dan hari-hari lonjakan.** Premium punya median nilai tertinggi, dan transaksi besar 17 Januari menunjukkan adanya pelanggan bernilai tinggi. Lonjakan 8 Januari juga perlu ditelusuri, misalnya apakah karena promo, supaya bisa diulang.
+5. **Pasang pemantauan harian.** Pantau median, IQR, dan peringatan otomatis berdasarkan batas IQR supaya outlier dan anomali cepat ditangani.
+
+<hr style="border: 2px solid black; width: 80%; margin: 50px auto;">
+
+### Catatan Kualitas Laporan
+
+Laporan ini memakai judul bagian bernomor dan daftar isi di bagian atas. Setiap grafik punya judul dan label sumbu, setiap tabel diberi nomor dan keterangan, dan kode diberi komentar singkat. File dapat di-*knit* ulang selama file Excel berada di folder yang sama dengan file Rmd.

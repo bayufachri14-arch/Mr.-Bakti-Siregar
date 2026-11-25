@@ -412,8 +412,8 @@ dipersilahkan melalui kontak dibawah ini!
 
 \bookmarksetup{startatroot}
 
-\chapter{Praktikum: Sampling Distribution dan
-Estimasi}\label{praktikum-sampling-distribution-dan-estimasi}
+\chapter{Praktikum P09: Sampling Distribution dan
+Estimasi}\label{praktikum-p09-sampling-distribution-dan-estimasi}
 
 Introduction to Statistics (SDT-1102) -- Pertemuan 9: Sampling
 Distribution dan Estimasi
@@ -1995,8 +1995,10 @@ mutu \\
 \end{longtable}
 }
 
-Praktikum ini hanya menggunakan base R (tidak memerlukan instalasi paket
-tambahan).
+Perhitungan memakai base R, sedangkan grafik memakai paket
+\textbf{ggplot2} dengan gaya yang sama seperti laporan UTS (tema minimal
+dan palet merah). Jika belum terpasang, jalankan sekali
+\texttt{install.packages("ggplot2")}.
 
 \section{Logika Uji Hipotesis}\label{logika-uji-hipotesis}
 
@@ -2045,10 +2047,13 @@ Jika mesin benar (\(\mu = 250\)), maka menurut CLT
 \NormalTok{se }\OtherTok{\textless{}{-}}\NormalTok{ sigma }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n)}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{10}\NormalTok{)}
 \NormalTok{xbar\_jika\_H0 }\OtherTok{\textless{}{-}} \FunctionTok{replicate}\NormalTok{(}\DecValTok{100000}\NormalTok{, }\FunctionTok{mean}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(n, mu0, sigma)))}
-\FunctionTok{hist}\NormalTok{(xbar\_jika\_H0, }\AttributeTok{breaks =} \DecValTok{60}\NormalTok{, }\AttributeTok{col =} \StringTok{"\#c6dbef"}\NormalTok{, }\AttributeTok{border =} \StringTok{"white"}\NormalTok{, }\AttributeTok{freq =} \ConstantTok{FALSE}\NormalTok{,}
-     \AttributeTok{main =} \StringTok{"Distribusi x{-}bar JIKA mesin bekerja benar (mu = 250)"}\NormalTok{,}
-     \AttributeTok{xlab =} \StringTok{"Rata{-}rata 36 kemasan (gram)"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =} \FunctionTok{c}\NormalTok{(xbar, }\DecValTok{2} \SpecialCharTok{*}\NormalTok{ mu0 }\SpecialCharTok{{-}}\NormalTok{ xbar), }\AttributeTok{col =} \StringTok{"firebrick"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{lty =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Xbar =}\NormalTok{ xbar\_jika\_H0), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Xbar)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =} \FunctionTok{after\_stat}\NormalTok{(density)), }\AttributeTok{bins =} \DecValTok{60}\NormalTok{, }\AttributeTok{fill =} \StringTok{"\#FDD49E"}\NormalTok{, }\AttributeTok{color =} \StringTok{"white"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ xbar, }\AttributeTok{color =} \StringTok{"\#8B0000"}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \DecValTok{2} \SpecialCharTok{*}\NormalTok{ mu0 }\SpecialCharTok{{-}}\NormalTok{ xbar, }\AttributeTok{color =} \StringTok{"\#8B0000"}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribusi x{-}bar JIKA mesin bekerja benar (mu = 250)"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Rata{-}rata 36 kemasan (gram)"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Kepadatan"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2218,30 +2223,29 @@ dan daerah penolakan, ditentukan oleh \(\alpha\) dan arah uji.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{gambar\_daerah }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(arah, judul, }\AttributeTok{alpha =} \FloatTok{0.05}\NormalTok{) \{}
-\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{400}\NormalTok{)}
-  \FunctionTok{plot}\NormalTok{(x, }\FunctionTok{dnorm}\NormalTok{(x), }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{main =}\NormalTok{ judul, }\AttributeTok{xlab =} \StringTok{"z"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{""}\NormalTok{, }\AttributeTok{yaxt =} \StringTok{"n"}\NormalTok{)}
-\NormalTok{  arsir }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(a, b) }\FunctionTok{polygon}\NormalTok{(}\FunctionTok{c}\NormalTok{(a, }\FunctionTok{seq}\NormalTok{(a, b, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{), b),}
-                                  \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{dnorm}\NormalTok{(}\FunctionTok{seq}\NormalTok{(a, b, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)), }\DecValTok{0}\NormalTok{),}
-                                  \AttributeTok{col =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.8}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.5}\NormalTok{), }\AttributeTok{border =} \ConstantTok{NA}\NormalTok{)}
-  \ControlFlowTok{if}\NormalTok{ (arah }\SpecialCharTok{==} \StringTok{"dua"}\NormalTok{)   \{ k }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha }\SpecialCharTok{/} \DecValTok{2}\NormalTok{); }\FunctionTok{arsir}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\SpecialCharTok{{-}}\NormalTok{k); }\FunctionTok{arsir}\NormalTok{(k, }\DecValTok{4}\NormalTok{) \}}
-  \ControlFlowTok{if}\NormalTok{ (arah }\SpecialCharTok{==} \StringTok{"kanan"}\NormalTok{) \{ k }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha); }\FunctionTok{arsir}\NormalTok{(k, }\DecValTok{4}\NormalTok{) \}}
-  \ControlFlowTok{if}\NormalTok{ (arah }\SpecialCharTok{==} \StringTok{"kiri"}\NormalTok{)  \{ k }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(alpha); }\FunctionTok{arsir}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, k) \}}
-\NormalTok{\}}
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\FunctionTok{gambar\_daerah}\NormalTok{(}\StringTok{"dua"}\NormalTok{, }\StringTok{"Dua arah (1,96)"}\NormalTok{)}
-\FunctionTok{gambar\_daerah}\NormalTok{(}\StringTok{"kanan"}\NormalTok{, }\StringTok{"Kanan (1,645)"}\NormalTok{)}
-\FunctionTok{gambar\_daerah}\NormalTok{(}\StringTok{"kiri"}\NormalTok{, }\StringTok{"Kiri ({-}1,645)"}\NormalTok{)}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{800}\NormalTok{)}
+\NormalTok{label\_arah }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Dua arah (±1,96)"}\NormalTok{, }\StringTok{"Kanan (1,645)"}\NormalTok{, }\StringTok{"Kiri ({-}1,645)"}\NormalTok{)}
+
+\NormalTok{daerah }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Panel =}\NormalTok{ label\_arah[}\DecValTok{1}\NormalTok{], }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{tolak =} \FunctionTok{abs}\NormalTok{(x) }\SpecialCharTok{\textgreater{}=} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha }\SpecialCharTok{/} \DecValTok{2}\NormalTok{)),}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Panel =}\NormalTok{ label\_arah[}\DecValTok{2}\NormalTok{], }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{tolak =}\NormalTok{ x }\SpecialCharTok{\textgreater{}=} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha)),}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Panel =}\NormalTok{ label\_arah[}\DecValTok{3}\NormalTok{], }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{tolak =}\NormalTok{ x }\SpecialCharTok{\textless{}=} \FunctionTok{qnorm}\NormalTok{(alpha))}
+\NormalTok{)}
+\NormalTok{daerah}\SpecialCharTok{$}\NormalTok{y     }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(daerah}\SpecialCharTok{$}\NormalTok{x)}
+\NormalTok{daerah}\SpecialCharTok{$}\NormalTok{Panel }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(daerah}\SpecialCharTok{$}\NormalTok{Panel, }\AttributeTok{levels =}\NormalTok{ label\_arah)}
+\NormalTok{daerah}\SpecialCharTok{$}\NormalTok{ekor  }\OtherTok{\textless{}{-}} \FunctionTok{paste}\NormalTok{(daerah}\SpecialCharTok{$}\NormalTok{Panel, daerah}\SpecialCharTok{$}\NormalTok{x }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{)   }\CommentTok{\# pisahkan ekor kiri dan kanan}
+
+\FunctionTok{ggplot}\NormalTok{(daerah, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_ribbon}\NormalTok{(}\AttributeTok{data =} \FunctionTok{subset}\NormalTok{(daerah, tolak), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{ymin =} \DecValTok{0}\NormalTok{, }\AttributeTok{ymax =}\NormalTok{ y, }\AttributeTok{group =}\NormalTok{ ekor),}
+              \AttributeTok{fill =} \StringTok{"\#B30000"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{0.9}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ Panel) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"z"}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_blank}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
 \pandocbounded{\includegraphics[keepaspectratio]{chapters/bab-2_files/figure-pdf/unnamed-chunk-5-1.pdf}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
 Daerah merah adalah \textbf{daerah penolakan}, luasnya
 \(\alpha = 0{,}05\). Pada uji dua arah, \(\alpha\) dibagi dua ke kedua
@@ -2284,15 +2288,20 @@ Kiri & \(P(Z \le z)\) \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{400}\NormalTok{)}
-\FunctionTok{plot}\NormalTok{(x, }\FunctionTok{dnorm}\NormalTok{(x), }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"z"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{""}\NormalTok{, }\AttributeTok{yaxt =} \StringTok{"n"}\NormalTok{,}
-     \AttributeTok{main =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"P{-}value dua arah = luas kedua ekor = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(p\_dua, }\DecValTok{4}\NormalTok{)))}
-\ControlFlowTok{for}\NormalTok{ (bts }\ControlFlowTok{in} \FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\SpecialCharTok{{-}}\FunctionTok{abs}\NormalTok{(z\_hitung)), }\FunctionTok{c}\NormalTok{(}\FunctionTok{abs}\NormalTok{(z\_hitung), }\DecValTok{4}\NormalTok{))) \{}
-\NormalTok{  xs }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(bts[}\DecValTok{1}\NormalTok{], bts[}\DecValTok{2}\NormalTok{], }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
-  \FunctionTok{polygon}\NormalTok{(}\FunctionTok{c}\NormalTok{(bts[}\DecValTok{1}\NormalTok{], xs, bts[}\DecValTok{2}\NormalTok{]), }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{dnorm}\NormalTok{(xs), }\DecValTok{0}\NormalTok{), }\AttributeTok{col =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.2}\NormalTok{, }\FloatTok{0.4}\NormalTok{, }\FloatTok{0.8}\NormalTok{, }\FloatTok{0.5}\NormalTok{), }\AttributeTok{border =} \ConstantTok{NA}\NormalTok{)}
-\NormalTok{\}}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{1.96}\NormalTok{, }\FloatTok{1.96}\NormalTok{), }\AttributeTok{lty =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =} \StringTok{"firebrick"}\NormalTok{)}
-\FunctionTok{text}\NormalTok{(z\_hitung, }\FloatTok{0.12}\NormalTok{, }\AttributeTok{labels =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"z = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(z\_hitung, }\DecValTok{2}\NormalTok{)), }\AttributeTok{pos =} \DecValTok{2}\NormalTok{)}
+\NormalTok{x   }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{800}\NormalTok{)}
+\NormalTok{df\_p }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =} \FunctionTok{dnorm}\NormalTok{(x))}
+\NormalTok{df\_p}\SpecialCharTok{$}\NormalTok{ekor }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(df\_p}\SpecialCharTok{$}\NormalTok{x }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"kiri"}\NormalTok{, }\StringTok{"kanan"}\NormalTok{)}
+\NormalTok{ekor\_p }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(df\_p, }\FunctionTok{abs}\NormalTok{(x) }\SpecialCharTok{\textgreater{}=} \FunctionTok{abs}\NormalTok{(z\_hitung))}
+
+\FunctionTok{ggplot}\NormalTok{(df\_p, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_ribbon}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ekor\_p, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{ymin =} \DecValTok{0}\NormalTok{, }\AttributeTok{ymax =}\NormalTok{ y, }\AttributeTok{group =}\NormalTok{ ekor),}
+              \AttributeTok{fill =} \StringTok{"\#FC8D59"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{0.9}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{1.96}\NormalTok{, }\FloatTok{1.96}\NormalTok{), }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"\#8B0000"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\AttributeTok{x =}\NormalTok{ z\_hitung, }\AttributeTok{y =} \FloatTok{0.12}\NormalTok{, }\AttributeTok{label =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"z = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(z\_hitung, }\DecValTok{2}\NormalTok{)), }\AttributeTok{hjust =} \FloatTok{1.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"P{-}value dua arah = luas kedua ekor = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(p\_dua, }\DecValTok{4}\NormalTok{)),}
+       \AttributeTok{x =} \StringTok{"z"}\NormalTok{, }\AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.y =} \FunctionTok{element\_blank}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2603,9 +2612,10 @@ sampel berbeda, berapa kali kita keliru menolak \(H_0\)?
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{hist}\NormalTok{(p\_values\_H0, }\AttributeTok{breaks =} \DecValTok{20}\NormalTok{, }\AttributeTok{col =} \StringTok{"\#c6dbef"}\NormalTok{, }\AttributeTok{border =} \StringTok{"white"}\NormalTok{,}
-     \AttributeTok{main =} \StringTok{"Distribusi p{-}value ketika H0 BENAR: seragam"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"p{-}value"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Frekuensi"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =} \FloatTok{0.05}\NormalTok{, }\AttributeTok{col =} \StringTok{"firebrick"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{p =}\NormalTok{ p\_values\_H0), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ p)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.05}\NormalTok{), }\AttributeTok{fill =} \StringTok{"\#FADBD8"}\NormalTok{, }\AttributeTok{color =} \StringTok{"\#8B0000"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FloatTok{0.05}\NormalTok{, }\AttributeTok{color =} \StringTok{"\#B30000"}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribusi p{-}value ketika H0 BENAR: seragam"}\NormalTok{, }\AttributeTok{x =} \StringTok{"p{-}value"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Frekuensi"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2654,14 +2664,23 @@ Memengaruhi}\label{kurva-power-faktor-yang-memengaruhi}
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{mu\_seq }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{245}\NormalTok{, }\DecValTok{255}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.05}\NormalTok{)}
-\FunctionTok{plot}\NormalTok{(mu\_seq, }\FunctionTok{power\_teori}\NormalTok{(mu\_seq, }\DecValTok{36}\NormalTok{), }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =} \StringTok{"\#4C72B0"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
-     \AttributeTok{xlab =} \StringTok{"Rata{-}rata pengisian sebenarnya (gram)"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Power = P(tolak H0)"}\NormalTok{,}
-     \AttributeTok{main =} \StringTok{"Kurva Power Uji Dua Arah (H0: mu = 250)"}\NormalTok{)}
-\FunctionTok{lines}\NormalTok{(mu\_seq, }\FunctionTok{power\_teori}\NormalTok{(mu\_seq, }\DecValTok{100}\NormalTok{), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =} \StringTok{"\#DD8452"}\NormalTok{)}
-\FunctionTok{lines}\NormalTok{(mu\_seq, }\FunctionTok{power\_teori}\NormalTok{(mu\_seq, }\DecValTok{36}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =} \StringTok{"\#4C72B0"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{0.8}\NormalTok{), }\AttributeTok{lty =} \DecValTok{3}\NormalTok{, }\AttributeTok{col =} \StringTok{"grey50"}\NormalTok{)}
-\FunctionTok{legend}\NormalTok{(}\StringTok{"top"}\NormalTok{, }\AttributeTok{bty =} \StringTok{"n"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{lty =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#4C72B0"}\NormalTok{, }\StringTok{"\#DD8452"}\NormalTok{, }\StringTok{"\#4C72B0"}\NormalTok{), }\AttributeTok{cex =} \FloatTok{0.8}\NormalTok{,}
-       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"n = 36, alpha = 0,05"}\NormalTok{, }\StringTok{"n = 100, alpha = 0,05"}\NormalTok{, }\StringTok{"n = 36, alpha = 0,01"}\NormalTok{))}
+\NormalTok{kurva  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"n = 36, alpha = 0,05"}\NormalTok{, }\StringTok{"n = 100, alpha = 0,05"}\NormalTok{, }\StringTok{"n = 36, alpha = 0,01"}\NormalTok{)}
+\NormalTok{df\_power }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{mu    =} \FunctionTok{rep}\NormalTok{(mu\_seq, }\DecValTok{3}\NormalTok{),}
+  \AttributeTok{power =} \FunctionTok{c}\NormalTok{(}\FunctionTok{power\_teori}\NormalTok{(mu\_seq, }\DecValTok{36}\NormalTok{), }\FunctionTok{power\_teori}\NormalTok{(mu\_seq, }\DecValTok{100}\NormalTok{),}
+            \FunctionTok{power\_teori}\NormalTok{(mu\_seq, }\DecValTok{36}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.01}\NormalTok{)),}
+  \AttributeTok{Kurva =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(kurva, }\AttributeTok{each =} \FunctionTok{length}\NormalTok{(mu\_seq)), }\AttributeTok{levels =}\NormalTok{ kurva)}
+\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(df\_power, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ mu, }\AttributeTok{y =}\NormalTok{ power, }\AttributeTok{color =}\NormalTok{ Kurva, }\AttributeTok{linetype =}\NormalTok{ Kurva)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{0.8}\NormalTok{), }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{, }\AttributeTok{color =} \StringTok{"grey50"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"\#8B0000"}\NormalTok{, }\StringTok{"\#FC8D59"}\NormalTok{, }\StringTok{"\#8B0000"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_linetype\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"solid"}\NormalTok{, }\StringTok{"solid"}\NormalTok{, }\StringTok{"dashed"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Kurva Power Uji Dua Arah (H0: mu = 250)"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Rata{-}rata pengisian sebenarnya (gram)"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Power = P(tolak H0)"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{, }\AttributeTok{legend.title =} \FunctionTok{element\_blank}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3274,7 +3293,9 @@ Kegunaan
 \texttt{1\ -\ pnorm(z)} / \texttt{pnorm(z)} & \emph{P-value} satu arah
 kanan / kiri \\
 \texttt{dnorm(x)} & Kurva normal untuk menggambar daerah penolakan \\
-\texttt{polygon()} & Mengarsir daerah di bawah kurva \\
+\texttt{ggplot()}, \texttt{geom\_histogram()}, \texttt{geom\_line()},
+\texttt{facet\_wrap()} & Membuat grafik (paket ggplot2) \\
+\texttt{geom\_ribbon()} & Mengarsir daerah di bawah kurva \\
 \texttt{match.arg()}, \texttt{switch()} & Memilih arah uji dalam fungsi
 buatan \\
 \texttt{replicate(B,\ ...)} & Simulasi kesalahan Tipe I dan
@@ -3392,8 +3413,8 @@ pemahaman dengan merujuk pada:
   Hypothesis Testing: One-Sample Tests}.
 \item
   Dokumentasi resmi R: \texttt{?pnorm}, \texttt{?qnorm},
-  \texttt{?p.adjust}, \texttt{?polygon} (dapat diakses langsung di
-  R/RStudio).
+  \texttt{?p.adjust}, dan \texttt{?geom\_ribbon} untuk ggplot2 (dapat
+  diakses langsung di R/RStudio).
 \end{itemize}
 
 \bookmarksetup{startatroot}

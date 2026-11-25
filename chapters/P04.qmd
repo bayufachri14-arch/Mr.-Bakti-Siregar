@@ -1,0 +1,1930 @@
+---
+title: "Praktikum P04: Penyajian dan Visualisasi Data"# Judul utama dokumen
+subtitle: "Praktikum 04:Introduction to Statistics (SDT-11012)"# Subjudul sesi
+author: "Bayu Fachri (52260027)"                 # Penulis
+date: "`r format(Sys.Date(), '%B %d, %Y')`"      # Tanggal otomatis
+
+
+---
+
+
+
+<div style="text-align:center;">
+
+<img class="zoom-img"
+     src="../images/author/Bayu.jpg"
+     alt="Bayu Fachri"
+     style="width:250px;height:250px;border-radius:50%;object-fit:cover;object-position:center 26%;border:2px solid #2c3e50;display:block;margin:auto;" />
+
+<h3 class="zoom-text" style="margin-top:12px;">Bayu Fachri (52260027)</h3>
+
+<p style="text-align:center;font-size:14px;margin-top:3px;">
+<a class="zoom-link" href="https://www.linkedin.com/in/bayu-fachri-838b802ba/" target="_blank" rel="noopener noreferrer"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+       style="width:16px;height:16px;vertical-align:middle;"> LinkedIn
+</a>
+<span style="margin:0 10px;">|</span>
+<a class="zoom-link" href="https://rpubs.com/BBY" target="_blank" rel="noopener noreferrer"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://framalibre.org/images/logo/Rstudio.png"
+       style="width:16px;height:16px;vertical-align:middle;"> R.Pubs
+</a>
+<span style="margin:0 12px;">|</span>
+<a class="zoom-link" href="https://github.com/bayufachri14-arch" target="_blank" rel="noopener noreferrer"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
+       style="width:16px;height:16px;vertical-align:middle;"> GitHub
+</a>
+<span style="margin:0 10px;">|</span>
+<a class="zoom-link" href="mailto:bayufachri14@gmail.com"
+   style="display:inline-block;margin:0 8px;text-decoration:none;white-space:nowrap;">
+  <img class="zoom-icon" src="https://static.vecteezy.com/system/resources/previews/022/484/508/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png"
+       style="width:16px;height:16px;vertical-align:middle;"> Email
+</a>
+</p>
+
+<p class="zoom-text" style="max-width:520px;margin:10px auto;text-align:center;
+          font-size:13.8px;line-height:1.5;color:#333;">
+Mahasiswa **Sains Data** di **Institut Teknologi Sains Bandung** dengan rasa ingin tahu yang tinggi dan semangat untuk terus berkembang. Tertarik pada teknologi, data, dan berbagai hal baru. Percaya bahwa setiap proses adalah bagian dari perjalanan untuk menjadi versi terbaik dari diri sendiri.
+</p>
+
+</div>
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Pendahuluan
+ 
+**Program Studi:** Data Science **Konteks Sesi**: Pertemuan 4 – Penyajian dan Visualisasi Data
+
+Tiga puluh angka nilai ujian yang ditulis berjajar hampir mustahil “dibaca”: di mana kebanyakan
+nilai berada? Adakah nilai yang janggal? Namun begitu angka-angka itu dikelompokkan dalam
+tabel atau digambar sebagai histogram, polanya langsung terlihat dalam hitungan detik. **Penyajian**
+**data** adalah langkah pertama mengubah data mentah menjadi informasi.
+
+Penyajian yang baik juga menuntut kejujuran. Grafik yang sumbunya dipotong, kelas histogram
+yang dipilih asal-asalan, atau diagram lingkaran dengan terlalu banyak irisan dapat menyesatkan pembaca – disengaja atau tidak.
+
+### Tujuan Pembelajaran
+
+Setelah menyelesaikan praktikum ini, mahasiswa mampu:
+
+1. Menyusun **tabel distribusi frekuensi** untuk data kategorik dan numerik, lengkap dengan
+**frekuensi relatif** dan **frekuensi kumulatif.**
+2. Menentukan banyak kelas (**Aturan Sturges**), lebar kelas, batas kelas, **batas nyata**, dan
+**titik tengah** kelas.
+3. Membuat dan menafsirkan **diagram batang, diagram lingkaran, histogram, poligon**
+**frekuensi, ogive,** dan **diagram batang-daun** (*stem-and-leaf*) di R.
+4. Memilih visualisasi yang sesuai dengan **jenis data.**
+5. Menerapkan **prinsip visualisasi** yang jujur: skala, label, pemilihan *bin,* dan interpretasi.
+
+### Peta Alur Belajar
+
+| Tahap | Bagian | Fokus |
+| --- | --- | --- |
+| 1 | Data yang Dipakai | Transaksi (kategorik), nilai ujian dan pendapatan (numerik) |
+| 2 | Tabel Frekuensi Data Kategorik | Frekuensi, relatif, persentase, kumulatif, tabel silang |
+| 3 | Tabel Frekuensi Data Numerik | Sturges, lebar kelas, batas nyata, titik tengah |
+| 4 | Visualisasi Data Kategorik | Diagram batang, Pareto, diagram lingkaran |
+| 5 | Visualisasi Data Numerik | Histogram, poligon, ogive, *stem-and-leaf* |
+| 6 | Prinsip Visualisasi | Skala, label, *bin*, interpretasi; grafik menyesatkan |
+| 7–8 | Studi Kasus & Latihan Mandiri | Penerapan menyeluruh |
+| 9–11 | Referensi Praktis | Kesalahan umum, *cheat sheet* R, glosarium |
+
+<div style="text-align: center;">
+ Praktikum ini hanya menggunakan <b>base R</b> (tidak memerlukan instalasi paket tambahan).
+ </div>
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Data yang Dipakai
+Tiga dataset dipakai sepanjang praktikum. Dataset nilai ujian dan pendapatan mingguan akan
+dipakai lagi pada Pertemuan 5 (ukuran pemusatan dan penyebaran), jadi pastikan Anda mema-
+haminya.
+
+```{r}
+# 1. Kategorik: metode pembayaran 60 transaksi sebuah kedai kopi
+set.seed(404)
+metode <- sample(c("QRIS", "Tunai", "Debit", "E-Wallet", "Kartu Kredit"), 60, replace = TRUE,
+
+prob = c(0.38, 0.22, 0.18, 0.15, 0.07))
+
+waktu <- sample(c("Pagi", "Siang", "Malam"), 60, replace = TRUE)
+# 2. Numerik: nilai ujian Statistika 30 mahasiswa
+nilai_ujian <- c(78, 65, 82, 90, 74, 68, 95, 88, 72, 80,
+91, 77, 63, 85, 79, 92, 70, 84, 76, 89,
+81, 67, 93, 75, 86, 71, 94, 83, 69, 87)
+# 3. Numerik terkelompok: pendapatan mingguan (USD) 100 karyawan
+kelas_p <- c("801-1000", "1001-1200", "1201-1400", "1401-1600", "1601-1800", "1801-2000")
+f_p <- c(9, 22, 39, 15, 9, 6)
+```
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Tabel Frekuensi Data Kategorik
+
+### Frekuensi, Frekuensi Relatif, dan Persentase
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+tabel_frekuensi <- data.frame(
+  Kolom = c("Frekuensi ($f$)", "Frekuensi relatif", "Persentase"),
+  Rumus = c("hitung", "$\\dfrac{f}{n}$", "$\\dfrac{f}{n} \\times 100\\%$"),
+  Arti  = c("Banyaknya data pada kategori",
+            "Proporsi (0 sampai 1)",
+            "Proporsi dalam persen")
+)
+
+kable(tabel_frekuensi, escape = FALSE, align = "l",
+      col.names = c("Kolom", "Rumus", "Arti")) %>%
+  kable_styling(latex_options = c("hold_position"), full_width = FALSE,
+                position = "center")
+```
+
+```{r}
+f_metode <- table(metode)
+f_metode <- sort(f_metode, decreasing = TRUE) # urutkan dari yang terbanyak
+
+tabel_metode <- data.frame(
+  Metode = names(f_metode),
+  f = as.numeric(f_metode),
+  f_relatif = round(as.numeric(prop.table(f_metode)), 3),
+  Persen = round(as.numeric(prop.table(f_metode)) * 100, 1)
+)
+tabel_metode <- rbind(tabel_metode,
+
+data.frame(Metode = "Total", f = sum(tabel_metode$f),
+
+f_relatif = 1, Persen = 100))
+
+kable(tabel_metode, caption = "Distribusi Frekuensi Metode Pembayaran (n = 60)")
+```
+
+<div style="text-align: center;">
+**Frekuensi kumulatif untuk data nominal?** Kumulatif hanya bermakna jika kate-
+gori memiliki **urutan** (ordinal atau numerik). Pada data nominal seperti metode pemba-
+yaran, kumulatif baru bermakna setelah diurutkan dari terbanyak – dan itu pun hanya
+untuk analisis Pareto (lihat bagian visualisasi).
+ </div>
+
+### Tabel Silang (Tabel Kontingensi)
+
+Untuk melihat hubungan **dua** variabel kategorik, gunakan tabel silang.
+
+```{r}
+silang <- table(Waktu = factor(waktu, levels = c("Pagi", "Siang", "Malam")),
+
+Metode = factor(metode, levels = names(f_metode)))
+
+addmargins(silang)
+```
+
+```{r}
+# Persentase per baris: komposisi metode pembayaran di setiap waktu
+round(prop.table(silang, margin = 1) * 100, 1)
+```
+
+Persentase **per baris** menjawab “di waktu tertentu, metode apa yang dominan?”; persentase **per**
+**kolom** (`margin = 2`) menjawab “transaksi QRIS paling banyak terjadi pada waktu apa?”. Pilih
+arah persentase sesuai pertanyaan.
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Tabel Frekuensi Data Numerik
+
+Data numerik dengan banyak nilai berbeda perlu **dikelompokkan** ke dalam kelas (interval).
+Langkah-langkahnya:
+
+| Langkah | Keterangan | Rumus |
+| --- | --- | --- |
+| 1 | Hitung rentang | $R = x_{\max} - x_{\min}$ |
+| 2 | Tentukan banyak kelas (Aturan Sturges) | $k = 1 + 3,322 \log_{10} n$ (dibulatkan) |
+| 3 | Tentukan lebar kelas | $w = \frac{R}{k}$ (dibulatkan **ke atas**) |
+| 4 | Tentukan batas kelas | Mulai dari $x_{\min}$ (atau sedikit di bawahnya) |
+| 5 | Tentukan batas nyata | Batas bawah $-0,5$ satuan; batas atas $+0,5$ satuan |
+| 6 | Hitung titik tengah | $m = \frac{\text{batas bawah} + \text{batas atas}}{2}$ |
+| 7 | Hitung frekuensi tiap kelas | Turus / `cut()` + `table()` |
+
+### Langkah demi Langkah: Nilai Ujian
+
+```{r}
+n <- length(nilai_ujian)
+R <- max(nilai_ujian) - min(nilai_ujian)
+k_sturges <- 1 + 3.322 * log10(n)
+k <- round(k_sturges)
+w <- ceiling(R / k)
+c(n = n, Min = min(nilai_ujian), Maks = max(nilai_ujian), Rentang = R,
+k_Sturges = round(k_sturges, 3), k = k, R_per_k = round(R / k, 3), Lebar_w = w)
+```
+
+Diperoleh *k* = 1+3,322 log10 30 ≈ 5.91 → **6 kelas**, dan lebar kelas *w* = 32/6 ≈ 5,33 → 6 (dibulatkan
+ke atas agar seluruh data tertampung).
+
+```{r}
+batas_bawah <- seq(min(nilai_ujian), by = w, length.out = k) # 63, 69, ..., 93
+batas_atas <- batas_bawah + w - 1 # 68, 74,..., 98
+batas_nyata_u <- c(batas_bawah - 0.5, max(batas_atas) + 0.5) # 62.5, 68.5..., 98.5
+f_ujian <- as.numeric(table(cut(nilai_ujian, breaks = batas_nyata_u)))
+tabel_ujian <- data.frame(
+Kelas = paste0(batas_bawah, "-", batas_atas),
+Batas_Nyata = paste0(batas_bawah - 0.5, "-", batas_atas + 0.5),
+Titik_Tengah = (batas_bawah + batas_atas) / 2,
+f = f_ujian,
+f_Relatif = round(f_ujian / n, 3),
+Persen = round(f_ujian / n * 100, 1),
+F_Kumulatif = cumsum(f_ujian),
+Persen_Kum = round(cumsum(f_ujian) / n * 100, 1)
+)
+kable(tabel_ujian, caption = "Distribusi Frekuensi Nilai Ujian Statistika (n = 30)")
+```
+
+**Mengapa batas nyata?** Nilai ujian dicatat sebagai bilangan bulat. Batas nyata (±0,5) menutup“celah” antara kelas 63–68 dan 69–74 sehingga setiap kemungkinan nilai (misalnya 68,7 bila dibu-
+latkan) punya tempat yang jelas, dan batang histogram saling menempel tanpa celah.
+
+**Cara membaca:**
+- Kelas dengan frekuensi terbanyak adalah kelas 75-80, 81-86, 87-92 (masing-masing 6 maha-
+siswa).
+- 50% mahasiswa bernilai 80 atau kurang (frekuensi kumulatif relatif kelas ketiga).
+- Hanya 3 mahasiswa (10%) berada di kelas tertinggi 93–98.
+
+**Konvensi interval di R.** cut() secara bawaan memakai interval **tertutup kanan**
+(a, b]. Karena batas nyata berakhir di ,5 dan data berupa bilangan bulat, tidak ada
+data yang jatuh tepat di batas, sehingga konvensi ini tidak menjadi masalah.
+
+### Kelas Lebar Sama dengan `hist`()
+
+Fungsi hist() juga menghitung frekuensi kelas jika diberi argumen plot = FALSE:
+
+```{r}
+h <- hist(nilai_ujian, breaks = batas_nyata_u, plot = FALSE)
+data.frame(dari = head(h$breaks, -1), sampai = tail(h$breaks, -1),
+
+titik_tengah = h$mids, f = h$counts)
+```
+
+### Data yang Sudah Terkelompok: Pendapatan Mingguan
+
+Sering kali kita hanya menerima **tabel jadi** tanpa data mentah. Kita tetap dapat melengkapinya
+dengan kolom relatif dan kumulatif.
+
+```{r}
+batas_nyata_p <- seq(800.5, by = 200, length.out = 7)
+L_p <- head(batas_nyata_p, -1); U_p <- tail(batas_nyata_p, -1)
+n_p <- sum(f_p)
+tabel_p <- data.frame(
+Kelas = kelas_p,
+Batas_Nyata = paste0(L_p, "-", U_p),
+Titik_Tengah = (L_p + U_p) / 2,
+f = f_p,
+Persen = f_p / n_p * 100,
+F_Kum_Kurang = cumsum(f_p), # "kurang dari" batas nyata atas
+F_Kum_Lebih = rev(cumsum(rev(f_p))) # "lebih dari" batas nyata bawah
+)
+kable(tabel_p, caption = "Pendapatan Mingguan 100 Karyawan (USD)")
+```
+
+Kumulatif **“kurang dari”** menjawab: “berapa karyawan berpendapatan di bawah 1.400,5 USD?”
+(70 orang). Kumulatif **“lebih dari”** menjawab: “berapa karyawan berpendapatan di atas 1.400,5
+USD?” (30 orang).
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Visualisasi Data Kategorik
+
+### Diagram Batang (Bar Chart)
+
+Diagram batang menampilkan frekuensi tiap kategori sebagai batang **terpisah** (ada celah antar-
+batang, karena kategori tidak bersambung).
+
+```{r}
+library(plotly)
+
+df <- data.frame(
+  Metode    = names(f_metode),
+  Frekuensi = as.integer(f_metode)
+)
+df <- df[order(-df$Frekuensi), ]
+df$Persentase <- paste0(round(df$Frekuensi / sum(df$Frekuensi) * 100, 1), "%")
+
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (df$Frekuensi - min(df$Frekuensi)) / (max(df$Frekuensi) - min(df$Frekuensi))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+fig <- plot_ly(
+  data = df,
+  x = ~Metode,
+  y = ~Frekuensi,
+  type = "bar",
+  marker = list(color = warna),
+  text = ~Frekuensi,
+  textposition = "outside",
+  textfont = list(size = 14),
+  hovertemplate = paste0("<b>%{x}</b><br>",
+                         "Frekuensi: %{y}<br>",
+                         "Persentase: ", df$Persentase,
+                         "<extra></extra>")
+) %>%
+  layout(
+    title = list(text = "<b>Metode Pembayaran di Kedai Kopi (n = 60 transaksi)</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    xaxis = list(title = "",   # judul "Metode Pembayaran" dihilangkan
+                 categoryorder = "array",
+                 categoryarray = df$Metode,
+                 showgrid = FALSE),
+    yaxis = list(title = "Jumlah Transaksi",
+                 range = c(0, max(df$Frekuensi) * 1.2),
+                 showticklabels = FALSE,
+                 ticks = "",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    bargap = 0.15,
+    margin = list(t = 80, b = 50, l = 70, r = 40)
+  )
+
+fig
+```
+
+Untuk nama kategori yang panjang atau banyak kategori, diagram batang horizontal lebih mudah
+dibaca:
+
+```{r}
+library(plotly)
+
+# Data frame persentase dari f_metode, diurutkan dari tertinggi
+df <- data.frame(
+  Metode    = names(f_metode),
+  Frekuensi = as.integer(f_metode)
+)
+df$Persen <- df$Frekuensi / sum(df$Frekuensi) * 100
+df <- df[order(-df$Persen), ]
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (df$Persen - min(df$Persen)) / (max(df$Persen) - min(df$Persen))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+fig <- plot_ly(
+  data = df,
+  x = ~Persen,
+  y = ~Metode,
+  type = "bar",
+  orientation = "h",
+  marker = list(color = warna),
+  text = paste0(round(df$Persen, 1), "%"),
+  textposition = "outside",
+  textfont = list(size = 14),
+  hovertemplate = paste0("<b>%{y}</b><br>",
+                         "Persentase: %{x:.1f}%<br>",
+                         "Frekuensi: ", df$Frekuensi,
+                         "<extra></extra>")
+) %>%
+  layout(
+    title = list(text = "<b>Komposisi Metode Pembayaran</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    xaxis = list(title = "",   # judul "Persentase Transaksi (%)" dihapus
+                 range = c(0, max(df$Persen) * 1.2),
+                 showticklabels = FALSE,
+                 ticks = "",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    yaxis = list(title = "",
+                 categoryorder = "array",
+                 categoryarray = df$Metode,
+                 autorange = "reversed",
+                 showgrid = FALSE),
+    bargap = 0.15,
+    margin = list(t = 80, b = 40, l = 110, r = 40)
+  )
+
+fig
+```
+
+```{r}
+par(mar = c(5, 4, 4, 2) + 0.1)
+```
+
+### Diagram Batang Berkelompok dan Bertumpuk
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik)
+metode <- c("QRIS", "Tunai", "Debit", "E-Wallet", "Kartu Kredit")
+pagi   <- c(5, 3, 3, 4, 3)
+siang  <- c(8, 6, 3, 4, 2)
+malam  <- c(8, 6, 3, 1, 1)
+
+# Urutkan metode dari total transaksi tertinggi ke terendah
+total_metode <- pagi + siang + malam
+o      <- order(-total_metode)
+metode <- metode[o]
+pagi   <- pagi[o]
+siang  <- siang[o]
+malam  <- malam[o]
+idx    <- seq_along(metode)
+
+# Warna waktu (sama seperti gambar)
+c_pagi  <- "#FDD49E"
+c_siang <- "#FC8D59"
+c_malam <- "#B30000"
+
+# ---------- Panel 1: Berkelompok ----------
+w <- 0.27
+p1 <- plot_ly() %>%
+  add_bars(x = idx - w, y = pagi, width = w, name = "Pagi",
+           marker = list(color = c_pagi), legendgroup = "Pagi", legendrank = 1,
+           text = pagi, textposition = "outside",
+           hovertemplate = "<b>%{text}</b> transaksi<extra>Pagi</extra>") %>%
+  add_bars(x = idx, y = siang, width = w, name = "Siang",
+           marker = list(color = c_siang), legendgroup = "Siang", legendrank = 2,
+           text = siang, textposition = "outside",
+           hovertemplate = "<b>%{text}</b> transaksi<extra>Siang</extra>") %>%
+  add_bars(x = idx + w, y = malam, width = w, name = "Malam",
+           marker = list(color = c_malam), legendgroup = "Malam", legendrank = 3,
+           text = malam, textposition = "outside",
+           hovertemplate = "<b>%{text}</b> transaksi<extra>Malam</extra>")
+
+# ---------- Panel 2: Bertumpuk 100% ----------
+tot      <- pagi + siang + malam
+pr_pagi  <- pagi  / tot * 100
+pr_siang <- siang / tot * 100
+pr_malam <- malam / tot * 100
+lab <- function(x) sprintf("%.0f%%", x)
+
+# Digambar dengan teknik overlay (tinggi kumulatif, dari atas ke bawah)
+p2 <- plot_ly() %>%
+  add_bars(x = idx, y = rep(100, length(idx)), width = 0.8, name = "Malam",
+           marker = list(color = c_malam), legendgroup = "Malam", showlegend = FALSE,
+           text = lab(pr_malam), textposition = "inside", insidetextanchor = "end",
+           textfont = list(color = "white"),
+           hovertemplate = "<b>%{text}</b><extra>Malam</extra>") %>%
+  add_bars(x = idx, y = pr_pagi + pr_siang, width = 0.8, name = "Siang",
+           marker = list(color = c_siang), legendgroup = "Siang", showlegend = FALSE,
+           text = lab(pr_siang), textposition = "inside", insidetextanchor = "end",
+           textfont = list(color = "black"),
+           hovertemplate = "<b>%{text}</b><extra>Siang</extra>") %>%
+  add_bars(x = idx, y = pr_pagi, width = 0.8, name = "Pagi",
+           marker = list(color = c_pagi), legendgroup = "Pagi", showlegend = FALSE,
+           text = lab(pr_pagi), textposition = "inside", insidetextanchor = "end",
+           textfont = list(color = "black"),
+           hovertemplate = "<b>%{text}</b><extra>Pagi</extra>")
+
+# ---------- Gabungkan ----------
+jarak <- 0.12   # jarak antarpanel (makin besar makin renggang)
+
+fig <- subplot(p1, p2, nrows = 1, margin = jarak,
+               titleX = TRUE, titleY = TRUE) %>%
+  layout(
+    barmode = "overlay",
+    bargap  = 0,
+    xaxis  = list(tickvals = idx, ticktext = metode, tickangle = -90, title = "",
+                  tickfont = list(size = 12)),
+    xaxis2 = list(tickvals = idx, ticktext = metode, tickangle = -90, title = "",
+                  tickfont = list(size = 12)),
+    yaxis  = list(title = "Jumlah Transaksi", showticklabels = FALSE,
+                  range = c(0, max(pagi, siang, malam) * 1.2)),
+    yaxis2 = list(title = "Persentase (%)", showticklabels = FALSE,
+                  range = c(0, 100)),
+    legend = list(x = 0.38, y = 0.98, traceorder = "normal"),
+    margin = list(t = 80, b = 140, l = 70, r = 40)
+  )
+
+# Ambil domain x sebenarnya dari tiap panel, lalu hitung tengahnya
+b  <- plotly_build(fig)
+pusat1 <- mean(b$x$layout$xaxis$domain)
+pusat2 <- mean(b$x$layout$xaxis2$domain)
+
+fig <- fig %>%
+  layout(
+    annotations = list(
+      # Judul tiap panel (atas)
+      list(text = "<b>Berkelompok (beside = TRUE)</b>", x = pusat1, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>Bertumpuk 100%</b>", x = pusat2, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      # "Metode Pembayaran" di bawah tiap panel
+      list(text = "Metode Pembayaran", x = pusat1, y = -0.28,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 13)),
+      list(text = "Metode Pembayaran", x = pusat2, y = -0.28,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 13))
+    )
+  )
+
+fig
+```
+
+```{r}
+par(mfrow = c(1,1))
+```
+
+Diagram **berkelompok** baik untuk membandingkan frekuensi absolut; diagram **bertumpuk 100%**
+baik untuk membandingkan **komposisi** antarkategori.
+
+### Diagram Pareto
+
+Diagram Pareto adalah diagram batang yang diurutkan dari frekuensi terbesar, ditambah garis
+**persentase kumulatif.** Ia dipakai untuk menemukan “sedikit penyebab yang menyumbang seba-
+gian besar masalah” (prinsip 80/20), misalnya jenis keluhan pelanggan.
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik), urut dari terbesar; "Lainnya" tetap di akhir
+keluhan <- c("Pengiriman terlambat", "Barang rusak", "Salah kirim",
+             "Refund lama", "CS tidak responsif", "Lainnya")
+frek    <- c(48, 27, 14, 7, 5, 4)
+
+total <- sum(frek)
+kum   <- cumsum(frek) / total * 100     # persentase kumulatif
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (frek - min(frek)) / (max(frek) - min(frek))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Angka di dalam batang untuk batang tinggi, di luar untuk batang pendek
+besar      <- frek >= 0.1 * total
+pos_teks   <- ifelse(besar, "inside", "outside")
+warna_teks <- ifelse(besar & skala > 0.5, "white", "black")
+
+fig <- plot_ly() %>%
+  # Batang (sumbu kiri)
+  add_bars(x = keluhan, y = frek, name = "Jumlah Keluhan",
+           marker = list(color = warna),
+           text = frek, textposition = pos_teks, insidetextanchor = "end",
+           textfont = list(color = warna_teks, size = 13),
+           hovertemplate = "<b>%{x}</b><br>Jumlah: %{y}<extra></extra>") %>%
+  # Garis kumulatif (sumbu kanan)
+  add_trace(x = keluhan, y = kum, type = "scatter", mode = "lines+markers",
+            yaxis = "y2", name = "Kumulatif (%)",
+            line = list(color = "black", width = 2),
+            marker = list(color = "black", size = 8),
+            hovertemplate = "<b>%{x}</b><br>Kumulatif: %{y:.1f}%<extra></extra>") %>%
+  layout(
+    title = list(text = "<b>Diagram Pareto Keluhan Pelanggan</b>"),
+    showlegend = FALSE,
+    bargap = 0.1,
+    xaxis = list(title = "", tickangle = -90,
+                 categoryorder = "array", categoryarray = keluhan),
+    yaxis = list(title = "Jumlah Keluhan", showticklabels = FALSE,
+                 range = c(0, total * 1.05), showgrid = FALSE),
+    yaxis2 = list(overlaying = "y", side = "right", range = c(0, 105),
+                  tickvals = c(0, 25, 50, 75, 100),
+                  ticktext = c("0%", "25%", "50%", "75%", "100%"),
+                  showgrid = FALSE),
+    # Garis putus-putus batas 80%
+    shapes = list(
+      list(type = "line", xref = "paper", x0 = 0, x1 = 1,
+           yref = "y2", y0 = 80, y1 = 80,
+           line = list(color = "gray50", dash = "dash", width = 1.5))
+    ),
+    margin = list(t = 70, b = 140, l = 70, r = 70)
+  )
+
+fig
+```
+
+```{r}
+frek       <- c(48, 27, 14, 7, 5, 4)
+kum_persen <- cumsum(frek) / sum(frek) * 100
+round(kum_persen, 1)
+```
+
+
+Dua jenis keluhan teratas sudah menyumbang 71.4% dari seluruh keluhan – prioritas perbaikan yang jelas.
+
+### Diagram Lingkaran (Pie Chart)
+
+Diagram lingkaran menunjukkan **bagian dari keseluruhan** (total harus 100%).
+
+```{r}
+library(plotly)
+
+# Data dari f_metode, diurutkan dari frekuensi tertinggi
+df <- data.frame(
+  Metode    = names(f_metode),
+  Frekuensi = as.integer(f_metode)
+)
+df <- df[order(-df$Frekuensi), ]
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (df$Frekuensi - min(df$Frekuensi)) / (max(df$Frekuensi) - min(df$Frekuensi))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Warna teks: putih di irisan tua, hitam di irisan pudar
+warna_teks <- ifelse(skala > 0.5, "white", "black")
+
+fig <- plot_ly(
+  data = df,
+  labels = ~Metode,
+  values = ~Frekuensi,
+  type = "pie",
+  sort = FALSE,
+  direction = "clockwise",
+  rotation = 90,
+  marker = list(colors = warna,
+                line = list(color = "white", width = 1.5)),
+  textinfo = "label+percent",
+  textposition = "inside",
+  insidetextorientation = "horizontal",
+  textfont = list(color = warna_teks, size = 14),
+  hovertemplate = "<b>%{label}</b><br>Frekuensi: %{value}<br>Persentase: %{percent}<extra></extra>"
+) %>%
+  layout(
+    title = list(text = "<b>Komposisi Metode Pembayaran</b>"),
+    showlegend = FALSE,
+    margin = list(t = 80, b = 40, l = 40, r = 40)
+  )
+
+fig
+```
+
+**Kapan diagram lingkaran boleh dipakai?** Hanya jika (1) kategorinya sedikit (sekitar 2–5),
+(2) proporsinya berbeda cukup jelas, dan (3) pesannya adalah “bagian dari keseluruhan”. Mata
+manusia lebih pandai membandingkan **panjang** daripada **sudut,**   sehingga untuk perbandingan
+yang teliti, diagram batang hampir selalu lebih baik.
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik batang)
+df <- data.frame(
+  Kategori = c("A", "B", "C", "D", "E"),
+  Nilai    = c(21, 19, 20, 22, 18)
+)
+
+# Urutkan dari terbesar ke terkecil
+df <- df[order(-df$Nilai), ]
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (df$Nilai - min(df$Nilai)) / (max(df$Nilai) - min(df$Nilai))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Warna teks: putih di latar tua, hitam di latar pudar
+warna_teks <- ifelse(skala > 0.5, "white", "black")
+
+judul_kanan <- paste0("<b>Sekarang jelas: ", df$Kategori[which.max(df$Nilai)], "</b>")
+
+fig <- plot_ly() %>%
+  # ---------- Panel kiri: diagram lingkaran ----------
+  add_pie(
+    data = df,
+    labels = ~Kategori,
+    values = ~Nilai,
+    sort = FALSE,                      # pertahankan urutan data (terbesar dulu)
+    direction = "clockwise",
+    rotation = 90,
+    marker = list(colors = warna,
+                  line = list(color = "black", width = 1)),
+    textinfo = "label+value",
+    textposition = "inside",
+    insidetextorientation = "horizontal",
+    textfont = list(color = warna_teks, size = 15),
+    hovertemplate = "<b>%{label}</b><br>Nilai: %{value}<extra></extra>",
+    domain = list(x = c(0, 0.45), y = c(0, 0.85))
+  ) %>%
+  # ---------- Panel kanan: grafik batang ----------
+  add_bars(
+    data = df,
+    x = ~Kategori,
+    y = ~Nilai,
+    marker = list(color = warna),
+    text = ~Nilai,
+    textposition = "outside",
+    hovertemplate = "<b>%{x}</b><br>Nilai: %{y}<extra></extra>"
+  ) %>%
+  layout(
+    showlegend = FALSE,
+    bargap = 0.1,
+    xaxis = list(title = "", domain = c(0.58, 1),
+                 categoryorder = "array", categoryarray = df$Kategori),
+    yaxis = list(title = "",
+                 domain = c(0, 0.85),
+                 range = c(0, max(df$Nilai) * 1.15),
+                 showticklabels = FALSE,
+                 ticks = "",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    margin = list(t = 90, b = 60, l = 40, r = 40),
+    annotations = list(
+      list(text = "<b>Mana yang terbesar?</b>", x = 0.225, y = 1.0,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 16)),
+      list(text = judul_kanan, x = 0.79, y = 1.0,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 16))
+    )
+  )
+
+fig
+```
+
+```{r}
+par(mfrow = c(1, 1))
+```
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Visualisasi Data Numerik
+
+### Histogram
+
+Histogram menampilkan distribusi data numerik yang **dikelompokkan.** Berbeda dengan diagram batang, batang histogram **saling menempel** karena kelasnya bersambung (sumbu-x adalah skala numerik).
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari histogram)
+batas <- c(62.5, 68.5, 74.5, 80.5, 86.5, 92.5, 98.5)
+frek  <- c(4, 5, 6, 6, 6, 3)
+
+lebar  <- diff(batas)                          # lebar tiap kelas
+tengah <- batas[-length(batas)] + lebar / 2    # titik tengah tiap batang
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (frek - min(frek)) / (max(frek) - min(frek))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Label kelas untuk hover
+kelas <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+fig <- plot_ly() %>%
+  add_bars(
+    x = tengah, y = frek, width = lebar,
+    marker = list(color = warna,
+                  line = list(color = "white", width = 1.5)),
+    text = frek, textposition = "outside",
+    textfont = list(size = 14),
+    customdata = kelas,
+    hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>"
+  ) %>%
+  layout(
+    title = list(text = "<b>Histogram Nilai Ujian Statistika (n = 30)</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    bargap = 0,
+    xaxis = list(title = "",   # judul "Nilai Ujian" dihapus
+                 tickvals = batas, ticktext = batas,
+                 range = c(min(batas) - 1, max(batas) + 1),
+                 showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "Frekuensi",
+                 range = c(0, max(frek) * 1.2),
+                 showticklabels = FALSE,
+                 ticks = "",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    margin = list(t = 80, b = 40, l = 70, r = 40)
+  )
+
+fig
+```
+
+| Aspek | Diagram Batang | Histogram |
+| --- | --- | --- |
+| Jenis data | Kategorik (atau diskrit dengan sedikit nilai) | Numerik kontinu (atau diskrit dengan banyak nilai) |
+| Sumbu-x | Kategori (urutan boleh diubah) | Skala numerik (urutan tetap) |
+| Celah antarsatubarang | Ada | Tidak ada |
+| Lebar batang | Tidak bermakna | Mewakili lebar kelas |
+
+### Histogram dari Data Terkelompok
+
+Jika hanya tabel yang tersedia, histogram digambar dari batas nyata dan frekuensinya:
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari histogram)
+batas <- c(800.5, 1000.5, 1200.5, 1400.5, 1600.5, 1800.5, 2000.5)
+frek  <- c(9, 22, 39, 15, 9, 6)
+
+lebar  <- diff(batas)                          # lebar tiap kelas
+tengah <- batas[-length(batas)] + lebar / 2    # titik tengah tiap batang
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (frek - min(frek)) / (max(frek) - min(frek))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Label kelas untuk hover
+kelas <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+fig <- plot_ly() %>%
+  add_bars(
+    x = tengah, y = frek, width = lebar,
+    marker = list(color = warna,
+                  line = list(color = "white", width = 1.5)),
+    text = frek, textposition = "outside",
+    textfont = list(size = 14),
+    customdata = kelas,
+    hovertemplate = "Kelas: <b>%{customdata}</b> USD<br>Frekuensi: %{y}<extra></extra>"
+  ) %>%
+  layout(
+    title = list(text = "<b>Histogram Pendapatan Mingguan 100 Karyawan</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    bargap = 0,
+    xaxis = list(title = "",   # judul sumbu x dihapus
+                 tickvals = batas, ticktext = batas,
+                 range = c(min(batas) - 50, max(batas) + 50),
+                 showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "Frekuensi",
+                 range = c(0, max(frek) * 1.2),
+                 showticklabels = FALSE,   # angka sumbu y dihapus
+                 ticks = "",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    margin = list(t = 80, b = 40, l = 70, r = 40)
+  )
+
+fig
+```
+
+Distribusi pendapatan **menjulur ke kanan:** puncak di kelas 1201–1400, dengan ekor panjang ke arah pendapatan tinggi.
+
+### Poligon Frekuensi
+
+Poligon frekuensi menghubungkan **titik tengah** puncak tiap kelas dengan garis. Ditambahkan satu kelas kosong di kedua ujung agar poligon “menapak” di sumbu-x. Poligon berguna untuk **membandingkan** beberapa distribusi dalam satu grafik.
+
+```{r}
+library(plotly)
+
+# Data (histogram nilai ujian)
+batas <- c(62.5, 68.5, 74.5, 80.5, 86.5, 92.5, 98.5)
+frek  <- c(4, 5, 6, 6, 6, 3)
+
+lebar  <- diff(batas)
+tengah <- batas[-length(batas)] + lebar / 2    # titik tengah kelas
+n      <- length(frek)
+
+# Titik poligon: ditutup dengan frekuensi 0 di kedua ujung
+x_poli <- c(tengah[1] - lebar[1], tengah, tengah[n] + lebar[n])
+y_poli <- c(0, frek, 0)
+t_poli <- c("", frek, "")                      # angka hanya pada titik asli
+
+# Gradasi merah untuk batang histogram
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (frek - min(frek)) / (max(frek) - min(frek))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+kelas <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+fig <- plot_ly() %>%
+  # Histogram sebagai latar
+  add_bars(
+    x = tengah, y = frek, width = lebar,
+    marker = list(color = warna, line = list(color = "white", width = 1.5)),
+    customdata = kelas,
+    hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>"
+  ) %>%
+  # Poligon frekuensi
+  add_trace(
+    x = x_poli, y = y_poli, type = "scatter", mode = "lines+markers+text",
+    line = list(color = "black", width = 3),
+    marker = list(color = "black", size = 9),
+    text = t_poli, textposition = "top center",
+    textfont = list(size = 14, color = "black"),
+    hovertemplate = "Titik tengah: %{x}<br>Frekuensi: %{y}<extra></extra>"
+  ) %>%
+  layout(
+    title = list(text = "<b>Poligon Frekuensi Nilai Ujian</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    bargap = 0,
+    xaxis = list(title = "",
+                 tickvals = batas, ticktext = batas,
+                 range = c(min(batas) - 8, max(batas) + 8),
+                 showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "Frekuensi",
+                 range = c(0, max(frek) * 1.25),
+                 tickvals = 0:max(frek + 1),   # angka sumbu kiri ditampilkan
+                 showticklabels = TRUE,
+                 ticks = "outside",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    margin = list(t = 80, b = 40, l = 70, r = 40)
+  )
+
+fig
+```
+
+### Ogive (Kurva Frekuensi Kumulatif)
+
+Ogive memplot **frekuensi kumulatif** terhadap **batas nyata atas** tiap kelas (dimulai dari batas nyata bawah kelas pertama dengan kumulatif 0). Ogive memudahkan menjawab “berapa persen data di bawah nilai tertentu?” dan menaksir median secara grafis.
+
+```{r}
+library(plotly)
+
+# Data (dari histogram pendapatan mingguan)
+batas <- c(800.5, 1000.5, 1200.5, 1400.5, 1600.5, 1800.5, 2000.5)
+frek  <- c(9, 22, 39, 15, 9, 6)
+
+# Persentase kumulatif "kurang dari" (diawali 0 di batas bawah)
+kum <- c(0, cumsum(frek) / sum(frek) * 100)
+
+# Estimasi nilai pada 50% (interpolasi linear)
+median_est <- approx(x = kum, y = batas, xout = 50)$y
+
+# Gradasi merah untuk titik: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (kum - min(kum)) / (max(kum) - min(kum))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Angka di atas titik (titik awal 0 tidak diberi angka)
+teks <- c("", paste0(round(kum[-1]), "%"))
+
+fig <- plot_ly() %>%
+  # Garis ogive
+  add_trace(
+    x = batas, y = kum, type = "scatter", mode = "lines+markers+text",
+    line = list(color = "#8B0000", width = 3),
+    marker = list(color = warna, size = 11,
+                  line = list(color = "#8B0000", width = 1.5)),
+    text = teks, textposition = "top left",
+    textfont = list(size = 14, color = "black"),
+    hovertemplate = "Kurang dari <b>%{x}</b> USD<br>Kumulatif: %{y:.1f}%<extra></extra>"
+  ) %>%
+  layout(
+    title = list(text = "<b>Ogive 'Kurang Dari' Pendapatan Mingguan</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    xaxis = list(title = "",   # judul sumbu x dihapus
+                 tickvals = batas, ticktext = batas,
+                 range = c(min(batas) - 50, max(batas) + 50),
+                 showgrid = FALSE, zeroline = FALSE,
+                 showline = TRUE, mirror = TRUE),
+    yaxis = list(title = "Persentase Kumulatif (%)",   # judul dikembalikan
+                 range = c(-3, 108),
+                 showticklabels = FALSE,               # angka sumbu kiri dihapus
+                 ticks = "",
+                 showgrid = FALSE, zeroline = FALSE,
+                 showline = TRUE, mirror = TRUE),
+    shapes = list(
+      # Garis horizontal di 50%
+      list(type = "line", xref = "paper", x0 = 0, x1 = 1,
+           yref = "y", y0 = 50, y1 = 50,
+           line = list(color = "gray50", dash = "dash", width = 1.5)),
+      # Garis vertikal di estimasi median
+      list(type = "line", xref = "x", x0 = median_est, x1 = median_est,
+           yref = "paper", y0 = 0, y1 = 1,
+           line = list(color = "#B22222", dash = "dash", width = 1.5))
+    ),
+    annotations = list(
+      list(text = paste0("~", round(median_est)),
+           x = median_est, y = 7, xref = "x", yref = "y",
+           xanchor = "left", xshift = 8, showarrow = FALSE,
+           font = list(size = 14, color = "#B22222"))
+    ),
+    margin = list(t = 80, b = 40, l = 60, r = 40)
+  )
+
+fig
+```
+
+Garis 50% memotong ogive di sekitar **1298 USD** – inilah taksiran median secara grafis. Pada Pertemuan 5 kita akan menghitung median data terkelompok secara aljabar dan mendapatkan angka yang sama.
+
+### Diagram Batang-Daun (Stem-and-Leaf)
+
+Diagram batang-daun memecah setiap nilai menjadi **batang** (digit depan) dan **daun** (digit terakhir). Kelebihannya: bentuk distribusi terlihat seperti histogram, tetapi **nilai asli tetap terbaca.**Cocok untuk data berukuran kecil–sedang.
+
+```{r}
+stem(nilai_ujian)
+```
+
+Baca baris 7 | 0124 sebagai nilai 70, 71, 72, 74. Perhatikan bahwa R otomatis memecah setiap batang menjadi **dua baris** (daun 0–4 dan daun 5–9) agar bentuk distribusi lebih terlihat. Argumen scale` mengatur tingkat pemecahan tersebut;`scale` = 0.5 menghasilkan satu baris per puluhan:
+
+```{r}
+stem(nilai_ujian, scale = 0.5)
+```
+
+Versi satu baris per puluhan lebih ringkas, tetapi bentuk distribusinya menjadi kurang terlihat mirip histogram dengan kelas yang terlalu lebar.
+
+### Memilih Grafik yang Tepat
+
+| Tujuan / Jenis Data | Grafik yang disarankan |
+| --- | --- |
+| Frekuensi kategori (nominal/ordinal) | Diagram batang (horizontal bila label panjang) |
+| Bagian dari keseluruhan, sedikit kategori | Diagram lingkaran atau batang bertumpuk 100% |
+| Prioritas masalah | Diagram Pareto |
+| Hubungan dua variabel kategorik | Batang berkelompok / bertumpuk; tabel silang |
+| Distribusi numerik (n besar) | Histogram |
+| Distribusi numerik (n kecil) | *Stem-and-leaf*, diagram titik (**stripchart**) |
+| Membandingkan beberapa distribusi | Poligon frekuensi, *boxplot* (Pertemuan 6) |
+| Persentase di bawah suatu nilai | Ogive |
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Prinsip Visualisasi yang Jujur
+
+### Prinsip 1 – Skala: Jangan Memotong Sumbu Diagram Batang
+
+Panjang batang harus **sebanding** dengan nilainya. Jika sumbu-y tidak dimulai dari nol, perbedaan
+kecil tampak raksasa.
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik)
+df <- data.frame(
+  Aplikasi = c("Aplikasi A", "Aplikasi B"),
+  Pangsa   = c(41, 43)
+)
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (df$Pangsa - min(df$Pangsa)) / (max(df$Pangsa) - min(df$Pangsa))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Fungsi pembuat satu panel (rentang sumbu y berbeda)
+buat_panel <- function(rentang) {
+  plot_ly(
+    data = df,
+    x = ~Aplikasi,
+    y = ~Pangsa,
+    type = "bar",
+    marker = list(color = warna, line = list(color = "black", width = 1)),
+    text = ~paste0(Pangsa, "%"),
+    textposition = "outside",
+    textfont = list(size = 14),
+    hovertemplate = "<b>%{x}</b><br>Pangsa pasar: %{y}%<extra></extra>"
+  ) %>%
+    layout(
+      xaxis = list(title = "", categoryorder = "array",
+                   categoryarray = df$Aplikasi),
+      yaxis = list(title = "Pangsa pasar (%)",
+                   range = rentang,
+                   showticklabels = FALSE,   # angka sumbu y dihapus
+                   ticks = "",
+                   showgrid = FALSE, zeroline = FALSE,
+                   showline = TRUE, mirror = TRUE)
+    )
+}
+
+# Panel kiri: sumbu mulai dari 40 (menyesatkan)
+p1 <- buat_panel(c(40, 43.5))
+# Panel kanan: sumbu mulai dari 0 (jujur)
+p2 <- buat_panel(c(0, 50))
+
+# ---------- Gabungkan ----------
+jarak <- 0.12
+
+fig <- subplot(p1, p2, nrows = 1, margin = jarak,
+               titleY = TRUE, shareY = FALSE) %>%
+  layout(
+    showlegend = FALSE,
+    bargap = 0.15,
+    xaxis  = list(showline = TRUE, mirror = TRUE),
+    xaxis2 = list(showline = TRUE, mirror = TRUE),
+    margin = list(t = 90, b = 50, l = 70, r = 40)
+  )
+
+# Ambil domain x sebenarnya dari tiap panel, lalu hitung tengahnya
+b      <- plotly_build(fig)
+pusat1 <- mean(b$x$layout$xaxis$domain)
+pusat2 <- mean(b$x$layout$xaxis2$domain)
+
+fig <- fig %>%
+  layout(
+    annotations = list(
+      list(text = "<b>MENYESATKAN: sumbu mulai dari 40</b>", x = pusat1, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>JUJUR: sumbu mulai dari 0</b>", x = pusat2, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15))
+    )
+  )
+
+fig
+```
+
+```{r}
+par(mfrow = c(1, 1))
+```
+
+Grafik kiri membuat Aplikasi B tampak “tiga kali” lebih besar, padahal selisihnya hanya 2 poin
+persentase. **Diagram garis** untuk tren boleh tidak dimulai dari nol (yang dibaca adalah peruba-
+han), tetapi **diagram batang wajib dimulai dari nol.**
+
+### Prinsip 2 – Label: Grafik Harus Dapat Berdiri Sendiri
+
+Setiap grafik minimal memuat: **judul** yang informatif, **label sumbu beserta satuan, legenda**
+bila ada lebih dari satu kelompok, serta **sumber data dan** n.
+
+```{r}
+library(plotly)
+
+# Data (histogram nilai ujian)
+batas <- c(62.5, 68.5, 74.5, 80.5, 86.5, 92.5, 98.5)
+frek  <- c(4, 5, 6, 6, 6, 3)
+
+lebar  <- diff(batas)
+tengah <- batas[-length(batas)] + lebar / 2
+kelas  <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (frek - min(frek)) / (max(frek) - min(frek))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+# Fungsi pembuat satu panel histogram
+buat_panel <- function(judul_y = "") {
+  plot_ly() %>%
+    add_bars(
+      x = tengah, y = frek, width = lebar,
+      marker = list(color = warna, line = list(color = "white", width = 1.5)),
+      text = frek, textposition = "outside",
+      textfont = list(size = 14),
+      customdata = kelas,
+      hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>"
+    ) %>%
+    layout(
+      xaxis = list(title = "", tickvals = batas, ticktext = batas,
+                   range = c(min(batas) - 1, max(batas) + 1),
+                   showgrid = FALSE, zeroline = FALSE),
+      yaxis = list(title = judul_y,
+                   range = c(0, max(frek) * 1.2),
+                   showticklabels = FALSE,   # angka sumbu y dihapus
+                   ticks = "",
+                   showgrid = FALSE, zeroline = FALSE)
+    )
+}
+
+p1 <- buat_panel()                       # panel kiri: polos
+p2 <- buat_panel("Jumlah Mahasiswa")     # panel kanan: dengan judul sumbu y
+
+# ---------- Gabungkan ----------
+jarak <- 0.12
+
+fig <- subplot(p1, p2, nrows = 1, margin = jarak,
+               titleY = TRUE, shareY = FALSE) %>%
+  layout(
+    showlegend = FALSE,
+    bargap = 0,
+    margin = list(t = 110, b = 50, l = 70, r = 40)
+  )
+
+# Ambil domain x sebenarnya dari panel kanan, lalu hitung tengahnya
+b      <- plotly_build(fig)
+pusat2 <- mean(b$x$layout$xaxis2$domain)
+
+fig <- fig %>%
+  layout(
+    annotations = list(
+      list(text = "<b>Nilai Ujian Statistika Kelas A<br>(n = 30, Semester Ganjil)</b>",
+           x = pusat2, y = 1.14,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15))
+    )
+  )
+
+fig
+```
+
+```{r}
+par(mfrow = c(1, 1))
+```
+
+### Prinsip 3 – Bin: Lebar Kelas Mengubah Cerita
+
+Bentuk histogram sangat bergantung pada banyak kelas (*bin*). Terlalu sedikit kelas menyembun-
+yikan pola; terlalu banyak kelas membuat grafik “bergerigi” oleh kebetulan.
+
+```{r}
+library(plotly)
+
+# Data waktu layanan (SIMULASI, ganti dengan data asli Anda)
+set.seed(123)
+waktu <- c(rnorm(130, mean = 8, sd = 1.6), rnorm(70, mean = 16, sd = 1.3))
+waktu <- pmin(pmax(waktu, 5.2), 19.8)
+
+# Fungsi pembuat satu panel histogram
+buat_hist <- function(breaks, tampil_angka = TRUE, ukuran = 13) {
+  h      <- hist(waktu, breaks = breaks, plot = FALSE)
+  frek   <- h$counts
+  tengah <- h$mids
+  lebar  <- diff(h$breaks)
+
+  # Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+  ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+  skala <- (frek - min(frek)) / (max(frek) - min(frek))
+  warna <- rgb(ramp(skala), maxColorValue = 255)
+
+  teks <- if (tampil_angka) ifelse(frek > 0, frek, "") else NULL
+
+  plot_ly() %>%
+    add_bars(
+      x = tengah, y = frek, width = lebar,
+      marker = list(color = warna, line = list(color = "white", width = 1)),
+      text = teks, textposition = "outside",
+      textfont = list(size = ukuran),
+      cliponaxis = FALSE,
+      hovertemplate = "Waktu: %{x:.2f} menit<br>Frekuensi: %{y}<extra></extra>"
+    ) %>%
+    layout(
+      xaxis = list(title = "Waktu layanan (menit)",   # judul sumbu x ditambahkan
+                   range = c(min(h$breaks) - 0.3, max(h$breaks) + 0.3),
+                   showgrid = FALSE, zeroline = FALSE),
+      yaxis = list(title = "Frekuensi",
+                   range = c(0, max(frek) * 1.2),
+                   showticklabels = FALSE,   # angka sumbu y dihapus
+                   ticks = "",
+                   showgrid = FALSE, zeroline = FALSE)
+    )
+}
+
+# Tiga panel
+p1 <- buat_hist(seq(5, 20, by = 5))                             # ~3 kelas
+p2 <- buat_hist(seq(4, 20, by = 2))                             # Sturges
+p3 <- buat_hist(seq(5, 20, by = 0.25), tampil_angka = FALSE)    # ~60 kelas
+
+# ---------- Gabungkan ----------
+jarak <- 0.08
+
+fig <- subplot(p1, p2, p3, nrows = 1, margin = jarak,
+               titleX = TRUE, titleY = TRUE, shareY = FALSE) %>%
+  layout(
+    showlegend = FALSE,
+    bargap = 0,
+    margin = list(t = 90, b = 80, l = 70, r = 40)
+  )
+
+# Ambil domain x sebenarnya dari tiap panel, lalu hitung tengahnya
+b      <- plotly_build(fig)
+pusat1 <- mean(b$x$layout$xaxis$domain)
+pusat2 <- mean(b$x$layout$xaxis2$domain)
+pusat3 <- mean(b$x$layout$xaxis3$domain)
+
+fig <- fig %>%
+  layout(
+    annotations = list(
+      list(text = "<b>Terlalu sedikit (~3 kelas)</b>", x = pusat1, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>Sturges (9 kelas)</b>", x = pusat2, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>Terlalu banyak (~60 kelas)</b>", x = pusat3, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15))
+    )
+  )
+
+fig
+```
+
+```{r}
+par(mfrow = c(1, 1))
+```
+
+Dengan 3 kelas, dua puncak (dua jenis layanan) **tidak terlihat.** Dengan 60 kelas, grafik penuh
+“gigi” acak. Aturan Sturges adalah titik awal yang baik untuk *n* kecil–sedang, tetapi **selalu coba**
+**beberapa pilihan** dan laporkan yang paling jujur menggambarkan data. Untuk *n* besar, aturan
+lain seperti Freedman–Diaconis (`nclass.FD`()) sering lebih baik.
+
+```{r}
+c(Sturges = nclass.Sturges(waktu), Scott = nclass.scott(waktu),
+  Freedman_Diaconis = nclass.FD(waktu))
+```
+
+### Prinsip 4 – Interpretasi: Ceritakan Bentuk, Pusat, Sebaran, dan Keanehan
+
+Saat membaca histogram, biasakan menjawab empat hal:
+
+| Aspek | Pertanyaan | Contoh untuk nilai ujian |
+| --- | --- | --- |
+| **Bentuk** | Simetris, menjulur kanan/kiri, satu atau dua puncak? | Relatif simetris, satu puncak lebar |
+| **Pusat** | Di sekitar nilai berapa data berkumpul? | Sekitar 80 |
+| **Sebaran** | Dari berapa sampai berapa? Rapat atau menyebar? | 63 sampai 95, cukup merata |
+| **Keanehan** | Ada celah, nilai ekstrem (*outlier*)? | Tidak tampak *outlier* |
+
+Ukuran pusat dan sebaran secara numerik dibahas pada Pertemuan 5; bentuk distribusi dan outlier
+secara formal pada Pertemuan 6.
+
+### Grafik Menyesatkan Lainnya
+
+| Praktik menyesatkan | Mengapa menyesatkan | Perbaikan |
+| --- | --- | --- |
+| Diagram lingkaran dengan total $\neq 100\%$ | Irisan tidak mewakili bagian dari keseluruhan | Gunakan diagram batang |
+| Efek 3D, bayangan, gambar ikon yang diperbesar dua dimensi | Luas/volume melebih-lebihkan perbedaan | Gunakan grafik 2D sederhana |
+| Lebar kelas histogram tidak sama tanpa penyesuaian | Kelas lebar tampak lebih "penting" | Gunakan lebar sama, atau plot **kepadatan** (`freq = FALSE`) |
+| Memilih rentang waktu yang menguntungkan (*cherry picking*) | Tren sesaat disajikan sebagai tren umum | Tampilkan periode yang utuh |
+| Dua sumbu-y dengan skala berbeda | Korelasi palsu tampak meyakinkan | Pisahkan menjadi dua grafik |
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Studi Kasus Komprehensif: Waktu Pengiriman Paket
+
+**Konteks:** Sebuah layanan logistik mencatat waktu pengiriman (jam, dari pemesanan hingga di-
+terima) untuk 80 paket di wilayah Bekasi. Manajer meminta laporan distribusi waktu pengiriman
+beserta komposisi layanan yang dipakai.
+
+### Langkah 1: Komposisi Layanan
+
+```{r}
+set.seed(2026)
+layanan <- sample(c("Reguler", "Ekspres", "Same Day"), 80, replace = TRUE, prob = c(0.55, 0.30, 0.15))
+
+f_layanan <- table(factor(layanan, levels = c("Same Day", "Ekspres", "Reguler")))
+kable(data.frame
+      (Layanan = names(f_layanan),
+        f = as.numeric(f_layanan),
+        Persen = round(as.numeric(prop.table(f_layanan)) * 100, 1)),
+      caption = "Komposisi Layanan Pengiriman (n = 80)")
+```
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik)
+df <- data.frame(
+  Layanan = c("Same Day", "Ekspres", "Reguler"),
+  Jumlah  = c(12, 20, 48)
+)
+
+# Urutkan dari terbesar ke terkecil
+df <- df[order(-df$Jumlah), ]
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (df$Jumlah - min(df$Jumlah)) / (max(df$Jumlah) - min(df$Jumlah))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+fig <- plot_ly(
+  data = df,
+  x = ~Layanan,
+  y = ~Jumlah,
+  type = "bar",
+  marker = list(color = warna),
+  text = ~Jumlah,
+  textposition = "outside",
+  textfont = list(size = 14),
+  hovertemplate = "<b>%{x}</b><br>Jumlah paket: %{y}<extra></extra>"
+) %>%
+  layout(
+    title = list(text = "<b>Jumlah Paket per Jenis Layanan</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    xaxis = list(title = "",
+                 categoryorder = "array",
+                 categoryarray = df$Layanan,
+                 showgrid = FALSE),
+    yaxis = list(title = "",   # judul "Jumlah Paket" dihapus
+                 range = c(0, max(df$Jumlah) * 1.2),
+                 showticklabels = FALSE,   # angka sumbu y dihapus
+                 ticks = "",
+                 showgrid = FALSE,
+                 zeroline = FALSE),
+    bargap = 0.15,
+    margin = list(t = 80, b = 50, l = 40, r = 40)
+  )
+
+fig
+```
+
+### Langkah 2: Tabel Distribusi Frekuensi Waktu Pengiriman
+
+```{r}
+set.seed(2026)
+layanan <- sample(c("Reguler", "Ekspres", "Same Day"), 80, replace = TRUE, prob = c(0.55, 0.30, 0.15))
+jam_kirim <- round(ifelse(layanan == "Same Day", rnorm(80, 6, 1.5),
+                   ifelse(layanan == "Ekspres", rnorm(80, 22, 4), rnorm(80, 46, 9))), 1)
+jam_kirim <- pmax(jam_kirim, 2)
+
+n_kirim <- length(jam_kirim)
+k_kirim <- round(1 + 3.322 * log10(n_kirim))
+w_kirim <- ceiling((max(jam_kirim) - min(jam_kirim)) / k_kirim)
+batas_kirim <- seq(floor(min(jam_kirim)), by = w_kirim, length.out = k_kirim + 1)
+c(k = k_kirim, lebar = w_kirim)
+```
+
+```{r}
+f_kirim <- as.numeric(table(cut(jam_kirim, breaks = batas_kirim, right = FALSE)))
+tabel_kirim <- data.frame(
+Interval_jam = paste0("[", head(batas_kirim, -1), ", ", tail(batas_kirim, -1), ")"),
+Titik_Tengah = (head(batas_kirim, -1) + tail(batas_kirim, -1)) / 2,
+f = f_kirim,
+Persen = round(f_kirim / n_kirim * 100, 1),
+Persen_Kum = round(cumsum(f_kirim) / n_kirim * 100, 1)
+)
+kable(tabel_kirim, caption = "Distribusi Frekuensi Waktu Pengiriman (jam)")
+```
+
+```{r}
+sum(f_kirim) == n_kirim # pastikan semua data tertampung
+```
+
+Karena data kontinu dengan satu desimal, kita memakai interval **setengah terbuka [a, b) (right = FALSE)**, sehingga nilai yang tepat berada di batas masuk ke kelas di atasnya.
+
+
+### Langkah 3: Histogram dan Ogive
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik)
+batas <- c(3, 12, 21, 30, 39, 48, 57, 66)
+frek  <- c(12, 6, 14, 8, 18, 15, 7)
+
+lebar  <- diff(batas)
+tengah <- batas[-length(batas)] + lebar / 2
+kelas  <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+# Persentase kumulatif "kurang dari" (diawali 0 di batas bawah)
+kum <- c(0, cumsum(frek) / sum(frek) * 100)
+
+# Gradasi merah: pudar (terendah) -> tebal (tertinggi)
+ramp <- colorRamp(c("#FADBD8", "#8B0000"))
+warna_hist <- rgb(ramp((frek - min(frek)) / (max(frek) - min(frek))),
+                  maxColorValue = 255)
+warna_ogv  <- rgb(ramp((kum - min(kum)) / (max(kum) - min(kum))),
+                  maxColorValue = 255)
+
+# ---------- Panel 1: Histogram ----------
+p1 <- plot_ly() %>%
+  add_bars(
+    x = tengah, y = frek, width = lebar,
+    marker = list(color = warna_hist, line = list(color = "white", width = 1.5)),
+    text = frek, textposition = "outside",
+    textfont = list(size = 14),
+    customdata = kelas,
+    hovertemplate = "Kelas: <b>%{customdata}</b> jam<br>Jumlah: %{y}<extra></extra>"
+  ) %>%
+  layout(
+    xaxis = list(title = "", tickvals = seq(10, 60, 10),
+                 range = c(0, 69), showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "Jumlah Paket",
+                 range = c(0, max(frek) * 1.2),
+                 showticklabels = FALSE, ticks = "",
+                 showgrid = FALSE, zeroline = FALSE)
+  )
+
+# ---------- Panel 2: Ogive ----------
+teks <- c("", paste0(round(kum[-1], 1), "%"))
+
+p2 <- plot_ly() %>%
+  add_trace(
+    x = batas, y = kum, type = "scatter", mode = "lines+markers+text",
+    line = list(color = "#8B0000", width = 3),
+    marker = list(color = warna_ogv, size = 11,
+                  line = list(color = "#8B0000", width = 1.5)),
+    text = teks, textposition = "top left",
+    textfont = list(size = 13, color = "black"),
+    hovertemplate = "Kurang dari <b>%{x}</b> jam<br>Kumulatif: %{y:.1f}%<extra></extra>"
+  ) %>%
+  layout(
+    xaxis = list(title = "", tickvals = seq(10, 60, 10),
+                 range = c(0, 69), showgrid = FALSE, zeroline = FALSE,
+                 showline = TRUE, mirror = TRUE),
+    yaxis = list(title = "Persentase Kumulatif (%)",
+                 range = c(-3, 108),
+                 showticklabels = FALSE, ticks = "",
+                 showgrid = FALSE, zeroline = FALSE,
+                 showline = TRUE, mirror = TRUE)
+  )
+
+# ---------- Gabungkan ----------
+jarak <- 0.12
+
+fig <- subplot(p1, p2, nrows = 1, margin = jarak,
+               titleY = TRUE, shareY = FALSE) %>%
+  layout(
+    showlegend = FALSE,
+    bargap = 0,
+    margin = list(t = 90, b = 50, l = 70, r = 40),
+    shapes = list(
+      # Garis putus-putus di 50% dan 90% (panel ogive)
+      list(type = "line", xref = "x2 domain", x0 = 0, x1 = 1,
+           yref = "y2", y0 = 50, y1 = 50,
+           line = list(color = "gray50", dash = "dash", width = 1.5)),
+      list(type = "line", xref = "x2 domain", x0 = 0, x1 = 1,
+           yref = "y2", y0 = 90, y1 = 90,
+           line = list(color = "gray50", dash = "dash", width = 1.5))
+    )
+  )
+
+# Ambil domain x sebenarnya dari tiap panel, lalu hitung tengahnya
+b      <- plotly_build(fig)
+pusat1 <- mean(b$x$layout$xaxis$domain)
+pusat2 <- mean(b$x$layout$xaxis2$domain)
+
+fig <- fig %>%
+  layout(
+    annotations = list(
+      list(text = "<b>Histogram Waktu Pengiriman</b>", x = pusat1, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>Ogive Waktu Pengiriman</b>", x = pusat2, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15))
+    )
+  )
+
+fig
+```
+
+### Langkah 4: Histogram per Layanan
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik), kelas sama untuk ketiga panel
+batas  <- c(3, 12, 21, 30, 39, 48, 57, 66)
+lebar  <- diff(batas)
+tengah <- batas[-length(batas)] + lebar / 2
+kelas  <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+frek <- list(
+  "Same Day" = c(12, 0, 0, 0, 0, 0, 0),
+  "Ekspres"  = c(0, 6, 11, 3, 0, 0, 0),
+  "Reguler"  = c(0, 0, 3, 5, 18, 15, 7)
+)
+
+# Gradasi merah memakai skala yang sama untuk semua panel
+semua <- unlist(frek)
+semua <- semua[semua > 0]
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+
+# Pengaturan sumbu x yang sama untuk ketiga panel
+sumbu_x <- list(
+  title = "Waktu pengiriman (jam)",
+  range = c(0, 69),
+  tickmode = "array",
+  tickvals = seq(10, 60, 10),
+  ticktext = seq(10, 60, 10),
+  tickangle = 0,            # angka selalu lurus (horizontal)
+  fixedrange = TRUE,
+  showgrid = FALSE, zeroline = FALSE
+)
+
+# Fungsi pembuat satu panel
+buat_panel <- function(f) {
+  skala <- (f - min(semua)) / (max(semua) - min(semua))
+  warna <- rgb(ramp(pmin(pmax(skala, 0), 1)), maxColorValue = 255)
+
+  plot_ly() %>%
+    add_bars(
+      x = tengah, y = f, width = lebar,
+      marker = list(color = warna, line = list(color = "white", width = 1.5)),
+      text = ifelse(f > 0, f, ""), textposition = "outside",
+      textfont = list(size = 14),
+      cliponaxis = FALSE,
+      customdata = kelas,
+      hovertemplate = "Kelas: <b>%{customdata}</b> jam<br>Jumlah: %{y}<extra></extra>"
+    ) %>%
+    layout(
+      xaxis = sumbu_x,
+      yaxis = list(title = "Jumlah Paket",
+                   range = c(0, 25),
+                   showticklabels = FALSE,
+                   ticks = "",
+                   showgrid = FALSE, zeroline = FALSE)
+    )
+}
+
+p1 <- buat_panel(frek[["Same Day"]])
+p2 <- buat_panel(frek[["Ekspres"]])
+p3 <- buat_panel(frek[["Reguler"]])
+
+# ---------- Gabungkan ----------
+fig <- subplot(p1, p2, p3, nrows = 1, margin = 0.08,
+               titleX = TRUE, titleY = TRUE, shareY = FALSE) %>%
+  layout(
+    showlegend = FALSE,
+    bargap = 0,
+    xaxis  = sumbu_x,
+    xaxis2 = sumbu_x,
+    xaxis3 = sumbu_x,
+    margin = list(t = 90, b = 90, l = 70, r = 40)
+  )
+
+# Ambil domain x sebenarnya dari tiap panel, lalu hitung tengahnya
+b      <- plotly_build(fig)
+pusat1 <- mean(b$x$layout$xaxis$domain)
+pusat2 <- mean(b$x$layout$xaxis2$domain)
+pusat3 <- mean(b$x$layout$xaxis3$domain)
+
+fig <- fig %>%
+  layout(
+    annotations = list(
+      list(text = "<b>Same Day</b>", x = pusat1, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>Ekspres</b>", x = pusat2, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15)),
+      list(text = "<b>Reguler</b>", x = pusat3, y = 1.08,
+           xref = "paper", yref = "paper", xanchor = "center",
+           showarrow = FALSE, font = list(size = 15))
+    )
+  )
+
+fig
+```
+
+```{r}
+par(mfrow = c(1, 1))
+```
+
+### Pertanyaan Diskusi dan Jawaban
+
+1. **Bagaimana bentuk distribusi waktu pengiriman secara keseluruhan?**
+
+Distribusinya **tidak satu puncak**: ada kelompok paket yang tiba dalam hitungan jam, kelompok sekitar satu hari, dan kelompok terbesar sekitar dua hari. Histogram per layanan menjelaskan penyebabnya  data sebenarnya **campuran tiga layanan** dengan waktu yang sangat berbeda.
+
+2. **Mengapa melaporkan “rata-rata waktu pengiriman” saja tidak tepat**?
+
+Karena distribusinya campuran. Satu angka rata-rata (34.9 jam) tidak mewakili pelanggan *Same Day* maupun Reguler. Laporan yang tepat memisahkan distribusi **per layanan**.
+
+3. **Informasi apa yang dapat dibaca dari ogive?**
+
+Misalnya, persentase paket yang tiba **kurang dari 24 jam** dapat dibaca langsung dari ogive atau dihitung: 30% paket. Garis 90% menunjukkan batas waktu yang dipenuhi oleh 90% pengiriman berguna untuk menetapkan janji layanan (SLA).
+
+4. **Grafik apa yang paling tepat untuk rapat manajemen?**
+
+Diagram batang komposisi layanan (kategorik) dan histogram **per layanan** (numerik), masing-masing dengan judul, satuan, dan n. Diagram lingkaran boleh dipakai untuk komposisi karena hanya ada tiga kategori.
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Latihan Mandiri
+
+### Latihan Utama (Exercise 2.14): Kepemilikan Kartu Kredit
+
+**Konteks**: Sebuah sampel acak dari 80 orang dewasa ditanya mengenai jumlah kartu kredit yang mereka miliki. Hasilnya disajikan dalam tabel berikut (data ini dilanjutkan pada Pertemuan 5).
+
+```{r}
+kelas_kk <- c("0 to 3", "4 to 7", "8 to 11", "12 or more")
+frekuensi_kk <- c(18, 26, 22, 14)
+n_kk <- sum(frekuensi_kk)
+```
+
+#### Tugas 1: Lengkapi tabel dengan frekuensi relatif, persentase, dan frekuensi kumulatif
+
+```{r}
+tabel_kk <- data.frame(
+Kelas = kelas_kk,
+f = frekuensi_kk,
+f_Relatif = frekuensi_kk / n_kk,
+Persen = frekuensi_kk / n_kk * 100,
+F_Kumulatif = cumsum(frekuensi_kk),
+Persen_Kum = cumsum(frekuensi_kk) / n_kk * 100
+)
+kable(tabel_kk, digits = 3, caption = "Distribusi Kepemilikan Kartu Kredit (n =80)")
+```
+
+#### Tugas 2: Berapa persen responden yang memiliki 8 kartu atau lebih?
+
+```{r}
+sum(frekuensi_kk[3:4]) / n_kk * 100
+```
+
+**Jawaban**: 45% responden (22 + 14 = 36 orang) memiliki 8 kartu kredit atau lebih.
+
+#### Tugas 3: Tentukan batas nyata dan titik tengah kelas
+
+```{r}
+batas_nyata_kk <- c(-0.5, 3.5, 7.5, 11.5, 15.5) # kelas terbuka diasumsikan lebar 4
+data.frame(Kelas = kelas_kk,
+
+Batas_Nyata = paste0(head(batas_nyata_kk, -1), " - ", tail(batas_nyata_kk, -1)),
+Titik_Tengah = (head(batas_nyata_kk, -1) + tail(batas_nyata_kk, -1)) /2)
+```
+
+**Catatan**: kelas “12 or more” adalah **kelas terbuka** (tidak punya batas atas). Untuk menggambar histogram atau menghitung titik tengah, kita **harus berasumsi** di sini lebarnya disamakan dengan kelas lain (12–15). Asumsi ini wajib dinyatakan.
+
+#### Tugas 4: Gambar histogram dan poligon frekuensinya
+
+```{r}
+library(plotly)
+
+# Data (dibaca dari grafik)
+batas <- c(-0.5, 3.5, 7.5, 11.5, 15.5)
+frek  <- c(18, 26, 22, 14)
+
+lebar  <- diff(batas)
+tengah <- batas[-length(batas)] + lebar / 2
+n      <- length(frek)
+kelas  <- paste0(batas[-length(batas)], " - ", batas[-1])
+
+# Titik poligon: ditutup dengan frekuensi 0 satu lebar kelas di luar kedua ujung
+x_poli <- c(tengah[1] - lebar[1], tengah, tengah[n] + lebar[n])
+y_poli <- c(0, frek, 0)
+t_poli <- c("", frek, "")          # angka hanya pada titik asli
+
+# Gradasi merah untuk batang: pudar (terendah) -> tebal (tertinggi)
+ramp  <- colorRamp(c("#FADBD8", "#8B0000"))
+skala <- (frek - min(frek)) / (max(frek) - min(frek))
+warna <- rgb(ramp(skala), maxColorValue = 255)
+
+fig <- plot_ly() %>%
+  # Histogram
+  add_bars(
+    x = tengah, y = frek, width = lebar,
+    marker = list(color = warna, line = list(color = "white", width = 1.5)),
+    customdata = kelas,
+    hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>"
+  ) %>%
+  # Poligon frekuensi
+  add_trace(
+    x = x_poli, y = y_poli, type = "scatter", mode = "lines+markers+text",
+    line = list(color = "black", width = 3),
+    marker = list(color = "black", size = 9),
+    text = t_poli, textposition = "top center",
+    textfont = list(size = 14, color = "black"),
+    hovertemplate = "Titik tengah: %{x}<br>Frekuensi: %{y}<extra></extra>"
+  ) %>%
+  layout(
+    title = list(text = "<b>Distribusi Kepemilikan Kartu Kredit (n = 80)</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    bargap = 0,
+    xaxis = list(title = "",   # judul sumbu x dihapus
+                 tickvals = batas, ticktext = batas,
+                 range = c(min(batas) - 6, max(batas) + 6),
+                 showgrid = FALSE, zeroline = FALSE,
+                 showline = TRUE, mirror = TRUE),
+    yaxis = list(title = "Frekuensi (f)",
+                 range = c(0, 31),
+                 tickvals = seq(0, 30, 5),   # angka sumbu kiri ditampilkan
+                 showticklabels = TRUE,
+                 ticks = "outside",
+                 showgrid = FALSE, zeroline = FALSE,
+                 showline = TRUE, mirror = TRUE),
+    margin = list(t = 80, b = 40, l = 70, r = 40)
+  )
+
+fig
+```
+
+#### Tugas 5: Interpretasikan distribusinya
+
+Jawaban: Kelas dengan frekuensi terbanyak adalah **4 to 7** (26 orang, 32,5%). Frekuensi naik dari kelas pertama ke kelas kedua lalu turun perlahan, sehingga distribusinya **sedikit menjulur ke kanan**. Sebanyak 44 responden (55%, dari frekuensi kumulatif kelas kedua) memiliki 7 kartu atau kurang. Ukuran pusat dan sebarannya dihitung pada Pertemuan 5.
+
+#### Tugas 6 (Tantangan): Diagram batang atau histogram?
+
+Jumlah kartu kredit adalah data diskrit. Apakah lebih tepat digambarkan dengan diagram batang atau histogram? Jelaskan.
+**Jawaban**: Jika data mentah tersedia dengan sedikit nilai berbeda (misalnya 0–15), **diagram batang per nilai** paling informatif. Namun karena data sudah dikelompokkan menjadi interval **bersambung** (0–3, 4–7, ...), **histogram** dengan batas nyata tepat dipakai – batasnya menempel karena setiap bilangan bulat pasti masuk satu kelas. Yang penting: kelas terbuka “12 or more”
+diberi catatan asumsi.
+
+### Latihan Tambahan (Self-Check)
+
+Kerjakan soal-soal berikut secara mandiri sebelum melihat kunci jawaban pada komentar kode.
+
+**Soal A**. Data usia (tahun) 25 peserta pelatihan: 23, 31, 27, 45, 38, 29, 34, 41, 26, 36, 52, 30, 28, 33, 47, 39, 24, 35, 43, 32, 37, 29, 48, 31, 40. Susun tabel distribusi frekuensi dengan Aturan Sturges, lengkap dengan batas nyata, titik tengah, frekuensi relatif, dan kumulatif.
+
+```{r}
+usia <- c(23, 31, 27, 45, 38, 29, 34, 41, 26, 36, 52, 30, 28, 33, 47, 39, 24, 35,43,
+
+32, 37, 29, 48, 31, 40)
+
+# Kunci jawaban:
+# k = 1 + 3.322 log10(25) = 5.64 -> 6 kelas; R = 52 - 23 = 29; w = 29/6 = 4.83 ->5
+# Kelas: 23-27, 28-32, 33-37, 38-42, 43-47, 48-52
+# Batas nyata: 22.5, 27.5, 32.5, 37.5, 42.5, 47.5, 52.5
+table(cut(usia, breaks = seq(22.5, 52.5, by = 5)))
+# f = 4, 7, 5, 4, 3, 2 (total 25); titik tengah = 25, 30, 35, 40, 45, 50
+```
+
+**Soal B**. Buat diagram batang-daun untuk data usia pada Soal A, lalu tentukan usia yang paling sering muncul.
+
+```{r}
+stem(usia)
+# Kunci jawaban: batang 2, 3, 4, 5. Usia 29 dan 31 masing-masing muncul dua kali
+# (terlihat sebagai daun "99" pada batang 2 dan "11" pada batang 3).
+```
+
+**Soal C**. Sebuah media menampilkan diagram batang penjualan dua merek dengan sumbu-y dari 950 sampai 1.000 unit (Merek A = 960, Merek B = 990). Jelaskan mengapa grafik itu menyesatkan dan hitung perbandingan panjang batang yang tampak vs yang seharusnya.
+
+```{r}
+# Kunci jawaban:
+(990 - 950) / (960 - 950) # tampak: batang B = 4 kali batang A
+990 / 960 # seharusnya: B hanya ~1.03 kali A (lebih besar 3%)
+# Diagram batang harus dimulai dari 0 agar panjang batang sebanding dengan nilainya.
+```
+
+**Soal D**. Dari tabel pendapatan mingguan pada praktikum ini, berapa persen karyawan yang berpenapatan lebih dari 1.600,5 USD? Kelas mana yang memuat median?
+
+```{r}
+# Kunci jawaban:
+sum(f_p[5:6]) / sum(f_p) * 100 # (9 + 6) / 100 = 15%
+cumsum(f_p) 
+# 9, 31, 70, ...-> posisi median ke-50 berada di kelas 1201-1400
+```
+
+##  Kesalahan Umum dalam Penyajian dan Visualisasi Data
+
+1. **Memakai histogram untuk data kategorik** (atau diagram batang dengan batang menempel untuk kategori)– pilih grafik sesuai jenis data.
+
+2. **Memotong sumbu-y diagram batang**– perbedaan kecil tampak sangat besar.
+
+3. **Diagram lingkaran** dengan terlalu banyak irisan atau total yang bukan 100%.
+
+4. **Grafik tanpa judul**, label sumbu, satuan, atau 𝑛– pembaca tidak dapat menafsirkan.
+
+5. **Memilih banyak kelas asal-asalan** – terlalu sedikit menyembunyikan pola, terlalu banyak menimbulkan pola palsu.
+
+6. **Lebar kelas dibulatkan ke bawah** sehingga data terbesar tidak tertampung - lebar kelas dibulatkan ke atas.
+
+7. **Kelas yang tumpang tindih atau berlubang**(misalnya60–70dan70–80)–satunilai tidak boleh masuk dua kelas; gunakan batas nyata atau interval setengah terbuka yang konsisten.
+
+8. **Menghitung frekuensi kumulatif untuk data nominal tanpa urutan yang bermakna**.
+
+9. **Tidak menyatakan asumsi kelas terbuka** (“12 or more”) saat menggambar histogram atau menghitung titik tengah.
+
+10. **Mengurutkan kategori ordinal menurut abjad**– urutan harus mengikuti tingkatannya.
+
+11. **Membandingkan persentase tabel silang ke arah yang salah**– pilih persentase baris atau kolom sesuai pertanyaan.
+
+12. **Efek 3D dan dekorasi berlebihan** yang mendistorsi proporsi.
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+##  Cheat Sheet: Fungsi R yang Digunakan
+
+|Fungsi|Kegunaan|
+|---|---|
+|table(x)|Frekuensi tiap kategori/nilai|
+|prop.table(tabel, margin)|Frekuensi relatif; margin = 1 per baris, 2 perkolom|
+|addmargins(tabel)|Menambahkan total baris dan kolom|
+|sort(tabel, decreasing = TRUE)|Mengurutkan frekuensi (untuk Pareto)|
+|cumsum(f)|Frekuensi kumulatif||
+|rev(cumsum(rev(f)))|Frekuensi kumulatif “lebih dari”|
+|log10(n), ceiling(x), round(x)|Perhitungan Aturan Sturges dan lebar kelas|
+|nclass.Sturges(x), nclass.FD(x),nclass.scott(x)|Banyak kelas menurut berbagai aturan|
+|seq(from, by, length.out)|Membuat batas kelas|
+|cut(x, breaks, right = TRUE/FALSE)|Mengelompokkan data ke kelas|
+|hist(x, breaks, plot = FALSE)|Menghitung frekuensi kelas tanpa menggambar|
+|barplot(f, horiz, beside)|Diagram batang (horizontal, berkelompok, bertumpuk)|
+|pie(f, labels)|Diagram lingkaran|
+|hist(x, breaks)|Histogram|
+|rect(x1, y1, x2, y2)|Menggambar histogram dari data terkelompok|
+|lines(x, y, type = "b")|Poligon frekuensi / ogive / garis kumulatif Pareto|
+|approx(x, y, xout)|Interpolasi linear (menaksir median dari ogive)|
+|stem(x, scale)|Diagram batang-daun|
+|axis(), text(), legend(), abline()|Melengkapi grafik dengan sumbu, label,legenda, garis bantu|
+|par(mfrow = c(r, c)), par(mar = ...)|Mengatur tata letak dan margin grafik|
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+##  Glosarium Istilah 
+
+|Istilah|Definisi Singkat|
+|---|---|
+|**Distribusi Frekuensi**|Tabel yang menunjukkan banyaknya data pada setiap kategori atau kelas|
+|**Frekuensi Relatif**|Frekuensi dibagi banyaknya data (𝑓/𝑛)|
+|**Frekuensi Kumulatif**|Jumlah frekuensi hingga kelas tertentu|
+|**Tabel Silang**|Tabel frekuensi dua variabel kategorik sekaligus|
+|**Aturan Sturges**|Aturan menentukan banyak kelas:𝑘 =1+ 3,322log10 |
+|**Lebar Kelas**|Selisih batas nyata atas dan bawah sebuah kelas|
+|**Batas Kelas**|Nilai terkecil dan terbesar yang tercantum pada sebuah kelas|
+|**Batas Nyata**|Batas kelas yang diperluas setengah satuan agar kelas bersambung|
+|**Titik Tengah Kelas**|Rata-rata batas bawah dan atas kelas; wakil nilai kelas|
+|**Kelas Terbuka**|Kelas tanpa batas bawah atau batas atas (misalnya “12 or more”)|
+|**Diagram Batang**|Grafik batang terpisah untuk frekuensi data kategorik|
+|**Diagram Pareto**|Diagram batang terurut dengan garis persentase kumulatif|
+|**Diagram Lingkaran**|Grafik irisan lingkaran yang menunjukkan bagian dari keseluruhan|
+|**Histogram**|Grafik batang bersambung untuk distribusi data numerik|
+|**Poligon Frekuensi**|Garis yang menghubungkan titik tengah puncak kelas histogram|
+|**Ogive**|Kurva frekuensi kumulatif terhadap batas nyata atas|
+|**Stem-and-Leaf**|Diagram yang memecah nilai menjadi batang dan daun sambil mempertahankan nilai asli|
+|**Bin**|Istilah lain untuk kelas/interval pada histogram|
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+## Rangkuman dan Kesimpulan
+
+1. **Tabel distribusi frekuensi** meringkas data menjadi frekuensi, frekuensi relatif, dan frekuensi kumulatif. Tabel silang meringkas hubungan dua variabel kategorik.
+
+2. **Data numerik dikelompokkan** dengan Aturan Sturges, lebar kelas yang dibulatkan ke atas, batas nyata agar kelas bersambung, dan **titik tengah** sebagai wakil kelas.
+
+3. **Jenis data menentukan grafik**: diagram batang/lingkaran/Pareto untuk kategorik; histogram, poligon, ogive, dan **stem-and-leaf** untuk numerik.
+
+4. **Visualisasi yang jujur** memulai sumbu diagram batang dari nol, memberi label lengkap,memilih bin dengan cermat, dan menghindari dekorasi yang mendistorsi.
+
+5. **Membaca grafik** berarti menceritakan **bentuk, pusat, sebaran, dan keanehan** data.
+
+Jembatan ke sesi berikutnya: Pertemuan 5 mengubah kesan visual “pusat di sekitar 80” dan “sebaran dari 63 sampai 95” menjadi angka yang tepat– mean, median, modus, rentang, varians, simpangan baku, dan koefisien variasi– termasuk perhitungannya dari tabel data terkelompok yang telah kita susun hari ini.
+
+<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+
+##  Referensi Pendukung
+
+Materi ini merangkum topik penyajian data dan visualisasi *(organizing and visualizing data)* yang umum dibahas pada bab awal buku teks pengantar statistika bisnis/data science. Mahasiswa disarankan melengkapi pemahaman dengan merujuk pada:
+
+- Modul/slide perkuliahan “Introduction to Statistics (SDT-1102)”– Pertemuan 4: Penyajian dan Visualisasi Data.
+
+- Tufte, E. R. *The Visual Display of Quantitative Information*. Graphics Press.
+
+- Huff, D. *How to Lie with Statistics*. W. W. Norton (bab tentang grafik yang menyesatkan).
+
+- Dokumentasi resmi R: ?table, ?cut, ?hist, ?barplot, ?pie, ?stem, ?nclass.Sturges (dapat diakses langsung di R/RStudio)

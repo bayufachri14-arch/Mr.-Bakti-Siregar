@@ -8,8 +8,9 @@ project:
     - assets/epub-reader.js
 
 book:
-  title: "Quarto Template"
-  author: "Bayu Fachri"
+  title: "Introduction to Statistics (SDT-11012)"
+  output-file: Quarto-Template
+  author: "Bayu Fachri (52260027)"
   date: today
   description: "Deskripsi singkat tentang buku"
   cover-image: images/Cover.png
@@ -27,9 +28,20 @@ book:
         aria-label: Pratinjau EPUB
   chapters:
     - index.qmd
-    - chapters/bab-1.qmd
-    - chapters/bab-2.qmd
-    - chapters/bab-3.qmd
+    - chapters/P01.qmd
+    - chapters/P02.qmd
+    - chapters/P03.qmd
+    - chapters/P04.qmd
+    - chapters/P05.qmd
+    - "chapters/P08 UTS.qmd"
+    - chapters/P09.qmd
+    - chapters/P10.qmd
+    - chapters/P11.qmd
+    - chapters/P12.qmd
+    - chapters/P13.qmd
+    - chapters/P14.qmd
+    - chapters/P15.qmd
+    - "chapters/P16 UAS.qmd"
     - references/referensi.qmd
 
 bibliography:
@@ -37,6 +49,12 @@ bibliography:
   - references/packages.bib
 csl: references/ieee.csl
 link-citations: true
+
+knitr:
+  opts_chunk:
+    screenshot.force: false
+  opts_knit:
+    rmarkdown.pandoc.to: "latex"
 
 format:
   html:
@@ -60,8 +78,10 @@ format:
     include-in-header: assets/preamble.tex
     number-sections: true
     toc: true
+    prefer-html: true
   epub:
     cover-image: images/Cover.png
+    prefer-html: true
 
 execute:
   freeze: auto

@@ -1,29 +1,30 @@
 ---
 # title: "Kata Pengantar"
-author: "Bayu Fachri"
+author: "Bayu Fachri (52260027)"
 description: "Deskripsi Singkat"
 ---
 
 # Kata Pengantar {.unnumbered}
 
-Dengan mengucap syukur kepada Tuhan Yang Maha Esa, saya sangat senang dapat mempersembahkan eBook **"Quarto Template"** kepada para pembaca dan pengguna. eBook ini disusun sebagai panduan praktis untuk membantu mahasiswa, dosen, peneliti, serta praktisi dalam memanfaatkan Quarto sebagai salah satu perangkat untuk menyusun, mengelola, dan menerbitkan dokumen secara profesional.
+Puji syukur ke hadirat Tuhan Yang Maha Esa atas selesainya eBook **"Praktikum Introduction to Statistics"** ini. Buku ini ditulis untuk menemani mahasiswa Data Science, dan siapa pun yang ingin belajar statistika, agar tidak hanya memahami konsepnya tetapi juga terbiasa mengolah data dengan bahasa R.
 
-Quarto merupakan perangkat *open-source scientific and technical publishing* yang memungkinkan pengguna mengintegrasikan teks, kode pemrograman, hasil analisis, visualisasi data, serta berbagai elemen pendukung lainnya ke dalam satu dokumen. Dengan Quarto, proses penulisan dan publikasi dapat dilakukan secara lebih terstruktur, reproducible, dan efisien dalam berbagai format keluaran, seperti HTML, PDF, Microsoft Word, serta format publikasi lainnya.
+Statistika kerap dianggap sebagai deretan rumus yang sulit dihafal. Padahal, pada intinya statistika adalah cara berpikir untuk menarik kesimpulan dari data yang terbatas. Karena itu, setiap pembahasan dalam buku ini dipadukan dengan kode R, simulasi, grafik, dan kasus nyata, sehingga pembaca dapat menyaksikan sendiri bagaimana sebuah konsep bekerja, bukan sekadar menerimanya.
 
-Contoh sitasi: tuliskan `[@xie2015]` untuk merujuk entri `xie2015` di `references/book.bib`. Pada hasil render, sitasinya tampil seperti ini [@xie2015].
+Buku ini disusun dengan Quarto, sehingga narasi, kode, tabel, dan grafik menyatu dalam satu dokumen yang bisa dijalankan ulang kapan saja. Untuk mengutip pustaka, cukup ketik `[@efron1993]`, yaitu kunci entri yang tersimpan di `referensi/referensi.bib`. Setelah dirender, kutipan tersebut akan tampil seperti ini [@efron1993].
 
-Melalui eBook ini, pembaca akan diperkenalkan pada penggunaan template Quarto, mulai dari pengenalan struktur proyek, pengaturan konfigurasi, penulisan dokumen menggunakan Markdown, integrasi kode pemrograman, pengelolaan referensi, hingga proses *rendering* menjadi dokumen yang siap digunakan dan dipublikasikan.
+Alur belajarnya disusun dari yang paling mendasar menuju yang lebih lanjut. Pembaca memulai dari jenis data dan cara menyajikannya, lalu melangkah ke ukuran pemusatan dan persebaran, distribusi sampling beserta teorema limit pusat, estimasi dan interval kepercayaan, hingga berakhir pada uji hipotesis. Di setiap bab tersedia latihan mandiri, rangkuman kesalahan yang sering terjadi, daftar fungsi R, dan glosarium istilah.
 
-Materi disusun secara bertahap agar mudah dipahami dan dipraktikkan, termasuk oleh pengguna yang baru pertama kali mengenal Quarto. Template dan contoh yang disajikan diharapkan dapat menjadi referensi dalam mengembangkan berbagai kebutuhan dokumentasi akademik, laporan penelitian, modul pembelajaran, buku elektronik, maupun publikasi berbasis data.
+Tidak diperlukan bekal khusus untuk memulai. Pembaca yang baru mengenal statistika inferensial maupun Quarto tetap dapat mengikutinya langkah demi langkah, sebab semua contoh dirancang agar hasilnya dapat direproduksi dan diperiksa kembali oleh siapa saja.
 
-Saya berharap eBook ini dapat memberikan manfaat nyata dalam mendukung peningkatan literasi digital, produktivitas akademik, dan penerapan praktik penulisan ilmiah yang modern. Lebih dari sekadar panduan teknis, eBook ini diharapkan dapat mendorong pembaca untuk mengeksplorasi berbagai kemampuan Quarto dan mengembangkan template sesuai dengan kebutuhan masing-masing.
+Harapan saya, buku ini membantu menumbuhkan kepekaan terhadap data, kebiasaan berpikir kritis, dan cara menulis laporan analisis yang rapi. Saya juga mengajak pembaca untuk mencoba sendiri: ubah nilai `set.seed`, ganti ukuran sampel, lalu perhatikan apa yang berubah pada hasilnya.
 
-Saya menyadari bahwa eBook ini masih memiliki ruang untuk penyempurnaan. Oleh karena itu, kritik, saran, dan masukan dari para pembaca sangat diharapkan sebagai bahan evaluasi untuk pengembangan edisi berikutnya.
+Buku ini tentu belum sempurna. Masukan, koreksi, dan saran dari pembaca akan sangat berarti bagi penyempurnaan edisi selanjutnya.
 
-Akhir kata, semoga eBook ini dapat menjadi referensi yang bermanfaat dan memberikan kontribusi positif bagi dunia pendidikan, penelitian, dan pengembangan ilmu pengetahuan.
+Selamat belajar, dan semoga buku ini menjadi bekal yang berguna dalam perjalanan Anda bersama data.
 
-**Bayu Fachri**  
-Penulis
+**Bayu Fachri**\
+Program Studi Data Science, ITSB\
+2026
 
 
 ## Penulis 
@@ -34,17 +35,16 @@ Penulis
 
 ## Ucapan Terima Kasih 
 
-Proses penulisan Tempate eBook ini tidak terlepas dari dukungan berbagai pihak. Saya ingin mengucapkan terima kasih kepada:
+Terwujudnya Template eBook ini tidak lepas dari bantuan dan dukungan banyak pihak. Dengan penuh rasa syukur, saya menyampaikan terima kasih kepada:
 
-* **Keluarga** yang selalu memberikan dukungan moral dan semangat tanpa henti.
-* **Rekan-rekan dan Kolaborator** yang telah memberikan masukan, saran, dan kritik yang konstruktif.
-* Institusi dan Organisasi, Khususnya **[ITSB](https://itsb.ac.id/)** yang telah menyediakan sumber daya dan fasilitas yang diperlukan selama proses penelitian dan penulisan.
+* **Keluarga**, yang senantiasa menjadi sumber motivasi dan dukungan moral di setiap langkah.
+* **Rekan-rekan dan Kolaborator**, yang telah berbagi masukan, saran, serta kritik membangun.
+* **Institusi dan Organisasi**, terutama **[ITSB](https://itsb.ac.id/)** , yang telah menyediakan sumber daya dan fasilitas selama proses penelitian dan penulisan berlangsung.
 
-Saya berharap Template eBook ini dapat menjadi referensi yang bermanfaat dan memberikan inspirasi serta pengetahuan baru bagi pembaca. Semoga Ebook ini dapat memenuhi ekspektasi dan kebutuhan para pembaca dan semoga ilmu yang disampaikan dapat bermanfaat bagi semua.
-
+Semoga Template eBook ini dapat menjadi rujukan yang berguna serta menghadirkan inspirasi dan wawasan baru bagi para pembaca. Harapan saya, eBook ini dapat memenuhi kebutuhan pembaca, dan semoga ilmu yang dibagikan membawa manfaat bagi semua.
 
 ## Masukan & Saran 
 
-Semua masukan dan tanggapan Anda sangat berarti bagi kami untuk memperbaiki Ebook Quarto Template ini kedepannya. Bagi para pembaca/pengguna yang ingin menyampaikan masukan dan tanggapan, dipersilahkan melalui kontak dibawah ini!
+Setiap masukan dan tanggapan dari Anda sangat berharga bagi kami untuk menyempurnakan Ebook Quarto Template ini di masa mendatang. Bagi pembaca atau pengguna yang ingin menyampaikan saran maupun kritik, silakan menghubungi kami melalui kontak berikut!
 
-**Email:** dsciencelabs@outlook.com
+**Email:** bayufachri14@gmail.com
