@@ -55,822 +55,104 @@ Mahasiswa **Sains Data** di **Institut Teknologi Sains Bandung** dengan rasa ing
 ## Pendahuluan
 
 **Program Studi:** Data Science\
-**Konteks Sesi:** Pertemuan 9 – Sampling Distribution dan Estimasi
+**Konteks Sesi:** Pertemuan 10 – Konsep dan Uji Hipotesis
 
-Paruh pertama semester mengajarkan cara menggambarkan data. Mulai pertemuan ini, kita melangkah ke statistika inferensial: menarik kesimpulan tentang populasi dari satu sampel. Masalahnya, sejak Pertemuan 1 kita tahu bahwa statistik sampel berubah-ubah: sampel berbeda menghasilkan $\bar{x}$ berbeda. Jika demikian, bagaimana kita bisa memercayai satu angka dari satu sampel? Jawabannya ada pada konsep terpenting dalam statistika inferensial: **sampling distribution** – distribusi dari sebuah statistik jika pengambilan sampel diulang berkali-kali. Dengan memahaminya, kita dapat menyatakan bukan hanya "berapa taksirannya", tetapi juga "seberapa jauh taksiran itu mungkin meleset".
+Dalam sidang pengadilan berlaku asas praduga tak bersalah: terdakwa dianggap tidak bersalah sampai jaksa menghadirkan bukti yang cukup kuat untuk meyakinkan hakim sebaliknya. Jika bukti kurang kuat, putusannya adalah "tidak terbukti bersalah" – bukan "terbukti tidak bersalah". Hakim juga bisa keliru: menghukum orang yang tidak bersalah, atau membebaskan orang yang bersalah.
+
+Uji hipotesis bekerja dengan logika yang persis sama. Kita memulai dengan asumsi "tidak ada efek/perbedaan" ($H_0$), lalu bertanya: jika asumsi itu benar, seberapa mengejutkan data yang kita peroleh? Jika sangat mengejutkan, kita menolak asumsi tersebut. Pertemuan ini membangun kerangka konsepnya; Pertemuan 11–14 menerapkannya pada berbagai uji.
 
 ### Tujuan Pembelajaran
 
 Setelah menyelesaikan praktikum ini, mahasiswa mampu:
 
-1. Membedakan distribusi populasi, distribusi sampel, dan distribusi sampling.
-2. Menjelaskan sifat distribusi sampling dari rata-rata sampel ($\bar{x}$) dan proporsi sampel ($\hat{p}$).
-3. Menjelaskan dan mendemonstrasikan *Central Limit Theorem* (CLT) serta pengaruh ukuran sampel.
-4. Menghitung dan menafsirkan *standard error* serta membedakannya dari simpangan baku.
-5. Menghitung *point estimate*, *confidence interval* (untuk mean dan proporsi), dan *margin of error*, serta menafsirkannya dengan benar.
-6. Menentukan ukuran sampel minimum untuk mencapai *margin of error* tertentu.
+1. Merumuskan hipotesis nol ($H_0$) dan hipotesis alternatif ($H_1$), baik dua arah maupun satu arah.
+2. Menjelaskan tingkat signifikansi ($\alpha$), statistik uji, nilai kritis, dan daerah penolakan.
+3. Menghitung dan menafsirkan *p-value* dengan benar.
+4. Mengambil keputusan (tolak $H_0$ atau gagal menolak $H_0$) dan menuliskan kesimpulan dalam konteks.
+5. Menjelaskan kesalahan Tipe I dan Tipe II, *power*, serta faktor yang memengaruhinya melalui simulasi.
+6. Membedakan signifikansi statistik dan signifikansi praktis, serta mengenali penyalahgunaan *p-value*.
 
 ### Peta Alur Belajar
 
 | Tahap | Bagian | Fokus |
 |:------|:-------|:------|
-| 1 | Tiga Distribusi | Populasi, sampel, sampling |
-| 2 | Distribusi Sampling Rata-rata | $E(\bar{x}) = \mu$, $SE = \sigma/\sqrt{n}$ |
-| 3 | Central Limit Theorem | Bentuk distribusi sampling untuk berbagai populasi |
-| 4 | Distribusi Sampling Proporsi | $E(\hat{p}) = p$, syarat pendekatan normal |
-| 5 | Standard Error | SE vs SD; hukum akar kuadrat |
-| 6 | Estimasi | *Point estimate*, CI (z dan t), *margin of error* |
-| 7 | Ukuran Sampel | Menentukan $n$ minimum |
-| 8–9 | Studi Kasus & Latihan Mandiri | Survei adopsi QRIS |
+| 1 | Logika Uji Hipotesis | Analogi pengadilan; "seberapa mengejutkan?" |
+| 2 | Merumuskan Hipotesis | $H_0$, $H_1$; dua arah dan satu arah |
+| 3 | Komponen Uji | $\alpha$, statistik uji, nilai kritis, *p-value* |
+| 4 | Prosedur Lima Langkah | Contoh lengkap dua arah dan satu arah |
+| 5 | Hubungan dengan CI | Uji dua arah vs selang kepercayaan |
+| 6 | Kesalahan Tipe I dan II | Simulasi $\alpha$, $\beta$, dan *power* |
+| 7 | Menafsirkan dengan Bijak | Signifikansi praktis; miskonsepsi; *p-hacking* |
+| 8–9 | Studi Kasus & Latihan Mandiri | Pemantauan kepatuhan baku mutu |
 | 10–12 | Referensi Praktis | Kesalahan umum, cheat sheet R, glosarium |
 
-Praktikum ini hanya menggunakan base R (tidak memerlukan instalasi paket tambahan).
+Perhitungan memakai base R, sedangkan grafik memakai paket **ggplot2** dengan gaya yang sama seperti laporan UTS (tema minimal dan palet merah). Jika belum terpasang, jalankan sekali `install.packages("ggplot2")`.
 
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+## Logika Uji Hipotesis
 
-## Tiga Distribusi yang Harus Dibedakan
+| Pengadilan | Uji Hipotesis |
+|:-----------|:--------------|
+| Praduga tak bersalah | $H_0$ diasumsikan benar |
+| Tuduhan jaksa | $H_1$ (klaim yang ingin dibuktikan) |
+| Bukti di persidangan | Data sampel dan statistik uji |
+| Standar "tanpa keraguan yang wajar" | Tingkat signifikansi $\alpha$ |
+| Putusan bersalah | Tolak $H_0$ |
+| Putusan tidak terbukti bersalah | Gagal menolak $H_0$ (bukan "menerima $H_0$") |
+| Menghukum orang tak bersalah | Kesalahan Tipe I |
+| Membebaskan orang bersalah | Kesalahan Tipe II |
 
-| Distribusi | Isinya | Jumlah nilai | Contoh |
-|:-----------|:-------|:------------:|:-------|
-| **Distribusi populasi** | Nilai setiap unit populasi | $N$ | Pengeluaran 20.000 mahasiswa |
-| **Distribusi sampel** | Nilai unit dalam satu sampel | $n$ | Pengeluaran 40 mahasiswa yang disurvei |
-| **Distribusi sampling** | Nilai statistik (misalnya $\bar{x}$) dari banyak sampel | Sebanyak sampel yang (dibayangkan) diambil | $\bar{x}$ dari 10.000 sampel berukuran 40 |
+### Ilustrasi: Apakah Mesin Pengisi Masih Tepat?
 
-Distribusi sampling adalah konsep **teoretis**: dalam praktik kita hanya memiliki satu sampel. Namun dengan simulasi kita dapat "melihatnya".
+Melanjutkan latihan Pertemuan 9: mesin kopi bubuk seharusnya mengisi rata-rata 250 gram dengan $\sigma = 6$ gram. Sampel 36 kemasan menghasilkan $\bar{x} = 247{,}6$ gram. Apakah mesin perlu dikalibrasi, atau selisih 2,4 gram itu sekadar kebetulan sampling?
 
-### Populasi Simulasi
-
-Kita memakai populasi 20.000 mahasiswa dengan variabel waktu layar harian (jam) yang menjulur kanan – bentuk yang sengaja dipilih jauh dari lonceng.
-
-```{r}
-set.seed(909)
-N <- 20000
-populasi <- round(rgamma(N, shape = 2, rate = 0.4), 2)   # jam per hari
-mu <- mean(populasi)
-sigma <- sqrt(mean((populasi - mu)^2))                    # SD populasi (pembagi N)
-c(N = N, mu = round(mu, 3), sigma = round(sigma, 3))
-```
+Jika mesin benar ($\mu = 250$), maka menurut CLT $\bar{x} \sim N(250,\ 6/\sqrt{36} = 1)$. Kita lihat seberapa "jauh" 247,6 dari distribusi tersebut:
 
 ```{r}
 library(plotly)
 
-set.seed(1)
-satu_sampel <- sample(populasi, 40)
-banyak_rata <- replicate(10000, mean(sample(populasi, 40)))
-
-# Gradasi merah: pudar (rendah) -> tebal (tinggi)
-ramp_merah <- colorRamp(c("#FADBD8", "#8B0000"))
-
-panel <- function(x, breaks, judul_x, rentang_x = NULL) {
-  h <- hist(x, breaks = breaks, plot = FALSE)
-  skala <- (h$counts - min(h$counts)) / max(1, max(h$counts) - min(h$counts))
-  kelas <- paste0(round(h$breaks[-length(h$breaks)], 2), " - ", round(h$breaks[-1], 2))
-  if (is.null(rentang_x)) rentang_x <- range(h$breaks)
-
-  plot_ly() %>%
-    add_bars(x = h$mids, y = h$counts, width = diff(h$breaks),
-             marker = list(color = rgb(ramp_merah(skala), maxColorValue = 255),
-                           line = list(color = "white", width = 1)),
-             customdata = kelas,
-             hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>") %>%
-    layout(xaxis = list(title = judul_x, range = rentang_x,
-                        showgrid = FALSE, zeroline = FALSE),
-           yaxis = list(title = "Frekuensi", range = c(0, max(h$counts) * 1.2),
-                        showticklabels = FALSE, ticks = "",
-                        showgrid = FALSE, zeroline = FALSE))
-}
-
-p1 <- panel(populasi,    40, "Jam per hari", c(0, 20))
-p2 <- panel(satu_sampel, 12, "Jam per hari", c(0, 20))
-p3 <- panel(banyak_rata, 40, "Rata-rata sampel (n = 40)")
-
-fig <- subplot(p1, p2, p3, nrows = 1, margin = 0.06,
-               titleX = TRUE, titleY = TRUE) %>%
-  layout(showlegend = FALSE, bargap = 0,
-         margin = list(t = 90, b = 50, l = 70, r = 40))
-
-# Judul tiap panel di tengah panelnya
-judul <- c("Populasi (N = 20.000)", "Satu sampel (n = 40)", "Sampling distribution x-bar")
-b <- plotly_build(fig)$x$layout
-anotasi <- lapply(1:3, function(i) {
-  sfx <- if (i == 1) "" else i
-  list(text = paste0("<b>", judul[i], "</b>"),
-       x = mean(b[[paste0("xaxis", sfx)]]$domain), y = 1.08,
-       xref = "paper", yref = "paper", xanchor = "center",
-       showarrow = FALSE, font = list(size = 15))
-})
-
-fig %>% layout(annotations = anotasi)
-```
-
-Populasi dan satu sampel sama-sama menjulur kanan, tetapi **distribusi rata-rata sampel** jauh lebih sempit dan hampir berbentuk lonceng. Inilah inti pertemuan ini.
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Distribusi Sampling Rata-rata Sampel
-
-Untuk sampel acak berukuran $n$ dari populasi dengan mean $\mu$ dan simpangan baku $\sigma$:
-
-| Sifat | Rumus | Arti |
-|:------|:------|:-----|
-| **Mean** | $\mu_{\bar{x}} = \mu$ | $\bar{x}$ adalah penaksir **tak bias**: rata-ratanya tepat di parameter |
-| **Standard error** | $\sigma_{\bar{x}} = \dfrac{\sigma}{\sqrt{n}}$ | Sebaran $\bar{x}$ mengecil seiring bertambahnya $n$ |
-| **Bentuk** | Normal jika populasi normal; mendekati normal untuk $n$ cukup besar (CLT) | Memungkinkan perhitungan peluang |
-
-```{r}
-knitr::kable(data.frame(
-  Besaran = c("Mean distribusi sampling", "SD distribusi sampling (SE)"),
-  Teori   = round(c(mu, sigma / sqrt(40)), 4),
-  Simulasi_10000_sampel = round(c(mean(banyak_rata), sd(banyak_rata)), 4)
-), caption = "Teori vs simulasi untuk n = 40")
-```
-
-Hasil simulasi hampir persis sama dengan teori.
-
-::: callout-note
-**Koreksi populasi terhingga.** Rumus $\sigma/\sqrt{n}$ mengasumsikan populasi sangat besar dibanding sampel. Jika sampel mencapai lebih dari sekitar 5% populasi (tanpa pengembalian), SE dikalikan faktor $\sqrt{\dfrac{N-n}{N-1}}$. Pada contoh ini $n/N = 0{,}2\%$, sehingga koreksi dapat diabaikan.
-:::
-
-### Pengaruh Ukuran Sampel
-
-```{r}
-library(plotly)
-
-# Populasi simulasi (sama seperti chunk "Populasi Simulasi")
-set.seed(909)
-N <- 20000
-populasi <- round(rgamma(N, shape = 2, rate = 0.4), 2)   # jam per hari
-mu    <- mean(populasi)
-sigma <- sqrt(mean((populasi - mu)^2))                   # SD populasi (pembagi N)
-
-set.seed(2)
-n_list <- c(5, 20, 80)
-xs     <- seq(1, 10, length.out = 400)
-ramp_merah <- colorRamp(c("#FADBD8", "#8B0000"))
-
-paneli <- lapply(n_list, function(nn) {
-  rata <- replicate(5000, mean(sample(populasi, nn)))
-  se   <- sigma / sqrt(nn)
-
-  h     <- hist(rata, breaks = 40, plot = FALSE)
-  skala <- (h$density - min(h$density)) / (max(h$density) - min(h$density))
-  kelas <- paste0(round(h$breaks[-length(h$breaks)], 2), " - ", round(h$breaks[-1], 2))
-  ymax  <- max(h$density, dnorm(xs, mu, se))
-
-  plot_ly() %>%
-    add_bars(x = h$mids, y = h$density, width = diff(h$breaks),
-             marker = list(color = rgb(ramp_merah(skala), maxColorValue = 255),
-                           line  = list(color = "white", width = 1)),
-             customdata = kelas,
-             hovertemplate = "Kelas: <b>%{customdata}</b><br>Densitas: %{y:.3f}<extra></extra>") %>%
-    add_lines(x = xs, y = dnorm(xs, mu, se),
-              line = list(color = "black", width = 3), hoverinfo = "skip") %>%
-    add_segments(x = mu, xend = mu, y = 0, yend = ymax * 1.1,
-                 line = list(color = "gray50", dash = "dash", width = 1.5),
-                 hoverinfo = "skip") %>%
-    layout(xaxis = list(title = "Rata-rata sampel", range = c(1, 10),
-                        showgrid = FALSE, zeroline = FALSE),
-           yaxis = list(title = "Densitas", range = c(0, ymax * 1.2),
-                        showticklabels = FALSE, ticks = "",
-                        showgrid = FALSE, zeroline = FALSE))
-})
-
-fig <- subplot(paneli, nrows = 1, margin = 0.06,
-               titleX = TRUE, titleY = TRUE) %>%
-  layout(showlegend = FALSE, bargap = 0,
-         margin = list(t = 90, b = 50, l = 70, r = 40))
-
-# Judul tiap panel di tengah panelnya
-judul <- paste0("n = ", n_list, " (SE = ", round(sigma / sqrt(n_list), 2), ")")
-b <- plotly_build(fig)$x$layout
-anotasi <- lapply(seq_along(judul), function(i) {
-  sfx <- if (i == 1) "" else i
-  list(text = paste0("<b>", judul[i], "</b>"),
-       x = mean(b[[paste0("xaxis", sfx)]]$domain), y = 1.08,
-       xref = "paper", yref = "paper", xanchor = "center",
-       showarrow = FALSE, font = list(size = 15))
-})
-
-fig %>% layout(annotations = anotasi)
-```
-
-```{r}
-par(mfrow = c(1, 1))
-```
-
-Kurva merah adalah distribusi normal dengan mean $\mu$ dan SD $\sigma/\sqrt{n}$. Semakin besar $n$: (1) distribusi semakin sempit, dan (2) bentuknya semakin mendekati normal meskipun populasinya menjulur kanan.
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Central Limit Theorem (CLT)
-
-::: callout-note
-**Central Limit Theorem.** Jika sampel acak berukuran $n$ diambil dari populasi sembarang bentuk dengan mean $\mu$ dan simpangan baku $\sigma$ (terhingga), maka untuk $n$ yang cukup besar, distribusi sampling $\bar{x}$ mendekati normal:
-
-$$
-\bar{x} \approx N\!\left(\mu,\ \frac{\sigma}{\sqrt{n}}\right)
-$$
-:::
-
-CLT adalah alasan mengapa distribusi normal muncul di mana-mana dalam statistika inferensial – bukan karena data selalu normal, tetapi karena **rata-rata** dari data cenderung normal.
-
-### Demonstrasi pada Tiga Bentuk Populasi
-
-```{r}
-library(plotly)
-
-set.seed(3)
-pop_bentuk <- list(
-  "Seragam"        = runif(20000, 0, 10),
-  "Menjulur kanan" = rexp(20000, rate = 0.5),
-  "Bimodal"        = c(rnorm(10000, 2, 0.8), rnorm(10000, 8, 0.8))
-)
-ukuran <- c(2, 5, 30)
-
-# Gradasi merah: pudar (rendah) -> tebal (tinggi)
-ramp_merah <- colorRamp(c("#FADBD8", "#8B0000"))
-
-panel <- function(x, breaks) {
-  h     <- hist(x, breaks = breaks, plot = FALSE)
-  skala <- (h$counts - min(h$counts)) / max(1, max(h$counts) - min(h$counts))
-  kelas <- paste0(round(h$breaks[-length(h$breaks)], 2), " - ", round(h$breaks[-1], 2))
-
-  plot_ly() %>%
-    add_bars(x = h$mids, y = h$counts, width = diff(h$breaks),
-             marker = list(color = rgb(ramp_merah(skala), maxColorValue = 255),
-                           line  = list(color = "white", width = 1)),
-             customdata = kelas,
-             hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>") %>%
-    layout(xaxis = list(title = "", showgrid = FALSE, zeroline = FALSE),
-           yaxis = list(title = "", range = c(0, max(h$counts) * 1.2),
-                        showticklabels = FALSE, ticks = "",
-                        showgrid = FALSE, zeroline = FALSE))
-}
-
-panel_list <- list()
-judul      <- c()
-
-# Baris 1: populasi
-for (nama in names(pop_bentuk)) {
-  panel_list[[length(panel_list) + 1]] <- panel(pop_bentuk[[nama]], 40)
-  judul <- c(judul, paste("Populasi:", nama))
-}
-# Baris 2-4: distribusi sampling x-bar untuk n = 2, 5, 30
-for (nn in ukuran) {
-  for (nama in names(pop_bentuk)) {
-    rata <- replicate(3000, mean(sample(pop_bentuk[[nama]], nn)))
-    panel_list[[length(panel_list) + 1]] <- panel(rata, 35)
-    judul <- c(judul, paste0(nama, ", n = ", nn))
-  }
-}
-
-fig <- subplot(panel_list, nrows = 4, margin = c(0.03, 0.03, 0.04, 0.07)) %>%
-  layout(showlegend = FALSE, bargap = 0, height = 950,
-         margin = list(t = 60, b = 40, l = 40, r = 40))
-
-# Judul tiap panel di tengah panelnya
-b <- plotly_build(fig)$x$layout
-anotasi <- lapply(seq_along(judul), function(i) {
-  sfx <- if (i == 1) "" else i
-  list(text = paste0("<b>", judul[i], "</b>"),
-       x = mean(b[[paste0("xaxis", sfx)]]$domain),
-       y = b[[paste0("yaxis", sfx)]]$domain[2] + 0.025,
-       xref = "paper", yref = "paper", xanchor = "center",
-       showarrow = FALSE, font = list(size = 13))
-})
-
-fig %>% layout(annotations = anotasi)
-```
-
-Baris pertama adalah populasi; baris berikutnya adalah distribusi sampling $\bar{x}$ untuk $n = 2, 5,$ dan $30$. Populasi **seragam** sudah tampak lonceng pada $n = 5$; populasi **bimodal** masih bergelombang pada $n = 2$ tetapi lonceng pada $n = 30$; populasi **menjulur kanan** membutuhkan $n$ terbesar untuk menghilangkan kemencengannya.
-
-### Seberapa Besar "Cukup Besar"?
-
-| Bentuk populasi | Ukuran sampel yang biasanya cukup |
-|:----------------|:----------------------------------|
-| Normal | Berapa pun (distribusi $\bar{x}$ tepat normal) |
-| Simetris, tidak normal | Sekitar 10–15 |
-| Menceng sedang | Sekitar 30 (aturan praktis yang populer) |
-| Sangat menceng atau banyak *outlier* | Bisa jauh lebih dari 30 |
-
-```{r}
-skew <- function(x) { d <- x - mean(x); mean(d^3) / mean(d^2)^1.5 }
-set.seed(4)
-data.frame(n = c(2, 5, 10, 30, 100),
-           Kemencengan_xbar = sapply(c(2, 5, 10, 30, 100), function(nn)
-             round(skew(replicate(5000, mean(sample(populasi, nn)))), 3)))
-```
-
-Kemencengan distribusi $\bar{x}$ menyusut kira-kira sebanding dengan $1/\sqrt{n}$.
-
-### Menghitung Peluang dengan CLT
-
-**Contoh:** Jika diambil sampel acak 40 mahasiswa, berapa peluang rata-rata waktu layarnya melebihi 5,5 jam?
-
-$$
-z = \frac{\bar{x} - \mu}{\sigma/\sqrt{n}}
-\qquad\qquad
-P(\bar{x} > 5{,}5) = P(Z > z)
-$$
-
-```{r}
-se40 <- sigma / sqrt(40)
-z_55 <- (5.5 - mu) / se40
-c(SE = round(se40, 4), z = round(z_55, 3),
-  Peluang_CLT = round(1 - pnorm(z_55), 4),
-  Peluang_simulasi = round(mean(banyak_rata > 5.5), 4))
-```
-
-Perbandingan: peluang **seorang** mahasiswa (bukan rata-rata 40 orang) memiliki waktu layar di atas 5,5 jam jauh lebih besar:
-
-```{r}
-mean(populasi > 5.5)
-```
-
-Individu sangat bervariasi, tetapi rata-rata dari banyak individu jauh lebih stabil.
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Distribusi Sampling Proporsi Sampel
-
-Untuk variabel kategorik biner (Ya/Tidak), statistik yang dipakai adalah proporsi sampel $\hat{p} = x/n$.
-
-| Sifat | Rumus |
-|:------|:------|
-| Mean | $\mu_{\hat{p}} = p$ |
-| Standard error | $\sigma_{\hat{p}} = \sqrt{\dfrac{p(1-p)}{n}}$ |
-| Bentuk | Mendekati normal jika $np \ge 10$ **dan** $n(1-p) \ge 10$ |
-
-```{r}
-library(plotly)
-
-p_benar <- 0.08    # misalnya 8% mahasiswa pernah terlambat membayar UKT
-set.seed(5)
-n_list <- c(20, 60, 300)
-xs     <- seq(0, 0.3, length.out = 400)
-
-# Gradasi merah: pudar (rendah) -> tebal (tinggi)
-ramp_merah <- colorRamp(c("#FADBD8", "#8B0000"))
-
-paneli <- lapply(n_list, function(nn) {
-  p_hat <- rbinom(5000, size = nn, prob = p_benar) / nn
-  se    <- sqrt(p_benar * (1 - p_benar) / nn)
-
-  h     <- hist(p_hat, breaks = seq(-0.005, 0.4, by = 0.01), plot = FALSE)
-  skala <- (h$density - min(h$density)) / (max(h$density) - min(h$density))
-  kelas <- paste0(round(h$breaks[-length(h$breaks)], 3), " - ", round(h$breaks[-1], 3))
-  ymax  <- max(h$density, dnorm(xs, p_benar, se))
-
-  plot_ly() %>%
-    add_bars(x = h$mids, y = h$density, width = diff(h$breaks),
-             marker = list(color = rgb(ramp_merah(skala), maxColorValue = 255),
-                           line  = list(color = "white", width = 1)),
-             customdata = kelas,
-             hovertemplate = "Kelas: <b>%{customdata}</b><br>Densitas: %{y:.2f}<extra></extra>") %>%
-    add_lines(x = xs, y = dnorm(xs, p_benar, se),
-              line = list(color = "black", width = 3), hoverinfo = "skip") %>%
-    layout(xaxis = list(title = "Proporsi sampel", range = c(0, 0.3),
-                        showgrid = FALSE, zeroline = FALSE),
-           yaxis = list(title = "Densitas", range = c(0, ymax * 1.2),
-                        showticklabels = FALSE, ticks = "",
-                        showgrid = FALSE, zeroline = FALSE))
-})
-
-fig <- subplot(paneli, nrows = 1, margin = 0.06,
-               titleX = TRUE, titleY = TRUE) %>%
-  layout(showlegend = FALSE, bargap = 0,
-         margin = list(t = 90, b = 50, l = 70, r = 40))
-
-# Judul tiap panel di tengah panelnya
-judul <- paste0("n = ", n_list, ": np = ", n_list * p_benar)
-b <- plotly_build(fig)$x$layout
-anotasi <- lapply(seq_along(judul), function(i) {
-  sfx <- if (i == 1) "" else i
-  list(text = paste0("<b>", judul[i], "</b>"),
-       x = mean(b[[paste0("xaxis", sfx)]]$domain), y = 1.08,
-       xref = "paper", yref = "paper", xanchor = "center",
-       showarrow = FALSE, font = list(size = 15))
-})
-
-fig %>% layout(annotations = anotasi)
-```
-
-Dengan $n = 20$ ($np = 1{,}6$), distribusi $\hat{p}$ sangat menceng dan "berbatang" – pendekatan normal buruk. Dengan $n = 300$ ($np = 24$), pendekatan normal sangat baik.
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Standard Error
-
-### Standard Error vs Simpangan Baku
-
-| | Simpangan baku ($s$ atau $\sigma$) | Standard error ($SE$) |
-|:--|:--|:--|
-| **Mengukur sebaran** | Data individu | Statistik (misalnya $\bar{x}$) dari sampel ke sampel |
-| **Menjawab** | "Seberapa beragam individu?" | "Seberapa tepat taksiran kita?" |
-| **Jika $n$ bertambah** | Tetap (mendekati $\sigma$) | **Mengecil** |
-| **Rumus (mean)** | $s = \sqrt{\dfrac{\sum (x_i - \bar{x})^2}{n-1}}$ | $SE = \dfrac{s}{\sqrt{n}}$ |
-
-Karena $\sigma$ biasanya tidak diketahui, SE ditaksir dengan $s/\sqrt{n}$ (untuk mean) atau $\sqrt{\hat{p}(1-\hat{p})/n}$ (untuk proporsi).
-
-```{r}
-set.seed(6)
-n_besar <- c(10, 40, 160, 640)
-knitr::kable(t(sapply(n_besar, function(nn) {
-  hasil <- replicate(2000, { s <- sample(populasi, nn); c(sd(s), sd(s) / sqrt(nn)) })
-  c(n = nn, Rata_SD_sampel = round(mean(hasil[1, ]), 3),
-    Rata_SE_taksiran = round(mean(hasil[2, ]), 3))
-})), caption = paste0("Rata-rata dari 2.000 sampel per n: SD stabil di sekitar sigma = ",
-                      round(sigma, 2), ", SE mengecil"))
-```
-
-### Hukum Akar Kuadrat
-
-Karena $SE \propto 1/\sqrt{n}$, untuk **membagi dua** SE dibutuhkan sampel **empat kali lipat**. Presisi semakin mahal: menambah $n$ dari 100 ke 400 memberi keuntungan yang sama dengan dari 400 ke 1.600.
-
-```{r}
-library(plotly)
-
-n_seq    <- 10:1000
-se_seq   <- sigma / sqrt(n_seq)
-n_tanda  <- c(100, 400)
-se_tanda <- sigma / sqrt(n_tanda)
-
-fig <- plot_ly() %>%
-  add_lines(x = n_seq, y = se_seq,
-            line = list(color = "#8B0000", width = 3),
-            hovertemplate = "n = %{x}<br>SE = %{y:.3f}<extra></extra>") %>%
-  add_trace(x = n_tanda, y = se_tanda, type = "scatter", mode = "markers+text",
-            marker = list(color = "black", size = 11),
-            text = paste0("n = ", n_tanda, "<br>SE = ", round(se_tanda, 2)),
-            textposition = "top right",
-            textfont = list(size = 14, color = "black"),
-            hovertemplate = "n = %{x}<br>SE = %{y:.3f}<extra></extra>") %>%
-  layout(
-    title = list(text = "<b>SE Menurun Cepat di Awal, Lalu Melandai</b>",
-                 x = 0.5, xanchor = "center"),
-    showlegend = FALSE,
-    xaxis = list(title = "Ukuran sampel (n)",
-                 showgrid = FALSE, zeroline = FALSE,
-                 showline = TRUE, mirror = TRUE),
-    yaxis = list(title = "Standard error",
-                 range = c(0, max(se_seq) * 1.15),
-                 showgrid = FALSE, zeroline = FALSE,
-                 showline = TRUE, mirror = TRUE),
-    margin = list(t = 80, b = 50, l = 70, r = 40)
-  )
-
-fig
-```
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Estimasi
-
-### Point Estimate
-
-*Point estimate* adalah **satu angka** yang menaksir parameter.
-
-| Parameter | *Point estimate* | Penaksir tak bias? |
-|:---------:|:-----------------|:------------------:|
-| $\mu$ | $\bar{x}$ | Ya |
-| $p$ | $\hat{p}$ | Ya |
-| $\sigma^2$ | $s^2$ (pembagi $n-1$) | Ya |
-| $\sigma$ | $s$ | Sedikit bias (diabaikan dalam praktik) |
-
-Kelemahan *point estimate*: hampir pasti tidak tepat sama dengan parameter, dan tidak memberi tahu seberapa jauh melesetnya.
-
-### Confidence Interval (Selang Kepercayaan)
-
-Selang kepercayaan memberikan rentang nilai yang masuk akal bagi parameter:
-
-$$
-\text{Point estimate} \ \pm\ \underbrace{\text{nilai kritis} \times SE}_{\text{margin of error}}
-$$
-
-#### CI untuk Mean, $\sigma$ Diketahui (z)
-
-$$
-\bar{x} \pm z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}}
-$$
-
-| Tingkat kepercayaan | $\alpha$ | $z_{\alpha/2}$ |
-|:-------------------:|:--------:|:--------------:|
-| 90% | 0,10 | 1,645 |
-| 95% | 0,05 | 1,960 |
-| 99% | 0,01 | 2,576 |
-
-```{r}
-round(qnorm(c(0.95, 0.975, 0.995)), 3)
-```
-
-#### CI untuk Mean, $\sigma$ Tidak Diketahui (t)
-
-Dalam praktik $\sigma$ hampir tidak pernah diketahui dan diganti $s$. Penggantian ini menambah ketidakpastian, sehingga nilai kritis diambil dari **distribusi t** dengan derajat bebas $df = n - 1$:
-
-$$
-\bar{x} \pm t_{\alpha/2,\ n-1}\,\frac{s}{\sqrt{n}}
-$$
-
-```{r}
-library(plotly)
-
-xk <- seq(-4, 4, length.out = 400)
-
-fig <- plot_ly() %>%
-  add_lines(x = xk, y = dnorm(xk), name = "Normal baku (z)",
-            line = list(color = "black", width = 3),
-            hovertemplate = "x = %{x:.2f}<br>Kepadatan: %{y:.3f}<extra>Normal baku (z)</extra>") %>%
-  add_lines(x = xk, y = dt(xk, df = 3), name = "t, df = 3",
-            line = list(color = "#B30000", width = 3, dash = "dash"),
-            hovertemplate = "x = %{x:.2f}<br>Kepadatan: %{y:.3f}<extra>t, df = 3</extra>") %>%
-  add_lines(x = xk, y = dt(xk, df = 10), name = "t, df = 10",
-            line = list(color = "#FC8D59", width = 3, dash = "dot"),
-            hovertemplate = "x = %{x:.2f}<br>Kepadatan: %{y:.3f}<extra>t, df = 10</extra>") %>%
-  layout(
-    title = list(text = "<b>Distribusi t Berekor Lebih Tebal dari Normal</b>",
-                 x = 0.5, xanchor = "center"),
-    showlegend = TRUE,
-    legend = list(x = 0.78, y = 0.98),
-    xaxis = list(title = "Nilai", showgrid = FALSE, zeroline = FALSE),
-    yaxis = list(title = "Kepadatan", showticklabels = FALSE, ticks = "",
-                 showgrid = FALSE, zeroline = FALSE),
-    margin = list(t = 80, b = 50, l = 70, r = 40)
-  )
-
-fig
-```
-
-```{r}
-data.frame(df = c(4, 9, 29, 99, Inf),
-           t_kritis_95 = round(qt(0.975, df = c(4, 9, 29, 99, Inf)), 3))
-```
-
-Untuk sampel kecil, nilai kritis t lebih besar daripada 1,96 (selang lebih lebar, "hukuman" karena menaksir $\sigma$). Saat $n$ membesar, distribusi t mendekati normal. Distribusi t dibahas lebih dalam pada Pertemuan 11.
-
-#### Contoh Perhitungan
-
-Satu sampel 40 mahasiswa (`satu_sampel`) dipakai untuk menaksir rata-rata waktu layar seluruh mahasiswa.
-
-```{r}
-n1 <- length(satu_sampel); xbar <- mean(satu_sampel); s <- sd(satu_sampel)
-t_krit <- qt(0.975, df = n1 - 1)
-se_hat <- s / sqrt(n1)
-moe    <- t_krit * se_hat
-
-c(n = n1, x_bar = round(xbar, 3), s = round(s, 3), SE = round(se_hat, 3),
-  t_kritis = round(t_krit, 3), MoE = round(moe, 3),
-  Bawah = round(xbar - moe, 3), Atas = round(xbar + moe, 3))
-```
-
-```{r}
-t.test(satu_sampel, conf.level = 0.95)$conf.int   # fungsi bawaan R, hasil sama
-```
-
-**Laporan:** "Rata-rata waktu layar mahasiswa diperkirakan 4,92 jam per hari, dengan selang kepercayaan 95% antara 3,95 dan 5,88 jam ($n = 40$)."
-
-#### CI untuk Proporsi
-
-$$
-\hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
-\qquad \text{syarat: } n\hat{p} \ge 10 \ \text{dan}\ n(1-\hat{p}) \ge 10
-$$
-
-```{r}
-x_ya <- 138; n_resp <- 400    # 138 dari 400 responden memakai QRIS setiap hari
-p_hat <- x_ya / n_resp
-se_p  <- sqrt(p_hat * (1 - p_hat) / n_resp)
-moe_p <- qnorm(0.975) * se_p
-c(p_hat = p_hat, SE = round(se_p, 4), MoE = round(moe_p, 4),
-  Bawah = round(p_hat - moe_p, 4), Atas = round(p_hat + moe_p, 4))
-```
-
-```{r}
-c(n_p = n_resp * p_hat, n_1_min_p = n_resp * (1 - p_hat))   # syarat terpenuhi
-```
-
-"Sekitar 34,5% responden memakai QRIS setiap hari, *margin of error* $\pm$ 4,7 poin persentase (kepercayaan 95%)" – format inilah yang sering dikutip media dari hasil survei.
-
-### Menafsirkan Selang Kepercayaan dengan Benar
-
-Kepercayaan 95% adalah sifat **prosedurnya**, bukan satu selang tertentu: jika pengambilan sampel dan perhitungan selang diulang berkali-kali, sekitar 95% selang yang dihasilkan akan memuat $\mu$.
-
-```{r}
-library(plotly)
-
-# Kalau dijalankan sendiri (populasi/mu belum ada), buka komentar tiga baris ini:
-# set.seed(909); N <- 20000
-# populasi <- round(rgamma(N, shape = 2, rate = 0.4), 2)
-# mu <- mean(populasi)
-
-set.seed(7)
-B <- 100
-selang <- t(replicate(B, {
-  s_i <- sample(populasi, 40)
-  m <- mean(s_i); e <- qt(0.975, 39) * sd(s_i) / sqrt(40)
-  c(bawah = m - e, atas = m + e)
-}))
-memuat <- selang[, "bawah"] <= mu & selang[, "atas"] >= mu
-idx    <- 1:B
-
-fig <- plot_ly() %>%
-  # Selang yang memuat mu (abu-abu)
-  add_segments(x = selang[memuat, "bawah"], xend = selang[memuat, "atas"],
-               y = idx[memuat], yend = idx[memuat],
-               line = list(color = "gray50", width = 2),
-               name = "Memuat \u03bc") %>%
-  # Selang yang gagal memuat mu (merah tebal)
-  add_segments(x = selang[!memuat, "bawah"], xend = selang[!memuat, "atas"],
-               y = idx[!memuat], yend = idx[!memuat],
-               line = list(color = "#8B0000", width = 4),
-               name = "Tidak memuat \u03bc") %>%
-  # Rata-rata populasi
-  add_segments(x = mu, xend = mu, y = 0, yend = B + 1,
-               line = list(color = "black", width = 2, dash = "dash"),
-               name = "\u03bc (rata-rata populasi)") %>%
-  layout(
-    title = list(text = paste0("<b>100 Selang Kepercayaan 95%: ", sum(memuat),
-                               " memuat \u03bc</b>"),
-                 x = 0.5, xanchor = "center"),
-    showlegend = TRUE,
-    legend = list(x = 0.72, y = 0.12),
-    xaxis = list(title = "Waktu layar (jam)", showgrid = FALSE, zeroline = FALSE),
-    yaxis = list(title = "Sampel ke-", range = c(0, B + 2),
-                 showticklabels = FALSE, ticks = "",
-                 showgrid = FALSE, zeroline = FALSE),
-    margin = list(t = 80, b = 50, l = 70, r = 40)
-  )
-
-fig
-```
-
-Garis merah adalah selang yang **gagal** memuat $\mu$. Kita tidak pernah tahu apakah selang *kita* termasuk yang merah – tetapi kita tahu prosedurnya berhasil sekitar 95% dari waktu.
-
-| Tafsiran | Benar/Salah |
-|:---------|:------------|
-| "Kami 95% yakin bahwa selang 4,2–5,7 jam memuat rata-rata populasi." | Benar (bahasa sehari-hari yang diterima) |
-| "95% selang yang dibuat dengan prosedur ini akan memuat $\mu$." | Benar (tafsiran paling tepat) |
-| "Ada peluang 95% bahwa $\mu$ berada di antara 4,2 dan 5,7." | Salah – $\mu$ bukan variabel acak; ia di dalam atau di luar selang |
-| "95% mahasiswa memiliki waktu layar antara 4,2 dan 5,7 jam." | Salah – CI adalah tentang rata-rata, bukan individu |
-| "95% rata-rata sampel lain akan jatuh di selang ini." | Salah |
-
-### Faktor yang Memengaruhi Lebar Selang
-
-| Faktor | Jika dinaikkan | Lebar selang |
-|:-------|:---------------|:-------------|
-| Tingkat kepercayaan (90% → 99%) | Nilai kritis naik | **Melebar** |
-| Ukuran sampel $n$ | SE turun | **Menyempit** |
-| Variabilitas data ($s$) | SE naik | **Melebar** |
-
-```{r}
-lebar <- function(n, s, conf) 2 * qt(1 - (1 - conf) / 2, n - 1) * s / sqrt(n)
-tabel_lebar <- round(outer(c(20, 80, 320), c(0.90, 0.95, 0.99),
-                           Vectorize(function(n, cf) lebar(n, s = 3, conf = cf))), 3)
-dimnames(tabel_lebar) <- list(c("n = 20", "n = 80", "n = 320"), c("90%", "95%", "99%"))
-knitr::kable(tabel_lebar, caption = "Lebar CI (s = 3) menurut ukuran sampel dan tingkat kepercayaan")
-```
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Menentukan Ukuran Sampel
-
-Sebelum survei, peneliti biasanya menetapkan *margin of error* ($E$) yang diinginkan lalu menghitung $n$ minimum (selalu dibulatkan **ke atas**).
-
-| Parameter | Rumus ukuran sampel | Keterangan |
-|:----------|:--------------------|:-----------|
-| Mean | $n = \left(\dfrac{z_{\alpha/2}\,\sigma}{E}\right)^2$ | $\sigma$ ditaksir dari studi sebelumnya atau survei percontohan |
-| Proporsi | $n = \dfrac{z_{\alpha/2}^2\,p(1-p)}{E^2}$ | Jika $p$ tidak diketahui, pakai $p = 0{,}5$ (paling konservatif) |
-
-```{r}
-n_mean <- function(sigma, E, conf = 0.95) ceiling((qnorm(1 - (1 - conf) / 2) * sigma / E)^2)
-n_prop <- function(E, p = 0.5, conf = 0.95) ceiling(qnorm(1 - (1 - conf) / 2)^2 * p * (1 - p) / E^2)
-
-n_mean(sigma = 3.5, E = 0.5)   # menaksir rata-rata waktu layar +- 0,5 jam
-```
-
-```{r}
-knitr::kable(data.frame(MoE = c("5%", "3%", "2%", "1%"),
-                        n_minimum = sapply(c(0.05, 0.03, 0.02, 0.01), n_prop)),
-             caption = "Ukuran sampel survei proporsi (p = 0,5; kepercayaan 95%)")
-```
-
-Survei nasional dengan *margin of error* sekitar $\pm$ 3% memerlukan sekitar 1.000–1.100 responden, berapa pun ukuran populasinya (asalkan populasi jauh lebih besar dari sampel). Memperkecil *margin of error* dari 2% ke 1% memerlukan sampel **empat kali lipat**.
-
-::: callout-warning
-**Ukuran sampel tidak menyembuhkan bias.** Rumus di atas hanya mengendalikan galat acak. Jika metode sampling bias (Pertemuan 3), sampel sebesar apa pun tetap menghasilkan selang yang presisi di tempat yang salah.
-:::
-
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
-
-## Studi Kasus Komprehensif: Survei Adopsi QRIS UMKM
-
-**Konteks:** Dinas Koperasi ingin menaksir (1) proporsi UMKM kuliner yang menerima QRIS dan (2) rata-rata nilai transaksi QRIS harian per UMKM pengguna. Survei acak sederhana terhadap 250 UMKM dari daftar resmi menghasilkan data berikut.
-
-```{r}
-set.seed(2026)
-n_umkm <- 250
-terima_qris <- rbinom(n_umkm, 1, 0.62)
-nilai_trx <- round(rlnorm(sum(terima_qris), meanlog = log(450000), sdlog = 0.6), -3)   # Rp/hari
-c(Jumlah_pengguna = sum(terima_qris))
-```
-
-```{r}
-summary(nilai_trx)
-```
-
-### Langkah 1: Estimasi Proporsi
-
-```{r}
-p_hat_u <- mean(terima_qris)
-se_u <- sqrt(p_hat_u * (1 - p_hat_u) / n_umkm)
-ci_u <- p_hat_u + c(-1, 1) * qnorm(0.975) * se_u
-c(n_p = n_umkm * p_hat_u, n_1mp = n_umkm * (1 - p_hat_u))   # cek syarat
-```
-
-```{r}
-round(c(p_hat = p_hat_u, SE = se_u, Bawah = ci_u[1], Atas = ci_u[2]), 4)
-```
-
-### Langkah 2: Estimasi Rata-rata Nilai Transaksi
-
-```{r}
-library(plotly)
-
-x_trx <- nilai_trx / 1000
-
-h     <- hist(x_trx, breaks = 25, plot = FALSE)
-skala <- (h$counts - min(h$counts)) / max(1, max(h$counts) - min(h$counts))
-kelas <- paste0(round(h$breaks[-length(h$breaks)], 1), " - ", round(h$breaks[-1], 1))
-
-# Gradasi merah: pudar (rendah) -> tebal (tinggi)
-ramp_merah <- colorRamp(c("#FADBD8", "#8B0000"))
-
-fig <- plot_ly() %>%
-  add_bars(x = h$mids, y = h$counts, width = diff(h$breaks),
-           marker = list(color = rgb(ramp_merah(skala), maxColorValue = 255),
-                         line  = list(color = "white", width = 1)),
-           customdata = kelas,
-           hovertemplate = "Kelas: <b>%{customdata}</b> ribu Rp<br>Jumlah UMKM: %{y}<extra></extra>") %>%
-  layout(
-    title = list(text = paste0("<b>Nilai Transaksi QRIS Harian (UMKM pengguna, n = ",
-                               length(nilai_trx), ")</b>"),
-                 x = 0.5, xanchor = "center"),
-    showlegend = FALSE, bargap = 0,
-    xaxis = list(title = "Ribu Rp per hari", showgrid = FALSE, zeroline = FALSE),
-    yaxis = list(title = "Jumlah UMKM", range = c(0, max(h$counts) * 1.2),
-                 showticklabels = FALSE, ticks = "",
-                 showgrid = FALSE, zeroline = FALSE),
-    margin = list(t = 80, b = 50, l = 70, r = 40)
-  )
-
-fig
-```
-
-```{r}
-ci_trx <- t.test(nilai_trx)$conf.int
-round(c(n = length(nilai_trx), Mean = mean(nilai_trx), Median = median(nilai_trx),
-        SE = sd(nilai_trx) / sqrt(length(nilai_trx)), Bawah = ci_trx[1], Atas = ci_trx[2]))
-```
-
-### Langkah 3: Apakah CLT Dapat Diandalkan di Sini?
-
-Datanya **menjulur kanan**. Kita periksa dengan *bootstrap*: mengambil ulang sampel (dengan pengembalian) dari data kita sendiri untuk meniru distribusi sampling $\bar{x}$.
-
-```{r}
-library(plotly)
-
-set.seed(11)
-boot_mean <- replicate(5000, mean(sample(nilai_trx, replace = TRUE)))
-mu_trx    <- mean(nilai_trx) / 1000
-se_trx    <- sd(nilai_trx) / sqrt(length(nilai_trx)) / 1000
-
-h     <- hist(boot_mean / 1000, breaks = 40, plot = FALSE)
+mu0 <- 250; sigma <- 6; n <- 36; xbar <- 247.6
+se <- sigma / sqrt(n)
+set.seed(10)
+xbar_jika_H0 <- replicate(100000, mean(rnorm(n, mu0, sigma)))
+
+xbar_cermin <- 2 * mu0 - xbar   # titik simetris terhadap mu0
+
+# 60 kelas sama lebar, densitas
+h     <- hist(xbar_jika_H0,
+              breaks = seq(min(xbar_jika_H0), max(xbar_jika_H0), length.out = 61),
+              plot = FALSE)
 skala <- (h$density - min(h$density)) / (max(h$density) - min(h$density))
 kelas <- paste0(round(h$breaks[-length(h$breaks)], 2), " - ", round(h$breaks[-1], 2))
 
-# Kurva normal teoretis, sedikit lebih lebar dari rentang histogram
-rentang <- range(h$breaks) + c(-1, 1) * 0.05 * diff(range(h$breaks))
-xs      <- seq(rentang[1], rentang[2], length.out = 400)
-ymax    <- max(h$density, dnorm(xs, mu_trx, se_trx))
-
 # Gradasi merah: pudar (rendah) -> tebal (tinggi)
 ramp_merah <- colorRamp(c("#FADBD8", "#8B0000"))
+
+rentang <- range(h$breaks, xbar, xbar_cermin) + c(-0.2, 0.2)
+ymax    <- max(h$density)
 
 fig <- plot_ly() %>%
   add_bars(x = h$mids, y = h$density, width = diff(h$breaks),
            marker = list(color = rgb(ramp_merah(skala), maxColorValue = 255),
-                         line  = list(color = "white", width = 1)),
-           customdata = kelas,
-           hovertemplate = "Kelas: <b>%{customdata}</b> ribu Rp<br>Densitas: %{y:.3f}<extra></extra>") %>%
-  add_lines(x = xs, y = dnorm(xs, mu_trx, se_trx),
-            line = list(color = "black", width = 3), hoverinfo = "skip") %>%
+                         line  = list(color = "white", width = 0.5)),
+           customdata = kelas, showlegend = FALSE,
+           hovertemplate = "Kelas: <b>%{customdata}</b> gram<br>Kepadatan: %{y:.3f}<extra></extra>") %>%
+  add_segments(x = xbar, xend = xbar, y = 0, yend = ymax * 1.1,
+               line = list(color = "#8B0000", width = 3),
+               name = paste0("x-bar teramati = ", xbar),
+               hoverinfo = "skip") %>%
+  add_segments(x = xbar_cermin, xend = xbar_cermin, y = 0, yend = ymax * 1.1,
+               line = list(color = "#8B0000", width = 3, dash = "dash"),
+               name = paste0("Titik simetris = ", xbar_cermin),
+               hoverinfo = "skip") %>%
   layout(
-    title = list(text = "<b>Distribusi Bootstrap Rata-rata Nilai Transaksi</b>",
+    title = list(text = "<b>Distribusi x-bar JIKA Mesin Bekerja Benar (\u03bc = 250)</b>",
                  x = 0.5, xanchor = "center"),
-    showlegend = FALSE, bargap = 0,
-    xaxis = list(title = "Ribu Rp per hari", range = rentang,
+    showlegend = TRUE,
+    legend = list(x = 0.02, y = 0.98),
+    bargap = 0,
+    xaxis = list(title = "Rata-rata 36 kemasan (gram)", range = rentang,
                  showgrid = FALSE, zeroline = FALSE),
-    yaxis = list(title = "Densitas", range = c(0, ymax * 1.2),
+    yaxis = list(title = "Kepadatan", range = c(0, ymax * 1.2),
                  showticklabels = FALSE, ticks = "",
                  showgrid = FALSE, zeroline = FALSE),
     margin = list(t = 80, b = 50, l = 70, r = 40)
@@ -880,221 +162,854 @@ fig
 ```
 
 ```{r}
-round(quantile(boot_mean, c(0.025, 0.975)))   # selang bootstrap persentil 95%
+mean(abs(xbar_jika_H0 - mu0) >= abs(xbar - mu0))   # seberapa sering selisih sebesar ini terjadi
 ```
 
-Distribusi *bootstrap* $\bar{x}$ hampir berbentuk lonceng dan selang *bootstrap* hampir sama dengan selang t. Dengan $n = 165$ pengguna, CLT bekerja baik meskipun data individunya menceng.
+Jika mesin benar, rata-rata yang meleset **2,4 gram atau lebih** (ke arah mana pun) hanya terjadi sekitar 1,6% dari waktu. Angka inilah yang disebut ***p-value***. Karena sangat jarang, kita punya alasan kuat untuk meragukan bahwa mesin bekerja benar.
 
-### Langkah 4: Merencanakan Survei Lanjutan
+::: {.callout-tip title="Interpretasi: Ilustrasi Mesin Pengisi"}
+**Interpretasi:** Bayangkan kita pura-pura percaya dulu bahwa mesin kopinya benar-benar tepat di 250 gram, lalu kita simulasikan pengambilan 36 kemasan sebanyak 100.000 kali, dan hasilnya rata-rata kemasan itu menumpuk rapi di sekitar 250 gram dengan sebaran yang sempit (simpangannya cuma 1 gram). Garis tebal di grafik menunjukkan rata-rata yang benar-benar kita dapat, yaitu 247,6 gram, dan garis putus-putus adalah bayangan cerminnya di sisi lain (252,4 gram), karena kita peduli selisih ke arah mana pun. Kedua garis itu berada jauh di pinggir tumpukan, dan hasil hitungan menunjukkan hanya sekitar 1,6% sampel yang meleset sejauh itu atau lebih kalau mesinnya memang benar. Angka 1,6% inilah yang disebut *p-value*, dan karena nilainya kecil sekali, wajar kalau kita mulai curiga bahwa mesinnya sebenarnya sudah bergeser.
+:::
 
-Dinas ingin survei tahun depan menghasilkan *margin of error* proporsi $\pm$ 3% dan rata-rata transaksi $\pm$ Rp 30.000 (kepercayaan 95%).
+::: {.callout-note title="Interpretasi Bab 2: Logika Uji Hipotesis"}
+**Interpretasi:** Bab ini cuma membangun intuisi dulu, yaitu uji hipotesis berpikir seperti sidang pengadilan: kita anggap "tidak ada masalah" ($H_0$) sampai data memberi bukti yang cukup kuat untuk menolaknya. Tabel analogi tadi gunanya menerjemahkan istilah pengadilan ke istilah statistik, dan poin terpenting dari tabel itu adalah putusan "gagal menolak $H_0$" itu setara "tidak terbukti bersalah", jadi bukan berarti $H_0$ pasti benar. Sementara itu dua jenis kesalahan di tabel (menghukum orang tak bersalah dan membebaskan orang bersalah) nanti dikenal sebagai kesalahan Tipe I dan Tipe II.
+:::
+
+## Merumuskan Hipotesis
+
+### Hipotesis Nol dan Alternatif
+
+| | Hipotesis Nol ($H_0$) | Hipotesis Alternatif ($H_1$ atau $H_a$) |
+|:--|:--|:--|
+| Isi | "Tidak ada efek, perbedaan, atau perubahan"; status quo | Klaim yang ingin dibuktikan peneliti |
+| Tanda | Selalu memuat **kesamaan**: $=$, $\le$, atau $\ge$ | $\ne$, $>$, atau $<$ |
+| Posisi dalam uji | Diasumsikan benar selama perhitungan | Diterima hanya jika bukti kuat |
+
+**Aturan penting:** hipotesis selalu dinyatakan tentang **parameter populasi** ($\mu$, $p$, $\sigma$), **bukan** statistik sampel. Menulis "$H_0: \bar{x} = 250$" adalah keliru, karena $\bar{x}$ sudah kita ketahui.
+
+::: {.callout-tip title="Interpretasi: Hipotesis Nol dan Alternatif"}
+**Interpretasi:** $H_0$ adalah posisi awal yang kita anggap benar selama perhitungan (selalu pakai tanda sama, yaitu $=$, $\le$, atau $\ge$), sedangkan $H_1$ adalah klaim yang ingin kita buktikan (tandanya $\ne$, $>$, atau $<$) dan baru kita percaya kalau datanya benar-benar meyakinkan. Satu aturan yang wajib diingat: hipotesis selalu bicara soal parameter populasi seperti $\mu$, bukan soal rata-rata sampel $\bar{x}$, karena $\bar{x}$ sudah kita hitung dari data sehingga tidak perlu lagi diuji.
+:::
+
+### Tiga Bentuk Hipotesis
+
+| Bentuk | $H_0$ | $H_1$ | Daerah penolakan | Contoh pertanyaan |
+|:--|:--|:--|:--|:--|
+| Dua arah | $\mu = \mu_0$ | $\mu \ne \mu_0$ | Kedua ekor | "Apakah rata-rata pengisian berbeda dari 250 g?" |
+| Satu arah kanan | $\mu \le \mu_0$ | $\mu > \mu_0$ | Ekor kanan | "Apakah rata-rata TSS melebihi baku mutu?" |
+| Satu arah kiri | $\mu \ge \mu_0$ | $\mu < \mu_0$ | Ekor kiri | "Apakah umur baterai kurang dari klaim 20 jam?" |
+
+::: {.callout-tip title="Interpretasi: Tiga Bentuk Hipotesis"}
+**Interpretasi:** Pilihan bentuk hipotesis tergantung pada ke arah mana kita khawatir: kalau kita peduli perbedaan ke arah mana saja (lebih tinggi maupun lebih rendah) pakai uji dua arah, kalau kita cuma khawatir nilainya terlalu besar pakai satu arah kanan, dan kalau cuma khawatir nilainya terlalu kecil pakai satu arah kiri. Arah ini menentukan di mana daerah penolakan diletakkan, yaitu di kedua ujung kurva, di ujung kanan saja, atau di ujung kiri saja.
+:::
+
+### Menerjemahkan Kalimat Menjadi Hipotesis
+
+| Kata kunci dalam klaim | Tanda di $H_1$ |
+|:--|:--:|
+| berbeda, berubah, tidak sama | $\ne$ |
+| lebih dari, meningkat, melebihi, lebih baik | $>$ |
+| kurang dari, menurun, lebih rendah, lebih cepat (waktu) | $<$ |
+
+::: callout-warning
+**Tentukan arah sebelum melihat data.** Memilih uji satu arah setelah melihat arah selisih pada data adalah kecurangan: *p-value* menjadi separuhnya secara tidak sah. Jika ragu, gunakan uji dua arah.
+:::
+
+::: {.callout-tip title="Interpretasi: Menerjemahkan Kalimat Menjadi Hipotesis"}
+**Interpretasi:** Ini trik praktis untuk membaca soal cerita: kata seperti "berbeda" atau "berubah" berarti $\ne$, kata seperti "melebihi" atau "meningkat" berarti $>$, dan kata seperti "kurang dari" atau "menurun" berarti $<$. Hati-hati dengan "lebih cepat" pada soal waktu, karena waktu yang lebih cepat artinya angkanya justru lebih kecil. Peringatan di kotak kuning juga penting: arah uji harus diputuskan sebelum melihat data, karena kalau arahnya dipilih setelah tahu data condong ke mana, *p-value* jadi separuh secara tidak sah, dan kalau ragu lebih aman pakai dua arah.
+:::
+
+::: {.callout-note title="Interpretasi Bab 3: Merumuskan Hipotesis"}
+**Interpretasi:** Bab ini menekankan bahwa menulis hipotesis dengan benar adalah fondasi, karena kalau rumusannya salah (misalnya memakai statistik sampel, menaruh tanda sama di $H_1$, atau memilih arah setelah melihat data) maka semua hitungan sesudahnya ikut tidak sah.
+:::
+
+## Komponen Uji Hipotesis
+
+### Tingkat Signifikansi ($\alpha$)
+
+$\alpha$ adalah batas peluang kesalahan Tipe I yang bersedia kita tanggung – peluang menolak $H_0$ padahal $H_0$ benar. Nilai yang umum: 0,05; 0,01; atau 0,10. $\alpha$ ditetapkan **sebelum** data dianalisis, berdasarkan seberapa mahal akibat kesalahan Tipe I.
+
+::: {.callout-tip title="Interpretasi: Tingkat Signifikansi (α)"}
+**Interpretasi:** $\alpha$ itu ibarat batas "seberapa berani kita salah alarm", yaitu peluang kita menolak $H_0$ padahal $H_0$-nya sebenarnya benar, dan nilai yang lazim dipakai adalah 0,05 (berani salah 5%), 0,01 (lebih hati-hati), atau 0,10 (lebih longgar). Nilainya harus ditetapkan sebelum melihat data dan disesuaikan dengan seberapa mahal akibatnya kalau kita salah menolak $H_0$, bukan dipilih belakangan supaya hasilnya kelihatan signifikan.
+:::
+
+### Statistik Uji
+
+Statistik uji mengukur seberapa jauh estimasi sampel dari nilai $H_0$, dalam satuan *standard error*:
+
+$$
+\text{statistik uji} = \frac{\text{estimasi} - \text{nilai di } H_0}{SE}
+\qquad\qquad
+z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}
+$$
 
 ```{r}
-c(n_untuk_proporsi = n_prop(E = 0.03, p = p_hat_u),
-  n_pengguna_untuk_mean = n_mean(sigma = sd(nilai_trx), E = 30000))
+z_hitung <- (xbar - mu0) / se
+z_hitung
 ```
+
+Rata-rata sampel berada 2,4 *standard error* di bawah nilai yang diklaim.
+
+::: {.callout-tip title="Interpretasi: Statistik Uji"}
+**Interpretasi:** Statistik uji pada dasarnya adalah penggaris yang mengukur seberapa jauh hasil sampel kita dari nilai klaim $H_0$, dengan satuan *standard error* sebagai ukurannya. Pada mesin kopi, nilainya $z = -2{,}4$, yang artinya rata-rata sampel (247,6 g) berada 2,4 *standard error* di bawah klaim 250 g, di mana tanda minus menunjukkan arahnya (di bawah) dan angka 2,4 menunjukkan jaraknya. Makin besar jarak ini (dalam nilai mutlak), makin sulit selisihnya dijelaskan sebagai kebetulan.
+:::
+
+### Nilai Kritis dan Daerah Penolakan
+
+Nilai kritis adalah batas yang memisahkan daerah "tidak mengejutkan" dan daerah penolakan, ditentukan oleh $\alpha$ dan arah uji.
+
+```{r}
+alpha <- 0.05
+c(Dua_arah = qnorm(1 - alpha / 2), Kanan = qnorm(1 - alpha), Kiri = qnorm(alpha))
+```
+
+```{r}
+library(plotly)
+
+alpha <- 0.05   # hapus baris ini jika alpha sudah dibuat di chunk sebelumnya
+x  <- seq(-4, 4, length.out = 800)
+z2 <- qnorm(1 - alpha / 2)   # batas uji dua arah
+z1 <- qnorm(1 - alpha)       # batas uji satu arah
+
+label_arah <- c("Dua arah (\u00b11,96)", "Kanan (1,645)", "Kiri (-1,645)")
+
+# Daerah tolak tiap panel: pasangan (awal, akhir) pada sumbu z
+daerah <- list(
+  list(c(-4, -z2), c(z2, 4)),   # dua arah: dua ekor
+  list(c(z1, 4)),               # kanan
+  list(c(-4, -z1))              # kiri
+)
+
+panel <- function(wilayah) {
+  p <- plot_ly()
+  for (w in wilayah) {
+    xr <- seq(w[1], w[2], length.out = 200)
+    p <- p %>% add_lines(x = xr, y = dnorm(xr),
+                         fill = "tozeroy", fillcolor = "rgba(179, 0, 0, 0.5)",
+                         line = list(color = "rgba(0,0,0,0)", width = 0),
+                         hoverinfo = "skip")
+  }
+  p %>%
+    add_lines(x = x, y = dnorm(x),
+              line = list(color = "black", width = 2),
+              hovertemplate = "z = %{x:.2f}<br>Kepadatan: %{y:.3f}<extra></extra>") %>%
+    layout(xaxis = list(title = "z", range = c(-4, 4),
+                        showgrid = FALSE, zeroline = FALSE),
+           yaxis = list(title = "", range = c(0, 0.45),
+                        showticklabels = FALSE, ticks = "",
+                        showgrid = FALSE, zeroline = FALSE))
+}
+
+fig <- subplot(lapply(daerah, panel), nrows = 1, margin = 0.04,
+               titleX = TRUE) %>%
+  layout(showlegend = FALSE,
+         margin = list(t = 90, b = 50, l = 40, r = 40))
+
+# Judul tiap panel di tengah panelnya
+b <- plotly_build(fig)$x$layout
+anotasi <- lapply(seq_along(label_arah), function(i) {
+  sfx <- if (i == 1) "" else i
+  list(text = paste0("<b>", label_arah[i], "</b>"),
+       x = mean(b[[paste0("xaxis", sfx)]]$domain), y = 1.08,
+       xref = "paper", yref = "paper", xanchor = "center",
+       showarrow = FALSE, font = list(size = 15))
+})
+
+fig %>% layout(annotations = anotasi)
+```
+
+Daerah merah adalah **daerah penolakan**, luasnya $\alpha = 0{,}05$. Pada uji dua arah, $\alpha$ dibagi dua ke kedua ekor.
+
+::: {.callout-tip title="Interpretasi: Nilai Kritis dan Daerah Penolakan"}
+**Interpretasi:** Nilai kritis adalah garis batas antara "masih wajar" dan "sudah terlalu aneh, tolak $H_0$", dan letaknya ditentukan oleh $\alpha$ serta arah uji: untuk $\alpha = 0{,}05$ batasnya $\pm 1{,}96$ pada uji dua arah, $1{,}645$ pada uji kanan, dan $-1{,}645$ pada uji kiri. Pada grafik tiga panel, area merah adalah daerah penolakan dengan total luas sama dengan $\alpha$, dan kalau statistik uji kita jatuh di area merah itu maka $H_0$ ditolak. Pada uji dua arah, $\alpha$ dibagi dua sehingga masing-masing ekor mendapat 0,025, itulah sebabnya batasnya lebih jauh (1,96) dibanding uji satu arah (1,645).
+:::
+
+### P-Value
+
+::: callout-note
+***P-value*** adalah peluang memperoleh statistik uji **seekstrem atau lebih ekstrem** daripada yang teramati, **dengan asumsi $H_0$ benar**.
+:::
+
+| Arah uji | *P-value* |
+|:---------|:----------|
+| Dua arah | $2 \times P(Z \ge \lvert z \rvert)$ |
+| Kanan | $P(Z \ge z)$ |
+| Kiri | $P(Z \le z)$ |
+
+```{r}
+p_dua <- 2 * (1 - pnorm(abs(z_hitung)))
+p_dua
+```
+
+```{r}
+library(plotly)
+
+# Jika z_hitung dan p_dua belum ada, buka komentar dua baris ini
+# (memakai data kemasan: mu0 = 250, sigma = 6, n = 36, xbar = 247.6):
+# z_hitung <- (247.6 - 250) / (6 / sqrt(36))
+# p_dua    <- 2 * pnorm(-abs(z_hitung))
+
+x  <- seq(-4, 4, length.out = 800)
+zb <- abs(z_hitung)
+
+# Dua ekor: kiri (x <= -|z|) dan kanan (x >= |z|)
+ekor_kiri  <- seq(-4, -zb, length.out = 200)
+ekor_kanan <- seq(zb, 4, length.out = 200)
+
+fig <- plot_ly() %>%
+  add_lines(x = ekor_kiri, y = dnorm(ekor_kiri),
+            fill = "tozeroy", fillcolor = "rgba(252, 141, 89, 0.7)",
+            line = list(color = "rgba(0,0,0,0)", width = 0),
+            hoverinfo = "skip") %>%
+  add_lines(x = ekor_kanan, y = dnorm(ekor_kanan),
+            fill = "tozeroy", fillcolor = "rgba(252, 141, 89, 0.7)",
+            line = list(color = "rgba(0,0,0,0)", width = 0),
+            hoverinfo = "skip") %>%
+  add_lines(x = x, y = dnorm(x),
+            line = list(color = "black", width = 2),
+            hovertemplate = "z = %{x:.2f}<br>Kepadatan: %{y:.3f}<extra></extra>") %>%
+  # Batas kritis +-1,96
+  add_segments(x = c(-1.96, 1.96), xend = c(-1.96, 1.96), y = 0, yend = 0.42,
+               line = list(color = "#8B0000", width = 1.5, dash = "dash"),
+               hoverinfo = "skip") %>%
+  layout(
+    title = list(text = paste0("<b>P-value dua arah = luas kedua ekor = ",
+                               round(p_dua, 4), "</b>"),
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE,
+    annotations = list(list(
+      text = paste0("<b>z = ", round(z_hitung, 2), "</b>"),
+      x = z_hitung, y = 0.12, xanchor = "right",
+      showarrow = FALSE, font = list(size = 14))),
+    xaxis = list(title = "z", range = c(-4, 4),
+                 showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "", range = c(0, 0.45),
+                 showticklabels = FALSE, ticks = "",
+                 showgrid = FALSE, zeroline = FALSE),
+    margin = list(t = 80, b = 50, l = 40, r = 40)
+  )
+
+fig
+```
+
+::: {.callout-tip title="Interpretasi: P-Value"}
+**Interpretasi:** *P-value* menjawab pertanyaan "kalau $H_0$ benar, seberapa sering saya mendapat hasil sejauh ini atau lebih jauh lagi?", dan cara menghitungnya mengikuti arah uji (dua kali luas satu ekor untuk dua arah, luas ekor kanan untuk uji kanan, dan luas ekor kiri untuk uji kiri). Pada mesin kopi, $z = -2{,}4$ memberi *p-value* dua arah sekitar 0,0164, yang pada grafik adalah luas area oranye di kedua ujung kurva (di luar $\pm 2{,}4$). Artinya kalau mesinnya benar, hasil seekstrem ini hanya muncul sekitar 1,6% dari waktu, jadi makin kecil *p-value* makin kuat kecurigaan kita terhadap $H_0$. Perlu diingat bahwa *p-value* bukan peluang $H_0$ benar, karena ia dihitung dengan mengandaikan $H_0$ benar lebih dulu.
+:::
+
+### Keputusan: Dua Pendekatan yang Setara
+
+| Pendekatan | Tolak $H_0$ jika | Contoh mesin kopi |
+|:--|:--|:--|
+| **Nilai kritis** | Statistik uji jatuh di daerah penolakan | $\lvert z \rvert = 2{,}4 > 1{,}96 \Rightarrow$ tolak |
+| ***P-value*** | *p-value* $\le \alpha$ | $0{,}0164 \le 0{,}05 \Rightarrow$ tolak |
+
+Kedua pendekatan **selalu** memberi keputusan yang sama. Pendekatan *p-value* lebih informatif karena menunjukkan **seberapa kuat** buktinya, bukan sekadar lolos atau tidak.
+
+| *P-value* | Kekuatan bukti melawan $H_0$ (pedoman kasar) |
+|:----------|:---------------------------------------------|
+| $> 0{,}10$ | Lemah/tidak ada |
+| $0{,}05$–$0{,}10$ | Lemah–sedang |
+| $0{,}01$–$0{,}05$ | Cukup kuat |
+| $< 0{,}01$ | Sangat kuat |
+
+::: callout-important
+**"Gagal menolak $H_0$" tidak sama dengan "$H_0$ benar".** Sama seperti "tidak terbukti bersalah" tidak berarti "terbukti tidak bersalah". Bisa jadi efeknya memang ada tetapi sampel kita terlalu kecil untuk mendeteksinya.
+:::
+
+::: {.callout-tip title="Interpretasi: Keputusan"}
+**Interpretasi:** Ada dua jalan untuk mengambil keputusan, yaitu membandingkan statistik uji dengan nilai kritis atau membandingkan *p-value* dengan $\alpha$, dan keduanya selalu menghasilkan keputusan yang sama. Pada mesin kopi, $|z| = 2{,}4$ lebih besar dari 1,96 dan *p-value* 0,0164 lebih kecil dari 0,05, sehingga keduanya sepakat menolak $H_0$. Jalur *p-value* lebih disukai karena ia memberi tahu seberapa kuat buktinya (dengan pedoman kasar: di atas 0,10 lemah, 0,05 sampai 0,10 lemah-sedang, 0,01 sampai 0,05 cukup kuat, dan di bawah 0,01 sangat kuat), bukan sekadar lolos atau tidak. Dan kalau hasilnya "gagal menolak $H_0$", jangan diartikan $H_0$ terbukti benar, sebab bisa saja efeknya ada tetapi sampelnya terlalu kecil untuk mendeteksinya.
+:::
+
+::: {.callout-note title="Interpretasi Bab 4: Komponen Uji Hipotesis"}
+**Interpretasi:** Bab ini memperkenalkan empat alat utama uji hipotesis: $\alpha$ sebagai batas keberanian salah, statistik uji sebagai ukuran jarak data dari klaim, nilai kritis sebagai garis batas penolakan, dan *p-value* sebagai ukuran seberapa mengejutkan data kita. Empat alat ini saling terhubung, karena statistik uji dibandingkan dengan nilai kritis (yang ditentukan $\alpha$) atau diubah menjadi *p-value* untuk dibandingkan dengan $\alpha$.
+:::
+
+## Prosedur Lima Langkah
+
+| Langkah | Isi |
+|:-------:|:----|
+| 1 | Rumuskan $H_0$ dan $H_1$ (tentukan arah) |
+| 2 | Tetapkan $\alpha$ |
+| 3 | Pilih uji yang sesuai, periksa asumsi, hitung statistik uji |
+| 4 | Tentukan nilai kritis dan/atau *p-value*, ambil keputusan |
+| 5 | Tulis kesimpulan **dalam konteks masalah** (bukan sekadar "tolak $H_0$") |
+
+Kita bungkus perhitungan uji z satu sampel dalam sebuah fungsi agar dapat dipakai ulang.
+
+```{r}
+uji_z <- function(xbar, mu0, sigma, n, arah = c("dua", "kanan", "kiri"), alpha = 0.05) {
+  arah <- match.arg(arah)
+  z <- (xbar - mu0) / (sigma / sqrt(n))
+  p <- switch(arah, dua = 2 * (1 - pnorm(abs(z))), kanan = 1 - pnorm(z), kiri = pnorm(z))
+  kritis <- switch(arah, dua = qnorm(1 - alpha / 2), kanan = qnorm(1 - alpha), kiri = qnorm(alpha))
+  data.frame(z = round(z, 4), z_kritis = round(kritis, 4), p_value = signif(p, 4),
+             keputusan = ifelse(p <= alpha, "Tolak H0", "Gagal menolak H0"))
+}
+```
+
+### Contoh 1 (Dua Arah): Mesin Pengisi Kopi
+
+1. $H_0: \mu = 250$ gram (mesin tepat); $H_1: \mu \ne 250$ gram (mesin perlu dikalibrasi).
+2. $\alpha = 0{,}05$.
+3. $\sigma$ diketahui (6 g), $n = 36$, uji z: $z = (247{,}6 - 250)/1 = -2{,}4$.
+
+```{r}
+uji_z(xbar = 247.6, mu0 = 250, sigma = 6, n = 36, arah = "dua")
+```
+
+4. $\lvert z \rvert = 2{,}4 > 1{,}96$ dan *p-value* $\approx 0{,}016 < 0{,}05 \Rightarrow$ tolak $H_0$.
+5. **Kesimpulan:** pada taraf signifikansi 5%, terdapat bukti yang cukup bahwa rata-rata pengisian mesin berbeda dari 250 gram (data menunjukkan cenderung kurang). Mesin sebaiknya diperiksa dan dikalibrasi.
+
+::: {.callout-tip title="Interpretasi: Contoh 1 (Mesin Pengisi Kopi)"}
+**Interpretasi:** Karena kita ingin tahu apakah mesinnya berbeda dari 250 gram ke arah mana pun, kita pakai uji dua arah, dan karena $\sigma$ diketahui kita pakai uji z. Hasilnya $z = -2{,}4$ dengan *p-value* sekitar 0,016, yang lebih kecil dari 0,05 sehingga $H_0$ ditolak. Kesimpulan dalam bahasa sehari-harinya: ada bukti yang cukup kuat bahwa rata-rata isi kemasan tidak lagi 250 gram, dan karena rata-rata sampelnya di bawah 250 maka kemungkinan mesin mengisi kurang, jadi sebaiknya mesin diperiksa dan dikalibrasi.
+:::
+
+### Contoh 2 (Satu Arah Kanan): Klaim Waktu Pengiriman
+
+Sebuah layanan logistik mengklaim rata-rata waktu pengirimannya paling lama 48 jam. Asosiasi konsumen curiga waktunya lebih lama. Data historis menunjukkan $\sigma = 10$ jam. Sampel 50 pengiriman menghasilkan $\bar{x} = 50{,}1$ jam.
+
+1. $H_0: \mu \le 48$ (klaim benar); $H_1: \mu > 48$ (klaim tidak benar – lebih lama).
+2. $\alpha = 0{,}05$.
+
+```{r}
+uji_z(xbar = 50.1, mu0 = 48, sigma = 10, n = 50, arah = "kanan")
+```
+
+**Kesimpulan:** *p-value* $\approx 0{,}069 > 0{,}05$, sehingga **gagal menolak** $H_0$. Pada taraf 5%, bukti belum cukup untuk menyatakan rata-rata waktu pengiriman melebihi 48 jam. Ini **tidak** membuktikan klaim perusahaan benar; dengan *p-value* 0,07, ada indikasi lemah yang layak ditindaklanjuti dengan sampel lebih besar.
+
+Perhatikan: jika asosiasi konsumen memakai uji dua arah, *p-value*-nya menjadi dua kali lipat (sekitar 0,14). Arah uji harus ditentukan dari pertanyaan penelitian **sebelum** melihat data.
+
+::: {.callout-tip title="Interpretasi: Contoh 2 (Waktu Pengiriman)"}
+**Interpretasi:** Di sini asosiasi konsumen curiga pengiriman lebih lama dari klaim 48 jam, jadi $H_1$-nya satu arah kanan ($\mu > 48$). Rata-rata sampel memang 50,1 jam (sedikit di atas klaim), tetapi *p-value*-nya sekitar 0,069, sedikit di atas 0,05, sehingga kita gagal menolak $H_0$. Artinya buktinya belum cukup untuk menuduh perusahaan berbohong, tetapi ini juga bukan bukti bahwa klaim perusahaan benar. Nilai 0,07 memberi sinyal lemah yang layak diselidiki lagi dengan sampel lebih besar. Perhatikan juga bahwa kalau arah ujinya diganti jadi dua arah, *p-value* ikut berlipat dua menjadi sekitar 0,14, itulah alasan kenapa arah harus ditentukan dari awal.
+:::
+
+::: {.callout-note title="Interpretasi Bab 5: Prosedur Lima Langkah"}
+**Interpretasi:** Lima langkah ini adalah resep baku yang dipakai berulang untuk semua uji: rumuskan hipotesis, tetapkan $\alpha$, hitung statistik uji, ambil keputusan, lalu tulis kesimpulan dalam konteks masalah. Langkah terakhir paling sering dilupakan padahal paling penting, karena pembaca butuh tahu arti hasilnya bagi masalah nyata, bukan sekadar kalimat "tolak $H_0$". Fungsi `uji_z()` dibuat supaya seluruh hitungan (statistik uji, nilai kritis, *p-value*, dan keputusan) bisa dipanggil sekaligus dan dipakai ulang di bab-bab berikutnya.
+:::
+
+## Hubungan Uji Dua Arah dan Selang Kepercayaan
+
+Uji dua arah dengan taraf $\alpha$ setara dengan memeriksa apakah $\mu_0$ berada di dalam selang kepercayaan $(1-\alpha) \times 100\%$:
+
+- $\mu_0$ di **luar** CI 95% $\Longleftrightarrow$ tolak $H_0$ pada $\alpha = 0{,}05$ (dua arah).
+- $\mu_0$ di **dalam** CI 95% $\Longleftrightarrow$ gagal menolak $H_0$.
+
+```{r}
+ci <- 247.6 + c(-1, 1) * qnorm(0.975) * 6 / sqrt(36)
+round(ci, 3)
+```
+
+```{r}
+250 >= ci[1] & 250 <= ci[2]   # FALSE -> 250 di luar selang -> konsisten dengan "tolak H0"
+```
+
+Selang kepercayaan lebih informatif: selain keputusan, ia menunjukkan rentang nilai $\mu$ yang masuk akal – di sini rata-rata pengisian kemungkinan antara 245,6 dan 249,6 gram, sehingga kekurangannya kemungkinan antara 0,4 dan 4,4 gram per kemasan.
+
+::: {.callout-note title="Interpretasi Bab 6: Hubungan Uji Dua Arah dan Selang Kepercayaan"}
+**Interpretasi:** Uji dua arah dan selang kepercayaan itu dua cara melihat hal yang sama: kalau nilai klaim $\mu_0$ jatuh di luar selang kepercayaan 95% maka $H_0$ ditolak pada $\alpha = 0{,}05$, dan kalau jatuh di dalam selang maka kita gagal menolak $H_0$. Pada mesin kopi, selang kepercayaan 95% adalah 245,6 sampai 249,6 gram, sedangkan klaim 250 gram berada di luar selang itu (hasil kode `FALSE`), sehingga cocok dengan keputusan tolak $H_0$ sebelumnya. Keunggulan selang kepercayaan adalah ia tidak cuma bilang "beda atau tidak", tetapi juga menunjukkan kira-kira seberapa besar bedanya, yaitu kemungkinan isi kemasan kurang antara 0,4 sampai 4,4 gram.
+:::
+
+## Kesalahan Tipe I, Tipe II, dan Power
+
+### Tabel Keputusan
+
+| | $H_0$ benar | $H_0$ salah |
+|:--|:--|:--|
+| **Tolak $H_0$** | Kesalahan Tipe I (*false positive*), peluang $= \alpha$ | Keputusan benar, peluang $=$ *power* $= 1 - \beta$ |
+| **Gagal menolak $H_0$** | Keputusan benar, peluang $= 1 - \alpha$ | Kesalahan Tipe II (*false negative*), peluang $= \beta$ |
+
+| Konteks | Kesalahan Tipe I | Kesalahan Tipe II |
+|:--|:--|:--|
+| Mesin pengisi ($H_0$: mesin tepat) | Menghentikan produksi untuk kalibrasi padahal mesin baik | Mesin terus mengisi kurang; konsumen dirugikan |
+| Tes penyakit ($H_0$: sehat) | Orang sehat didiagnosis sakit | Orang sakit tidak terdeteksi |
+| Filter spam ($H_0$: bukan spam) | Email penting masuk folder spam | Spam lolos ke kotak masuk |
+| Uji A/B ($H_0$: desain baru tidak lebih baik) | Meluncurkan desain yang sebenarnya tidak lebih baik | Melewatkan desain yang sebenarnya lebih baik |
+
+::: {.callout-tip title="Interpretasi: Tabel Keputusan"}
+**Interpretasi:** Setiap keputusan uji punya dua kemungkinan: benar atau salah. Kesalahan Tipe I terjadi kalau kita menolak $H_0$ padahal $H_0$ benar (alarm palsu, peluangnya $\alpha$), sedangkan kesalahan Tipe II terjadi kalau kita gagal menolak $H_0$ padahal $H_0$ salah (kasus yang terlewat, peluangnya $\beta$). *Power* adalah kebalikan dari $\beta$, yaitu peluang kita berhasil mendeteksi efek yang memang ada. Contoh di tabel menunjukkan bahwa dampak kedua kesalahan ini berbeda-beda tergantung konteks (misalnya orang sehat didiagnosis sakit vs orang sakit tidak terdeteksi), sehingga kita perlu memikirkan kesalahan mana yang lebih mahal harganya.
+:::
+
+### Simulasi: Kesalahan Tipe I Terjadi Sekitar $\alpha$ dari Waktu
+
+Jika mesin benar-benar tepat ($\mu = 250$) dan kita menguji 10.000 sampel berbeda, berapa kali kita keliru menolak $H_0$?
+
+```{r}
+set.seed(101)
+p_values_H0 <- replicate(10000, {
+  x <- rnorm(36, mean = 250, sd = 6)
+  z <- (mean(x) - 250) / (6 / 6)
+  2 * (1 - pnorm(abs(z)))
+})
+mean(p_values_H0 <= 0.05)   # proporsi kesalahan Tipe I
+```
+
+```{r}
+library(plotly)
+
+h     <- hist(p_values_H0, breaks = seq(0, 1, by = 0.05), plot = FALSE)
+kelas <- paste0(h$breaks[-length(h$breaks)], " - ", h$breaks[-1])
+
+fig <- plot_ly() %>%
+  add_bars(x = h$mids, y = h$counts, width = 0.05,
+           marker = list(color = "#FADBD8",
+                         line  = list(color = "#8B0000", width = 1.5)),
+           customdata = kelas,
+           hovertemplate = "Kelas: <b>%{customdata}</b><br>Frekuensi: %{y}<extra></extra>") %>%
+  add_segments(x = 0.05, xend = 0.05, y = 0, yend = max(h$counts) * 1.15,
+               line = list(color = "#B30000", width = 3),
+               hoverinfo = "skip") %>%
+  layout(
+    title = list(text = "<b>Distribusi p-value Ketika H0 BENAR: Seragam</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = FALSE, bargap = 0,
+    annotations = list(list(
+      text = "<b>\u03b1 = 0,05</b>", x = 0.05, y = max(h$counts) * 1.15,
+      xanchor = "left", yanchor = "bottom", xshift = 6,
+      showarrow = FALSE, font = list(size = 14, color = "#B30000"))),
+    xaxis = list(title = "p-value", range = c(0, 1),
+                 showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "Frekuensi", range = c(0, max(h$counts) * 1.3),
+                 showticklabels = FALSE, ticks = "",
+                 showgrid = FALSE, zeroline = FALSE),
+    margin = list(t = 80, b = 50, l = 70, r = 40)
+  )
+
+fig
+```
+
+Ketika $H_0$ benar, *p-value* tersebar **merata** antara 0 dan 1; sekitar 5% di antaranya jatuh di bawah 0,05 murni karena kebetulan. Itulah makna $\alpha$.
+
+::: {.callout-tip title="Interpretasi: Simulasi Kesalahan Tipe I"}
+**Interpretasi:** Di simulasi ini mesinnya sengaja dibuat benar-benar tepat di 250 gram, lalu kita uji 10.000 sampel berbeda, dan hasilnya sekitar 5% sampel tetap menghasilkan *p-value* di bawah 0,05, padahal tidak ada yang salah dengan mesinnya. Histogram *p-value*-nya juga datar merata dari 0 sampai 1, artinya ketika $H_0$ benar, semua nilai *p-value* sama-sama mungkin muncul. Jadi $\alpha = 0{,}05$ bukan sekadar teori: kalau $H_0$ benar, memang akan ada sekitar 5% "alarm palsu" murni karena kebetulan sampling.
+:::
+
+### Simulasi: Kesalahan Tipe II dan Power
+
+Sekarang anggap mesin **benar-benar** mengisi rata-rata 248 gram ($H_0$ salah). Seberapa sering uji kita mendeteksinya?
+
+```{r}
+power_sim <- function(mu_benar, n, alpha = 0.05, B = 5000) {
+  mean(replicate(B, {
+    z <- (mean(rnorm(n, mu_benar, 6)) - 250) / (6 / sqrt(n))
+    2 * (1 - pnorm(abs(z))) <= alpha
+  }))
+}
+power_teori <- function(mu_benar, n, alpha = 0.05) {
+  k <- qnorm(1 - alpha / 2); d <- (mu_benar - 250) / (6 / sqrt(n))
+  pnorm(-k - d) + 1 - pnorm(k - d)
+}
+set.seed(102)
+c(Power_simulasi = power_sim(248, 36), Power_teori = round(power_teori(248, 36), 4),
+  Beta_teori = round(1 - power_teori(248, 36), 4))
+```
+
+Dengan $n = 36$, uji hanya mendeteksi selisih 2 gram sekitar 52% dari waktu; sekitar 48% dari waktu mesin yang salah setel **lolos** (kesalahan Tipe II).
+
+::: {.callout-tip title="Interpretasi: Simulasi Kesalahan Tipe II dan Power"}
+**Interpretasi:** Sekarang situasinya dibalik: mesin benar-benar bergeser ke 248 gram sehingga $H_0$ memang salah, dan kita lihat seberapa sering uji berhasil menangkapnya. Dengan 36 kemasan, ujinya hanya berhasil mendeteksi kesalahan 2 gram itu sekitar 52% dari waktu (inilah *power*), sedangkan sekitar 48% sisanya mesin yang salah setel lolos begitu saja (inilah kesalahan Tipe II atau $\beta$). Hasil simulasi dan hasil rumus teori hampir sama, jadi kita bisa percaya rumusnya. Pelajarannya, uji dengan sampel kecil bisa saja "diam" padahal masalahnya ada.
+:::
+
+### Kurva Power: Faktor yang Memengaruhi
+
+```{r}
+library(plotly)
+
+mu_seq <- seq(245, 255, by = 0.05)
+
+fig <- plot_ly() %>%
+  # Garis acuan: alpha = 0,05 dan power = 0,80
+  add_segments(x = 245, xend = 255, y = 0.05, yend = 0.05,
+               line = list(color = "gray50", width = 1.5, dash = "dot"),
+               showlegend = FALSE, hoverinfo = "skip") %>%
+  add_segments(x = 245, xend = 255, y = 0.8, yend = 0.8,
+               line = list(color = "gray50", width = 1.5, dash = "dot"),
+               showlegend = FALSE, hoverinfo = "skip") %>%
+  add_lines(x = mu_seq, y = power_teori(mu_seq, 36),
+            name = "n = 36, alpha = 0,05",
+            line = list(color = "#8B0000", width = 3),
+            hovertemplate = "\u03bc = %{x:.2f}<br>Power: %{y:.3f}<extra>n = 36, \u03b1 = 0,05</extra>") %>%
+  add_lines(x = mu_seq, y = power_teori(mu_seq, 100),
+            name = "n = 100, alpha = 0,05",
+            line = list(color = "#FC8D59", width = 3),
+            hovertemplate = "\u03bc = %{x:.2f}<br>Power: %{y:.3f}<extra>n = 100, \u03b1 = 0,05</extra>") %>%
+  add_lines(x = mu_seq, y = power_teori(mu_seq, 36, alpha = 0.01),
+            name = "n = 36, alpha = 0,01",
+            line = list(color = "#8B0000", width = 3, dash = "dash"),
+            hovertemplate = "\u03bc = %{x:.2f}<br>Power: %{y:.3f}<extra>n = 36, \u03b1 = 0,01</extra>") %>%
+  layout(
+    title = list(text = "<b>Kurva Power Uji Dua Arah (H0: \u03bc = 250)</b>",
+                 x = 0.5, xanchor = "center"),
+    showlegend = TRUE,
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.02),
+    xaxis = list(title = "Rata-rata pengisian sebenarnya (gram)",
+                 showgrid = FALSE, zeroline = FALSE),
+    yaxis = list(title = "Power = P(tolak H0)", range = c(0, 1),
+                 showgrid = FALSE, zeroline = FALSE),
+    margin = list(t = 100, b = 50, l = 70, r = 40)
+  )
+
+fig
+```
+
+| Faktor | Jika dinaikkan | *Power* |
+|:--|:--|:--|
+| Besar efek sebenarnya ($\lvert \mu - \mu_0 \rvert$) | Selisih makin besar | **Naik** |
+| Ukuran sampel $n$ | SE mengecil | **Naik** |
+| $\alpha$ | Daerah penolakan melebar | **Naik** (tetapi risiko Tipe I naik) |
+| Variabilitas $\sigma$ | SE membesar | **Turun** |
+
+Tepat di $\mu = 250$ (saat $H_0$ benar), kurva menyentuh $0{,}05 = \alpha$. *Trade-off*: memperkecil $\alpha$ (garis putus-putus) mengurangi kesalahan Tipe I tetapi menurunkan *power* (menambah kesalahan Tipe II). Satu-satunya cara mengurangi keduanya sekaligus adalah **memperbesar sampel**.
+
+Konvensi yang umum dipakai: rancang studi agar *power* minimal 0,80 untuk efek terkecil yang dianggap penting.
+
+```{r}
+n_power <- function(delta, sigma, alpha = 0.05, power = 0.80) {
+  ceiling(((qnorm(1 - alpha / 2) + qnorm(power)) * sigma / delta)^2)
+}
+n_power(delta = 2, sigma = 6)   # sampel agar selisih 2 gram terdeteksi dengan power 80%
+```
+
+::: {.callout-tip title="Interpretasi: Kurva Power"}
+**Interpretasi:** Kurva ini menunjukkan peluang kita menolak $H_0$ untuk berbagai nilai rata-rata sebenarnya: tepat di 250 gram kurva menyentuh $\alpha = 0{,}05$ (karena di titik itu $H_0$ benar), lalu naik makin tinggi semakin jauh rata-rata sebenarnya dari 250. Kurva dengan sampel lebih besar (n = 100) naik lebih cepat daripada n = 36, artinya sampel besar lebih jago mendeteksi selisih kecil. Kurva putus-putus dengan $\alpha = 0{,}01$ berada lebih rendah, yang menunjukkan *trade-off* bahwa menurunkan risiko kesalahan Tipe I berarti menaikkan risiko kesalahan Tipe II. Satu-satunya cara menurunkan keduanya sekaligus adalah menambah sampel. Sebagai patokan, studi sebaiknya dirancang dengan *power* minimal 0,80, dan untuk mendeteksi selisih 2 gram dengan *power* 80% kita butuh sekitar 71 kemasan.
+:::
+
+::: {.callout-note title="Interpretasi Bab 7: Kesalahan Tipe I, Tipe II, dan Power"}
+**Interpretasi:** Uji hipotesis bisa salah, tetapi peluang salahnya bisa dihitung dan dikendalikan: kesalahan Tipe I dikendalikan lewat $\alpha$, sedangkan kesalahan Tipe II dikendalikan lewat *power* yang dipengaruhi besar efek, ukuran sampel, $\alpha$, dan variabilitas data. Dua simulasi di bab ini membuktikan bahwa angka-angka itu nyata, bukan sekadar rumus.
+:::
+
+## Menafsirkan Hasil Uji dengan Bijak
+
+### Signifikansi Statistik vs Signifikansi Praktis
+
+Dengan sampel sangat besar, selisih yang sangat kecil pun menjadi "signifikan secara statistik".
+
+```{r}
+knitr::kable(rbind(
+  "n = 36"      = uji_z(xbar = 249.8, mu0 = 250, sigma = 6, n = 36),
+  "n = 100.000" = uji_z(xbar = 249.8, mu0 = 250, sigma = 6, n = 100000)
+), caption = "Selisih 0,2 gram: tidak signifikan vs sangat signifikan")
+```
+
+Selisih 0,2 gram per kemasan (0,08%) kemungkinan tidak penting secara praktis, meskipun signifikan secara statistik pada $n = 100.000$. Karena itu, selalu laporkan **besar efek** (selisih dan selang kepercayaannya), bukan hanya *p-value*.
+
+::: {.callout-tip title="Interpretasi: Signifikansi Statistik vs Praktis"}
+**Interpretasi:** Selisih yang persis sama (0,2 gram) bisa memberi hasil yang sangat berbeda tergantung ukuran sampelnya: dengan 36 kemasan hasilnya tidak signifikan, tetapi dengan 100.000 kemasan hasilnya sangat signifikan. Ini terjadi karena sampel yang sangat besar membuat uji sensitif terhadap selisih sekecil apa pun, padahal selisih 0,2 gram (hanya 0,08% dari isi kemasan) kemungkinan tidak ada artinya di dunia nyata. Jadi "signifikan secara statistik" belum tentu "penting secara praktis", dan karena itu kita perlu selalu melaporkan besar efek beserta selang kepercayaannya, bukan hanya *p-value*.
+:::
+
+### Miskonsepsi tentang P-Value
+
+| Pernyataan | Benar/Salah | Penjelasan |
+|:--|:--:|:--|
+| "$p = 0{,}016$ berarti peluang $H_0$ benar adalah 1,6%." | Salah | *P-value* dihitung dengan asumsi $H_0$ benar; ia bukan peluang $H_0$ benar |
+| "$p = 0{,}016$ berarti peluang hasil ini terjadi karena kebetulan adalah 1,6%." | Salah | Sama dengan di atas, dengan kata-kata berbeda |
+| "$p > 0{,}05$ membuktikan tidak ada efek." | Salah | Bisa jadi *power* rendah (sampel kecil) |
+| "$p$ yang lebih kecil berarti efeknya lebih besar." | Salah | *P-value* dipengaruhi besar efek **dan** ukuran sampel |
+| "$p = 0{,}049$ dan $p = 0{,}051$ memberi bukti yang sangat berbeda." | Salah | Keduanya menunjukkan kekuatan bukti yang hampir sama |
+| "Jika $H_0$ benar, *p-value* kurang dari 0,05 terjadi sekitar 5% dari waktu." | Benar | Inilah makna $\alpha$ |
+
+::: {.callout-tip title="Interpretasi: Miskonsepsi tentang P-Value"}
+**Interpretasi:** Hampir semua kesalahpahaman tentang *p-value* berakar pada satu hal: *p-value* dihitung dengan mengandaikan $H_0$ benar, jadi ia bukan peluang bahwa $H_0$ benar dan bukan pula peluang hasilnya "cuma kebetulan". *P-value* besar juga tidak membuktikan tidak ada efek, karena bisa jadi sampelnya terlalu kecil, dan *p-value* yang lebih kecil tidak otomatis berarti efeknya lebih besar karena ia dipengaruhi besar efek sekaligus ukuran sampel. Selain itu, $p = 0{,}049$ dan $p = 0{,}051$ sebenarnya hampir sama kuat buktinya, jadi garis 0,05 jangan dianggap tembok ajaib. Satu-satunya pernyataan yang benar di tabel adalah bahwa kalau $H_0$ benar, *p-value* di bawah 0,05 memang muncul sekitar 5% dari waktu.
+:::
+
+### Bahaya Uji Berganda (P-Hacking)
+
+Jika kita menguji banyak hipotesis sekaligus – atau mencoba banyak cara analisis sampai ada yang "signifikan" – peluang setidaknya satu kesalahan Tipe I melonjak.
+
+```{r}
+k <- c(1, 5, 10, 20, 50)
+data.frame(Banyak_uji = k, P_minimal_satu_false_positive = round(1 - (1 - 0.05)^k, 3))
+```
+
+```{r}
+set.seed(103)
+# 20 "fitur" acak tanpa hubungan apa pun dengan target, masing-masing diuji
+p20 <- replicate(20, { x <- rnorm(30, 0, 1); 2 * (1 - pnorm(abs(mean(x) / (1 / sqrt(30))))) })
+sum(p20 <= 0.05)
+```
+
+Dengan 20 uji independen, peluang setidaknya satu hasil "signifikan" padahal semua $H_0$ benar adalah sekitar 64%. Solusi sederhana adalah **koreksi Bonferroni**: pakai $\alpha/k$ untuk setiap uji (misalnya $0{,}05/20 = 0{,}0025$), atau tetapkan satu hipotesis utama sebelum melihat data.
+
+```{r}
+sum(p20 <= 0.05 / 20)
+```
+
+```{r}
+p.adjust(sort(p20)[1:3], method = "bonferroni", n = 20)
+```
+
+::: {.callout-tip title="Interpretasi: Bahaya Uji Berganda (P-Hacking)"}
+**Interpretasi:** Kalau kita menguji banyak hal sekaligus, peluang munculnya minimal satu "temuan palsu" naik dengan cepat: dari 5% untuk satu uji menjadi sekitar 23% untuk lima uji, 40% untuk sepuluh uji, 64% untuk dua puluh uji, dan 92% untuk lima puluh uji. Simulasi dengan 20 fitur acak yang sebenarnya tidak berhubungan dengan apa pun menunjukkan hal yang sama, yaitu tetap ada yang tampak "signifikan" hanya karena kebetulan. Solusi paling sederhana adalah koreksi Bonferroni, yaitu membagi $\alpha$ dengan jumlah uji (misalnya $0{,}05/20 = 0{,}0025$) sehingga temuan kebetulan tadi tersaring, atau menetapkan satu hipotesis utama sebelum melihat data.
+:::
+
+::: {.callout-note title="Interpretasi Bab 8: Menafsirkan Hasil Uji dengan Bijak"}
+**Interpretasi:** Bab ini mengingatkan bahwa menghitung *p-value* itu mudah, tetapi menafsirkannya butuh kehati-hatian: hasil signifikan belum tentu penting, *p-value* sering disalahartikan, dan menguji terlalu banyak hal tanpa koreksi akan melahirkan temuan palsu. Kebiasaan baiknya, laporkan besar efek dan selang kepercayaan, jangan menyimpulkan "tidak ada efek" hanya dari *p-value* besar, dan tetapkan hipotesis sebelum melihat data.
+:::
+
+## Studi Kasus Komprehensif: Kepatuhan Baku Mutu TSS
+
+**Konteks:** Sebuah perusahaan membuang air olahan ke sungai dengan baku mutu TSS (misalnya) 50 mg/L untuk rata-rata bulanan. Regulator mengambil 30 sampel acak dalam sebulan. Dari pemantauan panjang, simpangan baku pengukuran diketahui $\sigma = 12$ mg/L.
+
+```{r}
+set.seed(2026)
+tss <- round(rnorm(30, mean = 54, sd = 12), 1)
+round(c(n = length(tss), Mean = mean(tss), SD = sd(tss), Median = median(tss)), 2)
+```
+
+### Langkah 1: Merumuskan Hipotesis – Siapa yang Menanggung Beban Pembuktian?
+
+Ada dua cara merumuskan hipotesis, dan pilihannya bukan sekadar teknis:
+
+| Rumusan | $H_0$ | $H_1$ | Artinya |
+|:--|:--:|:--:|:--|
+| **A** (praduga patuh) | $\mu \le 50$ | $\mu > 50$ | Perusahaan dianggap patuh sampai ada bukti kuat melanggar |
+| **B** (praduga melanggar) | $\mu \ge 50$ | $\mu < 50$ | Perusahaan harus membuktikan dirinya patuh |
+
+::: {.callout-tip title="Interpretasi: Langkah 1 (Merumuskan Hipotesis)"}
+**Interpretasi:** Pada kasus yang sama, ada dua cara menulis hipotesis yang punya makna sangat berbeda. Pada rumusan A, perusahaan dianggap patuh dulu dan regulator yang harus membuktikan adanya pelanggaran, sedangkan pada rumusan B perusahaan dianggap melanggar dulu dan ia sendiri yang harus membuktikan bahwa ia patuh. Jadi pemilihan $H_0$ bukan sekadar urusan teknis, tetapi menentukan siapa yang menanggung beban pembuktian dan siapa yang diuntungkan ketika data belum meyakinkan.
+:::
+
+### Langkah 2–4: Menjalankan Kedua Rumusan
+
+```{r}
+knitr::kable(rbind(
+  "A: H1 mu > 50 (melanggar)" = uji_z(mean(tss), 50, sigma = 12, n = 30, arah = "kanan"),
+  "B: H1 mu < 50 (patuh)"     = uji_z(mean(tss), 50, sigma = 12, n = 30, arah = "kiri")
+), caption = "Data yang sama, dua rumusan hipotesis")
+```
+
+::: {.callout-tip title="Interpretasi: Langkah 2–4 (Menjalankan Kedua Rumusan)"}
+**Interpretasi:** Dengan data yang sama persis, kedua rumusan memberi gambaran yang berbeda. Pada rumusan A, *p-value*-nya sekitar 0,0766 (di atas 0,05), sehingga kita gagal menolak $H_0$, artinya belum cukup bukti untuk menyatakan perusahaan melanggar. Pada rumusan B, *p-value* ekor kiri mendekati 0,92 yang sangat besar, sehingga kita gagal menolak $H_0$ juga, artinya perusahaan sama sekali belum berhasil membuktikan dirinya patuh. Rata-rata sampel memang sedikit di atas 50 mg/L, yang belum cukup kuat untuk menuduh melanggar tetapi jelas tidak cukup untuk menyatakan patuh.
+:::
+
+### Langkah 5: Konsekuensi Kesalahan
+
+| Rumusan | Kesalahan Tipe I | Kesalahan Tipe II |
+|:--:|:--|:--|
+| **A** | Perusahaan patuh dinyatakan melanggar (sanksi tidak adil) | Pelanggaran lolos (lingkungan dirugikan) |
+| **B** | Perusahaan melanggar dinyatakan patuh (lingkungan dirugikan) | Perusahaan patuh gagal membuktikan kepatuhannya |
+
+```{r}
+# Power rumusan A untuk mendeteksi pelanggaran nyata sebesar 5 mg/L (mu = 55)
+power_kanan <- function(mu_benar, mu0, sigma, n, alpha = 0.05)
+  1 - pnorm(qnorm(1 - alpha) - (mu_benar - mu0) / (sigma / sqrt(n)))
+round(c(Power_n30 = power_kanan(55, 50, 12, 30), Power_n60 = power_kanan(55, 50, 12, 60)), 3)
+```
+
+::: {.callout-tip title="Interpretasi: Langkah 5 (Konsekuensi Kesalahan)"}
+**Interpretasi:** Tabel ini menunjukkan bahwa kesalahan yang paling ketat dikendalikan berbeda di tiap rumusan: pada rumusan A yang dijaga ketat adalah jangan sampai perusahaan yang patuh dihukum, sedangkan pada rumusan B yang dijaga ketat adalah jangan sampai pelanggar dibiarkan lolos, sehingga rumusan B lebih melindungi lingkungan. Hasil perhitungan *power* juga memberi informasi penting bagi regulator: dengan 30 sampel, pelanggaran nyata sebesar 5 mg/L hanya terdeteksi sekitar 74% dari waktu, sedangkan dengan 60 sampel naik menjadi sekitar 94%.
+:::
 
 ### Pertanyaan Diskusi dan Jawaban
 
-**1. Bagaimana melaporkan hasil proporsi?**
+**1. Apa kesimpulan rumusan A?**
 
-"Diperkirakan 66% UMKM kuliner telah menerima QRIS (CI 95%: 60,1%–71,9%; $n = 250$)." Kalimat ini memuat *point estimate*, selang, tingkat kepercayaan, dan ukuran sampel.
+*P-value* = 0,0766. Pada taraf 5% bukti belum cukup untuk menyatakan rata-rata TSS melebihi 50 mg/L, meskipun rata-rata sampel di atas baku mutu.
 
-**2. Mengapa median transaksi jauh di bawah mean, dan mana yang dilaporkan?**
+**2. Mengapa rumusan B lebih "protektif" terhadap lingkungan?**
 
-Distribusinya menjulur kanan (segelintir UMKM besar). Untuk menggambarkan UMKM **tipikal**, median lebih tepat. Namun jika dinas ingin menaksir **total** nilai transaksi (mean $\times$ jumlah UMKM pengguna), yang dibutuhkan justru mean beserta selangnya.
+Pada rumusan B, kesalahan yang dikendalikan ketat ($\alpha = 5\%$) adalah menyatakan patuh padahal melanggar. Beban pembuktian ada pada perusahaan: rata-rata sampel harus cukup jauh di bawah 50 mg/L agar dinyatakan patuh. Pada data ini, rumusan B jelas gagal membuktikan kepatuhan.
 
-**3. Apakah selang 95% berarti 95% UMKM bertransaksi di rentang tersebut?**
+**3. Mengapa *power* penting bagi regulator?**
 
-Tidak. Selang itu menaksir **rata-rata populasi**. Rentang nilai transaksi individu jauh lebih lebar – lihat histogram.
+Dengan rumusan A dan $n = 30$, pelanggaran nyata sebesar 5 mg/L hanya terdeteksi sekitar 74% dari waktu. Sisanya lolos. Menambah sampel menjadi 60 menaikkan *power* menjadi sekitar 94%. Keputusan jumlah sampel pemantauan adalah keputusan tentang seberapa sering pelanggaran boleh lolos.
 
-**4. Mengapa ukuran sampel untuk proporsi tidak dihitung dengan $p = 0{,}5$?**
+**4. Apa pelajaran umumnya?**
 
-Kita sudah memiliki taksiran $\hat{p} \approx 0{,}66$ dari survei ini. Memakai $p = 0{,}5$ lebih aman (menghasilkan $n$ terbesar), tetapi dengan informasi sebelumnya kita dapat menghemat biaya. Perbedaannya kecil karena $p(1-p)$ hampir datar di sekitar 0,5.
+Rumusan $H_0$ menentukan siapa yang diuntungkan oleh keraguan. Pilihan itu harus didasarkan pada konsekuensi kesalahan di dunia nyata, ditetapkan sebelum data dilihat, dan dilaporkan secara terbuka.
 
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+::: {.callout-tip title="Interpretasi: Pertanyaan Diskusi dan Jawaban"}
+**Interpretasi:** Keempat jawaban ini bermuara pada satu pesan: *p-value* 0,0766 pada rumusan A hanya berarti bukti pelanggaran belum cukup kuat, bukan berarti perusahaan pasti patuh. Rumusan B lebih protektif terhadap lingkungan karena perusahaanlah yang harus membuktikan kepatuhannya, dan pada data ini ia gagal melakukannya. *Power* penting karena jumlah sampel pemantauan sama artinya dengan menentukan seberapa sering pelanggaran boleh lolos (30 sampel membiarkan sekitar 26% lolos, sedangkan 60 sampel hanya sekitar 6%). Pelajaran umumnya, $H_0$ sebaiknya dipilih berdasarkan konsekuensi di dunia nyata, ditentukan sebelum melihat data, dan dilaporkan secara terbuka.
+:::
+
+::: {.callout-note title="Interpretasi Bab 9: Studi Kasus Kepatuhan Baku Mutu TSS"}
+**Interpretasi:** Studi kasus ini memperlihatkan bahwa statistik bukan cuma soal hitungan, melainkan juga soal keadilan dan tanggung jawab: dengan data yang sama, cara kita menulis $H_0$ bisa mengubah siapa yang harus membuktikan dan siapa yang diuntungkan saat bukti belum jelas. Karena itu pemilihan hipotesis, taraf signifikansi, dan jumlah sampel harus dipertimbangkan bersama dampak nyatanya terhadap perusahaan maupun lingkungan.
+:::
 
 ## Latihan Mandiri
 
-### Latihan Utama: Berat Kemasan Kopi Bubuk
+### Latihan Utama: Umur Baterai Ponsel
 
-**Konteks:** Mesin pengisi kopi bubuk dirancang mengisi kemasan dengan rata-rata 250 gram. Dari data historis, simpangan baku pengisian $\sigma = 6$ gram. Petugas QC mengambil sampel acak 36 kemasan.
-
-```{r}
-set.seed(99)
-berat <- round(rnorm(36, mean = 248.5, sd = 6), 1)
-summary(berat)
-```
-
-#### Tugas 1: Hitung SE dan jelaskan maknanya
+**Konteks:** Produsen mengklaim baterai ponselnya bertahan rata-rata 20 jam pemakaian normal. Lembaga konsumen menguji 40 unit. Dari spesifikasi pengujian standar, $\sigma = 2{,}5$ jam.
 
 ```{r}
-sigma_k <- 6; n_k <- length(berat)
-sigma_k / sqrt(n_k)
+set.seed(3)
+umur <- round(rnorm(40, mean = 19.3, sd = 2.5), 1)
+round(c(n = length(umur), Mean = mean(umur), SD = sd(umur)), 3)
 ```
 
-**Jawaban:** SE $= 6/6 = 1$ gram. Rata-rata dari 36 kemasan biasanya meleset sekitar 1 gram dari rata-rata sebenarnya – jauh lebih kecil daripada variasi berat antarkemasan (6 gram).
+#### Tugas 1: Rumuskan hipotesis
 
-#### Tugas 2: Jika mesin bekerja benar ($\mu = 250$), berapa peluang rata-rata 36 kemasan kurang dari 248 gram?
+Lembaga konsumen curiga umur baterai kurang dari yang diklaim.
+
+**Jawaban:** $H_0: \mu \ge 20$ jam (klaim benar); $H_1: \mu < 20$ jam (klaim berlebihan). Uji satu arah kiri.
+
+#### Tugas 2: Hitung statistik uji, nilai kritis, dan p-value ($\alpha = 0{,}05$)
 
 ```{r}
-pnorm(248, mean = 250, sd = sigma_k / sqrt(n_k))
+hasil_lat <- uji_z(mean(umur), mu0 = 20, sigma = 2.5, n = 40, arah = "kiri")
+hasil_lat
 ```
 
-**Jawaban:** $z = (248 - 250)/1 = -2$, sehingga peluangnya sekitar 0,0228. Kejadian ini jarang jika mesin bekerja benar – gagasan yang menjadi dasar uji hipotesis di Pertemuan 10.
+#### Tugas 3: Ambil keputusan dan tuliskan kesimpulan dalam konteks
 
-#### Tugas 3: Hitung CI 95% untuk rata-rata berat ($\sigma$ diketahui)
+**Jawaban:** statistik uji $z = -2{,}1251$ dengan *p-value* 0,01679. Karena *p-value* kurang dari 0,05, $H_0$ ditolak: terdapat bukti yang cukup bahwa rata-rata umur baterai kurang dari 20 jam seperti yang diklaim.
+
+#### Tugas 4: Bagaimana keputusannya jika $\alpha = 0{,}01$?
 
 ```{r}
-ci_z <- mean(berat) + c(-1, 1) * qnorm(0.975) * sigma_k / sqrt(n_k)
-round(c(x_bar = mean(berat), Bawah = ci_z[1], Atas = ci_z[2]), 2)
+uji_z(mean(umur), mu0 = 20, sigma = 2.5, n = 40, arah = "kiri", alpha = 0.01)
 ```
 
-#### Tugas 4: Hitung CI 95% jika $\sigma$ dianggap tidak diketahui (t)
+**Jawaban:** pada $\alpha = 0{,}01$ nilai kritisnya $-2{,}326$, sehingga keputusannya menjadi **Gagal menolak $H_0$**. Keputusan dapat berubah menurut $\alpha$ – itulah sebabnya $\alpha$ harus ditetapkan sebelum melihat data, dan *p-value* sebaiknya dilaporkan apa adanya agar pembaca dapat menilai sendiri kekuatan buktinya.
+
+#### Tugas 5: Jelaskan kesalahan Tipe I dan II dalam konteks ini
+
+**Jawaban:** **Tipe I** – lembaga menyatakan klaim produsen berlebihan padahal baterai sebenarnya bertahan rata-rata 20 jam (merugikan reputasi produsen). **Tipe II** – lembaga menyatakan tidak ada bukti klaim berlebihan padahal baterai sebenarnya bertahan kurang dari 20 jam (merugikan konsumen).
+
+#### Tugas 6 (Tantangan): Power dan ukuran sampel
+
+Hitung *power* uji ini untuk mendeteksi umur sebenarnya 19 jam, lalu tentukan $n$ agar *power*-nya 90%.
 
 ```{r}
-round(t.test(berat)$conf.int, 2)
+power_kiri <- function(mu_benar, mu0, sigma, n, alpha = 0.05)
+  pnorm(qnorm(alpha) - (mu_benar - mu0) / (sigma / sqrt(n)))
+round(power_kiri(19, 20, 2.5, 40), 3)
 ```
 
 ```{r}
-round(c(s = sd(berat), t_kritis = qt(0.975, 35), z_kritis = qnorm(0.975)), 3)
+ceiling(((qnorm(0.95) + qnorm(0.90)) * 2.5 / 1)^2)   # n satu arah, power 90%
 ```
 
-#### Tugas 5: Tafsirkan hasilnya
+**Jawaban:** dengan 40 unit, selisih 1 jam terdeteksi sekitar 81% dari waktu. Untuk *power* 90% dibutuhkan sekitar 54 unit.
 
-**Jawaban:** Selang z dan selang t sangat mirip karena $n = 36$ cukup besar (t kritis hanya sedikit di atas 1,96) dan $s$ dekat dengan $\sigma$. Jika nilai 250 tidak berada di dalam selang, data memberi indikasi bahwa rata-rata pengisian mesin berbeda dari target – yang dapat dikonfirmasi dengan uji hipotesis. Hasil sampel ini: 250 berada di luar selang z.
-
-#### Tugas 6 (Tantangan): Ukuran sampel
-
-Berapa kemasan yang harus diambil agar *margin of error* CI 95% hanya $\pm$ 1 gram? Dan $\pm$ 0,5 gram?
-
-```{r}
-c(MoE_1 = n_mean(sigma = 6, E = 1), MoE_0.5 = n_mean(sigma = 6, E = 0.5))
-```
-
-**Jawaban:** 139 kemasan untuk $\pm$ 1 gram dan 554 kemasan untuk $\pm$ 0,5 gram – membagi dua *margin of error* membutuhkan sampel empat kali lipat.
+::: {.callout-tip title="Interpretasi: Latihan Utama (Umur Baterai Ponsel)"}
+**Interpretasi:** Karena lembaga konsumen curiga umur baterai *kurang* dari klaim 20 jam, ujinya satu arah kiri dengan $H_0: \mu \ge 20$. Hasil hitungan memberi $z = -2{,}1251$ dan *p-value* 0,01679, yang lebih kecil dari 0,05 sehingga $H_0$ ditolak, artinya ada bukti yang cukup bahwa baterai rata-rata bertahan kurang dari 20 jam. Namun kalau $\alpha$ diperketat menjadi 0,01, nilai kritisnya menjadi $-2{,}326$ dan $z = -2{,}125$ tidak melewatinya, sehingga keputusannya berubah menjadi gagal menolak $H_0$. Inilah alasan kenapa $\alpha$ harus ditetapkan sebelum melihat data dan *p-value* sebaiknya dilaporkan apa adanya. Untuk kesalahannya, Tipe I berarti lembaga menuduh klaim berlebihan padahal tidak (merugikan produsen), sedangkan Tipe II berarti lembaga gagal menangkap klaim yang memang berlebihan (merugikan konsumen). Pada tugas tantangan, dengan 40 unit selisih 1 jam terdeteksi sekitar 81% dari waktu, dan untuk mencapai *power* 90% dibutuhkan sekitar 54 unit.
+:::
 
 ### Latihan Tambahan (Self-Check)
 
 Kerjakan soal-soal berikut secara mandiri sebelum melihat kunci jawaban pada komentar kode.
 
-**Soal A.** Waktu tunggu layanan pelanggan berdistribusi menjulur kanan dengan $\mu = 8$ menit dan $\sigma = 6$ menit. Untuk sampel acak 64 panggilan, tentukan mean, SE, dan bentuk distribusi sampling $\bar{x}$, lalu hitung $P(\bar{x} > 9)$.
+**Soal A.** Tuliskan $H_0$ dan $H_1$: (1) Apakah rata-rata waktu respons server berubah dari 200 ms setelah pembaruan? (2) Apakah pelatihan menaikkan rata-rata skor tes di atas 70? (3) Apakah rata-rata kadar gula minuman kurang dari 10 g seperti label?
 
 ```{r}
 #| eval: false
 # Kunci jawaban:
-# Mean = 8; SE = 6 / sqrt(64) = 0.75; bentuk mendekati normal (CLT, n = 64)
-1 - pnorm(9, mean = 8, sd = 0.75)   # z = 1.33 -> sekitar 0.0912
+# (1) H0: mu = 200 vs H1: mu != 200 (dua arah)
+# (2) H0: mu <= 70 vs H1: mu > 70 (kanan)
+# (3) Jika pemeriksa ingin membuktikan label benar: H0: mu >= 10 vs H1: mu < 10 (kiri).
+#     Jika pemeriksa curiga kadar gula melebihi label: H0: mu <= 10 vs H1: mu > 10 (kanan).
+#     Rumusan bergantung pada klaim yang ingin dibuktikan.
 ```
 
-**Soal B.** Survei 1.200 pemilih menunjukkan 54% mendukung sebuah kebijakan. Hitung CI 95% dan *margin of error*-nya.
+**Soal B.** Uji dua arah menghasilkan $z = 1{,}80$. Hitung *p-value* dan keputusan pada $\alpha = 0{,}05$ dan $0{,}10$. Bagaimana jika ujinya satu arah kanan?
 
 ```{r}
 #| eval: false
 # Kunci jawaban:
-p <- 0.54; n <- 1200
-moe <- qnorm(0.975) * sqrt(p * (1 - p) / n)   # 0.0282 -> +- 2.8 poin persentase
-p + c(-1, 1) * moe                             # 0.512 sampai 0.568
+2 * (1 - pnorm(1.80))   # 0.0719 -> gagal tolak (0.05), tolak (0.10)
+1 - pnorm(1.80)         # 0.0359 -> tolak pada 0.05 (jika arah kanan ditetapkan SEBELUM melihat data)
 ```
 
-**Soal C.** Sepuluh pengukuran pH air limbah: 6,8; 7,1; 6,9; 7,4; 7,0; 6,7; 7,2; 7,3; 6,9; 7,1. Hitung CI 95% untuk rata-rata pH secara manual dengan distribusi t lalu periksa dengan `t.test()`.
-
-```{r}
-#| eval: false
-ph <- c(6.8, 7.1, 6.9, 7.4, 7.0, 6.7, 7.2, 7.3, 6.9, 7.1)
-# Kunci jawaban:
-# x-bar = 7.04; s = 0.2171; SE = 0.0687; t(0.975, 9) = 2.262; MoE = 0.155
-mean(ph) + c(-1, 1) * qt(0.975, 9) * sd(ph) / sqrt(10)   # 6.885 sampai 7.195
-t.test(ph)$conf.int
-```
-
-**Soal D.** Sebuah media menulis: "Dengan CI 95% \[62%, 68%\], berarti 95% warga memiliki tingkat kepuasan antara 62% dan 68%." Perbaiki tafsiran ini.
+**Soal C.** Seorang analis melaporkan: "*p-value* = 0,23, jadi terbukti kampanye iklan tidak berpengaruh terhadap penjualan." Kritik pernyataan ini.
 
 ```{r}
 #| eval: false
 # Kunci jawaban:
-# Tafsiran keliru. Yang benar: "Kami 95% yakin bahwa proporsi warga yang puas di seluruh
-# populasi berada antara 62% dan 68%." CI menaksir PARAMETER populasi (proporsi yang puas),
-# bukan rentang nilai individu.
+# "Gagal menolak H0" bukan bukti H0 benar. P-value 0,23 hanya berarti data tidak memberi bukti
+# yang cukup untuk menyatakan ada pengaruh. Mungkin pengaruhnya kecil dan power uji rendah
+# (sampel kecil). Laporkan selang kepercayaan besar efek untuk melihat rentang pengaruh
+# yang masih masuk akal.
 ```
 
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+**Soal D.** Sebuah tim menguji 15 variasi warna tombol terhadap warna lama, masing-masing dengan $\alpha = 0{,}05$, dan melaporkan satu variasi yang "signifikan" ($p = 0{,}03$). Berapa peluang setidaknya satu hasil signifikan jika sebenarnya tidak ada variasi yang lebih baik? Apakah temuan itu meyakinkan dengan koreksi Bonferroni?
 
-## Kesalahan Umum dalam Sampling Distribution dan Estimasi
+```{r}
+#| eval: false
+# Kunci jawaban:
+1 - 0.95^15   # sekitar 0.537 -> lebih dari separuh kemungkinan ada "temuan" palsu
+0.05 / 15     # batas Bonferroni = 0.0033; p = 0.03 > 0.0033 -> TIDAK signifikan setelah koreksi
+```
 
-1. Menyamakan distribusi **sampel** dengan distribusi **sampling** – yang pertama berisi data individu, yang kedua berisi statistik dari banyak sampel.
-2. Mengira CLT membuat **data** menjadi normal – CLT berbicara tentang distribusi **rata-rata**, bukan data individu.
-3. Menganggap $n \ge 30$ selalu cukup – data yang sangat menceng atau beroutlier bisa membutuhkan lebih.
-4. Menyamakan SD dan SE – SD mengukur keragaman individu; SE mengukur ketepatan taksiran.
-5. Memakai z padahal $\sigma$ tidak diketahui dan $n$ kecil – gunakan distribusi t.
-6. Menafsirkan CI sebagai peluang parameter berada di dalam selang tertentu, atau sebagai rentang nilai individu.
-7. Membulatkan ukuran sampel ke bawah – selalu bulatkan ke atas.
-8. Mengira ukuran populasi menentukan ukuran sampel – untuk populasi besar, yang menentukan adalah *margin of error*, tingkat kepercayaan, dan variabilitas.
-9. Mengira sampel besar menghilangkan bias – ukuran sampel hanya mengecilkan galat acak.
-10. Memakai pendekatan normal untuk proporsi saat $n\hat{p}$ atau $n(1-\hat{p})$ kurang dari 10.
-11. Melaporkan *point estimate* tanpa selang atau $n$ – pembaca tidak dapat menilai ketepatannya.
+::: {.callout-tip title="Interpretasi: Latihan Tambahan (Self-Check)"}
+**Interpretasi:** Keempat soal ini menguji empat kebiasaan penting. Pada Soal A, arah hipotesis ditentukan dari kata kunci dalam kalimat ("berubah" berarti dua arah, "menaikkan" berarti kanan, "kurang dari" berarti kiri), dan untuk kasus yang ambigu rumusannya bergantung pada klaim apa yang ingin dibuktikan. Pada Soal B, $z = 1{,}80$ memberi *p-value* dua arah 0,0719 (gagal menolak pada 0,05 tetapi menolak pada 0,10) dan *p-value* satu arah 0,0359 (menolak pada 0,05, asalkan arah kanan sudah ditetapkan sebelum melihat data), jadi pilihan $\alpha$ dan arah uji bisa mengubah keputusan. Pada Soal C, "*p-value* 0,23" hanya berarti bukti belum cukup, bukan bukti bahwa iklan tidak berpengaruh, karena bisa saja sampelnya kecil dan *power*-nya rendah. Pada Soal D, dengan 15 uji peluang adanya temuan palsu sudah sekitar 54%, dan temuan $p = 0{,}03$ itu tidak lolos koreksi Bonferroni karena batasnya hanya sekitar 0,0033.
+:::
 
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+::: {.callout-note title="Interpretasi Bab 10: Latihan Mandiri"}
+**Interpretasi:** Latihan ini merangkum seluruh isi bab-bab sebelumnya dalam praktik: merumuskan hipotesis dengan benar, menghitung dan memutuskan memakai $\alpha$ yang sudah ditetapkan di awal, menjelaskan arti kesalahan Tipe I dan II dalam konteks nyata, memperhitungkan *power* dan ukuran sampel, serta waspada terhadap tafsir yang keliru dan uji berganda. Kalau kamu bisa mengerjakan latihan ini tanpa melihat kunci, berarti konsep inti uji hipotesis sudah kamu kuasai dan siap dibawa ke uji t di pertemuan berikutnya.
+:::
+
+## Kesalahan Umum dalam Uji Hipotesis
+
+1. Menulis hipotesis tentang statistik sampel ($H_0: \bar{x} = 250$) – hipotesis selalu tentang **parameter**.
+2. Menaruh kesamaan di $H_1$ – tanda $=$, $\le$, $\ge$ selalu berada di $H_0$.
+3. Memilih arah uji **setelah** melihat data – *p-value* menjadi tidak sah.
+4. "Menerima $H_0$" – yang benar adalah "gagal menolak $H_0$"; ketiadaan bukti bukan bukti ketiadaan.
+5. Menafsirkan *p-value* sebagai peluang $H_0$ benar.
+6. Menyamakan signifikansi statistik dengan kepentingan praktis – selalu laporkan besar efek dan CI.
+7. Menetapkan $\alpha$ setelah melihat *p-value* agar hasilnya "signifikan".
+8. Menguji banyak hipotesis tanpa koreksi – peluang *false positive* melonjak.
+9. Mengabaikan *power* – studi dengan sampel kecil sering gagal mendeteksi efek nyata, lalu disimpulkan "tidak ada efek".
+10. Hanya menulis "tolak $H_0$" tanpa kesimpulan dalam konteks – pembaca perlu tahu artinya bagi masalah nyata.
+11. Mengabaikan konsekuensi dunia nyata saat merumuskan $H_0$ – rumusan menentukan siapa yang diuntungkan oleh keraguan.
 
 ## Cheat Sheet: Fungsi R yang Digunakan
 
 | Fungsi | Kegunaan |
-|:-------|:---------|
-| `sample(x, n)` / `sample(x, replace = TRUE)` | Sampel acak / sampel *bootstrap* |
-| `replicate(B, ekspresi)` | Simulasi distribusi sampling |
-| `rgamma()`, `rexp()`, `runif()`, `rnorm()`, `rbinom()`, `rlnorm()` | Membangkitkan populasi/data simulasi |
-| `pnorm(q, mean, sd)` | Peluang kumulatif normal $P(X \le q)$ |
-| `qnorm(p)` | Nilai kritis z (misalnya `qnorm(0.975)` = 1,96) |
-| `dnorm(x, mean, sd)` | Kepadatan normal (untuk menggambar kurva) |
-| `qt(p, df)`, `pt(q, df)`, `dt(x, df)` | Nilai kritis, peluang, dan kepadatan distribusi t |
-| `t.test(x, conf.level = 0.95)$conf.int` | Selang kepercayaan t untuk mean |
-| `curve(f(x), add = TRUE)` | Menambahkan kurva teoretis pada histogram |
-| `segments(x0, y0, x1, y1)` | Menggambar selang kepercayaan sebagai garis |
-| `ceiling(x)` | Membulatkan ke atas (ukuran sampel) |
-| `outer(a, b, f)` | Tabel nilai untuk kombinasi dua parameter |
-| `quantile(boot, c(0.025, 0.975))` | Selang *bootstrap* persentil |
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+|:--|:--|
+| `qnorm(1 - alpha/2)`, `qnorm(1 - alpha)`, `qnorm(alpha)` | Nilai kritis z dua arah, kanan, kiri |
+| `pnorm(z)` | $P(Z \le z)$; dasar *p-value* |
+| `2 * (1 - pnorm(abs(z)))` | *P-value* dua arah |
+| `1 - pnorm(z)` / `pnorm(z)` | *P-value* satu arah kanan / kiri |
+| `dnorm(x)` | Kurva normal untuk menggambar daerah penolakan |
+| `ggplot()`, `geom_histogram()`, `geom_line()`, `facet_wrap()` | Membuat grafik (paket ggplot2) |
+| `geom_ribbon()` | Mengarsir daerah di bawah kurva |
+| `match.arg()`, `switch()` | Memilih arah uji dalam fungsi buatan |
+| `replicate(B, ...)` | Simulasi kesalahan Tipe I dan *power* |
+| `p.adjust(p, method = "bonferroni")` | Koreksi uji berganda |
+| `ceiling()` | Membulatkan ukuran sampel ke atas |
+| `ifelse(p <= alpha, ...)` | Menuliskan keputusan otomatis |
 
 ## Glosarium Istilah
 
 | Istilah | Definisi Singkat |
-|:--------|:-----------------|
-| Statistika Inferensial | Menarik kesimpulan tentang populasi dari sampel |
-| Distribusi Sampling | Distribusi sebuah statistik dari semua kemungkinan sampel berukuran $n$ |
-| Penaksir Tak Bias | Statistik yang rata-rata distribusi samplingnya sama dengan parameter |
-| Central Limit Theorem | Distribusi $\bar{x}$ mendekati normal untuk $n$ besar, apa pun bentuk populasinya |
-| Standard Error (SE) | Simpangan baku distribusi sampling sebuah statistik |
-| Koreksi Populasi Terhingga | Faktor $\sqrt{(N-n)/(N-1)}$ bila sampel lebih dari sekitar 5% populasi |
-| Point Estimate | Satu nilai yang menaksir parameter |
-| Confidence Interval | Rentang nilai yang masuk akal bagi parameter dengan tingkat kepercayaan tertentu |
-| Tingkat Kepercayaan | Persentase selang (dari pengulangan prosedur) yang memuat parameter |
-| Margin of Error | Nilai kritis $\times$ SE; setengah lebar selang |
-| Nilai Kritis | Nilai dari distribusi z atau t yang menentukan lebar selang |
-| Distribusi t | Distribusi berekor tebal yang dipakai bila $\sigma$ ditaksir dengan $s$ |
-| Derajat Bebas (df) | Parameter distribusi t; $n-1$ untuk satu mean |
-| Bootstrap | Pengambilan sampel ulang dengan pengembalian dari data untuk meniru distribusi sampling |
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+|:--|:--|
+| Hipotesis | Pernyataan tentang parameter populasi |
+| Hipotesis Nol ($H_0$) | Pernyataan "tidak ada efek/perbedaan"; diasumsikan benar selama uji |
+| Hipotesis Alternatif ($H_1$) | Klaim yang ingin dibuktikan; diterima bila bukti kuat |
+| Uji Dua Arah / Satu Arah | Uji dengan daerah penolakan di kedua ekor / satu ekor |
+| Tingkat Signifikansi ($\alpha$) | Batas peluang kesalahan Tipe I |
+| Statistik Uji | Ukuran jarak estimasi dari nilai $H_0$ dalam satuan SE |
+| Nilai Kritis | Batas daerah penolakan |
+| Daerah Penolakan | Rentang nilai statistik uji yang membuat $H_0$ ditolak |
+| *P-Value* | Peluang hasil seekstrem atau lebih ekstrem dari yang teramati, jika $H_0$ benar |
+| Tolak $H_0$ | Keputusan bahwa data memberi bukti cukup melawan $H_0$ |
+| Gagal Menolak $H_0$ | Keputusan bahwa bukti belum cukup; bukan pembuktian $H_0$ |
+| Kesalahan Tipe I | Menolak $H_0$ yang benar (*false positive*) |
+| Kesalahan Tipe II | Gagal menolak $H_0$ yang salah (*false negative*) |
+| $\beta$ | Peluang kesalahan Tipe II |
+| *Power* | $1 - \beta$; peluang mendeteksi efek yang benar-benar ada |
+| Besar Efek | Ukuran seberapa besar perbedaan/efek, terlepas dari ukuran sampel |
+| Signifikansi Praktis | Apakah besar efek cukup penting di dunia nyata |
+| Uji Berganda | Melakukan banyak uji sekaligus sehingga peluang *false positive* naik |
+| Koreksi Bonferroni | Memakai $\alpha/k$ untuk setiap dari $k$ uji |
 
 ## Rangkuman dan Kesimpulan
 
-1. Distribusi sampling menggambarkan bagaimana sebuah statistik bervariasi dari sampel ke sampel; ia adalah fondasi seluruh statistika inferensial.
-2. $\bar{x}$ dan $\hat{p}$ adalah penaksir tak bias dengan SE masing-masing $\sigma/\sqrt{n}$ dan $\sqrt{p(1-p)/n}$.
-3. CLT menjamin distribusi $\bar{x}$ mendekati normal untuk $n$ cukup besar, apa pun bentuk populasinya; makin menceng populasi, makin besar $n$ yang dibutuhkan.
-4. SE bukan SD: SE mengecil sebanding $1/\sqrt{n}$ – presisi dua kali lipat membutuhkan sampel empat kali lipat.
-5. Selang kepercayaan = *point estimate* $\pm$ nilai kritis $\times$ SE. Gunakan z bila $\sigma$ diketahui, t bila $\sigma$ ditaksir. Kepercayaan 95% adalah sifat prosedur, bukan peluang untuk satu selang.
-6. Ukuran sampel dapat direncanakan dari *margin of error* yang diinginkan – tetapi tidak dapat menyembuhkan bias sampling.
+1. Logika uji hipotesis sama dengan pengadilan: asumsikan $H_0$ benar, lalu nilai seberapa mengejutkan data; tolak $H_0$ hanya jika bukti kuat.
+2. Hipotesis dinyatakan tentang **parameter**; $H_0$ selalu memuat kesamaan; arah uji ditentukan dari pertanyaan penelitian **sebelum** melihat data.
+3. Statistik uji mengukur jarak estimasi dari $H_0$ dalam satuan SE. Keputusan dapat diambil dengan nilai kritis atau *p-value* – keduanya setara.
+4. *P-value* adalah peluang hasil seekstrem ini **jika $H_0$ benar** – bukan peluang $H_0$ benar.
+5. Kesalahan Tipe I ($\alpha$) dan Tipe II ($\beta$) saling tarik-menarik; hanya sampel lebih besar yang dapat mengurangi keduanya sekaligus. Rancang studi dengan *power* memadai.
+6. Signifikan secara statistik belum tentu penting secara praktis; laporkan besar efek dan selang kepercayaan, dan waspadai uji berganda.
 
-**Jembatan ke sesi berikutnya:** Tugas 2 latihan tadi bertanya, "jika mesin bekerja benar, seberapa jarang hasil seperti ini?" Pertanyaan itulah inti uji hipotesis di Pertemuan 10: $H_0$, $H_1$, tingkat signifikansi, *p-value*, dan kesalahan Tipe I dan II.
-
-<hr style="border: 2px solid black; width: 50%; margin: 50px auto;">
+**Jembatan ke sesi berikutnya:** hari ini kita memakai uji z dengan $\sigma$ diketahui sebagai kendaraan untuk memahami konsep. Pertemuan 11 membahas situasi yang jauh lebih sering dijumpai – $\sigma$ tidak diketahui – dengan uji t satu sampel, dua sampel independen, dan berpasangan, beserta uji z dua sampel.
 
 ## Referensi Pendukung
 
-Materi ini merangkum topik distribusi sampling dan estimasi (*sampling distributions and confidence intervals*) yang umum dibahas pada buku teks pengantar statistika bisnis/data science. Mahasiswa disarankan melengkapi pemahaman dengan merujuk pada:
+Materi ini merangkum konsep dasar uji hipotesis (*fundamentals of hypothesis testing*) yang umum dibahas pada buku teks pengantar statistika bisnis/data science. Mahasiswa disarankan melengkapi pemahaman dengan merujuk pada:
 
-- Modul/slide perkuliahan "Introduction to Statistics (SDT-1102)" – Pertemuan 9: Sampling Distribution dan Estimasi.
-- Buku teks pengantar statistika pada bab *Sampling Distributions* dan *Confidence Interval Estimation*.
-- Efron, B., & Tibshirani, R. J. (1993). *An Introduction to the Bootstrap*. Chapman & Hall.
-- Dokumentasi resmi R: `?pnorm`, `?qnorm`, `?qt`, `?t.test`, `?replicate` (dapat diakses langsung di R/RStudio).
+- Modul/slide perkuliahan "Introduction to Statistics (SDT-1102)" – Pertemuan 10: Konsep dan Uji Hipotesis.
+- Wasserstein, R. L., & Lazar, N. A. (2016). The ASA Statement on p-Values: Context, Process, and Purpose. *The American Statistician, 70*(2), 129–133.
+- Buku teks pengantar statistika pada bab *Fundamentals of Hypothesis Testing: One-Sample Tests*.
+- Dokumentasi resmi R: `?pnorm`, `?qnorm`, `?p.adjust`, dan `?geom_ribbon` untuk ggplot2 (dapat diakses langsung di R/RStudio).
